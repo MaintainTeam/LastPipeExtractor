@@ -25,6 +25,7 @@ import org.schabi.newpipe.extractor.utils.Utils;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,11 +34,6 @@ import javax.annotation.Nullable;
 
 public class BitchuteSearchExtractor extends SearchExtractor {
 
-    @Nonnull
-    @Override
-    public String getUrl() throws ParsingException {
-        return super.getUrl() + "&page=%s";
-    }
 
     public BitchuteSearchExtractor(StreamingService service, SearchQueryHandler linkHandler) {
         super(service, linkHandler);
@@ -51,7 +47,7 @@ public class BitchuteSearchExtractor extends SearchExtractor {
 
     @Override
     public String getSearchSuggestion() {
-        return null;
+        return "";
     }
 
     @Override
@@ -62,7 +58,7 @@ public class BitchuteSearchExtractor extends SearchExtractor {
     @Nonnull
     @Override
     public List<MetaInfo> getMetaInfo() throws ParsingException {
-        return null; // TODO evermind: this is just to get it compiled not verified
+        return Collections.emptyList(); // TODO evermind verify what really should be done
     }
 
     @Nonnull
