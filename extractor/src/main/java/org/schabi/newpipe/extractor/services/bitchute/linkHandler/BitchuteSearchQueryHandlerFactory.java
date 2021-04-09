@@ -2,6 +2,7 @@ package org.schabi.newpipe.extractor.services.bitchute.linkHandler;
 
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandlerFactory;
+import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -16,7 +17,7 @@ public class BitchuteSearchQueryHandlerFactory extends SearchQueryHandlerFactory
     }
 
     private static final String CHARSET_UTF_8 = "UTF-8";
-    private static final String SEARCH_URL = "https://search.bitchute.com/renderer?query=";
+    private static final String SEARCH_URL = BitchuteConstants.SEARCH_URL_PREFIX;
 
     @Override
     public String getUrl(String query, List<String> contentFilter, String sortFilter) throws ParsingException {
