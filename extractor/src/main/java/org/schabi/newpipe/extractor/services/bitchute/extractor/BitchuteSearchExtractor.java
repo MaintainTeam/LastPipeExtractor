@@ -1,9 +1,8 @@
 package org.schabi.newpipe.extractor.services.bitchute.extractor;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import com.grack.nanojson.JsonArray;
+import com.grack.nanojson.JsonObject;
+
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.InfoItemExtractor;
 import org.schabi.newpipe.extractor.MetaInfo;
@@ -17,6 +16,7 @@ import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
 import org.schabi.newpipe.extractor.search.InfoItemsSearchCollector;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
+import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteParserHelper;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
 import org.schabi.newpipe.extractor.stream.StreamType;
@@ -64,49 +64,65 @@ public class BitchuteSearchExtractor extends SearchExtractor {
     @Nonnull
     @Override
     public InfoItemsPage<InfoItem> getInitialPage() throws IOException, ExtractionException {
-        return getPage(new Page(String.format(getUrl(), String.valueOf(1))));
+        return getPage(new Page(getUrl(), "0")); // id is used as the page number
     }
 
     @Override
     public InfoItemsPage<InfoItem> getPage(Page page) throws IOException, ExtractionException {
 
+        /*
+        //TODO evermind: do we need document for something?
         Document document = Jsoup.parse(getDownloader().get(page.getUrl(),
                 BitchuteParserHelper.getBasicHeader()).responseBody());
+         */
+
+
+        // retrieve the results via json result
+        String query = getLinkHandler().getId();
+        /* TODO for now we restrict to only search for videos and not for channel as I don't know
+           how to handle both. As they are separated query calls.
+         */
+        int currentPageNumber = Integer.parseInt(page.getId());
+        JsonObject jsonResponse = BitchuteParserHelper.getSearchResultForQuery(query, BitchuteConstants.KIND_VIDEO, currentPageNumber);
 
         InfoItemsSearchCollector collector = new InfoItemsSearchCollector(getServiceId());
         InfoItemExtractor infoItemExtractor;
-        Elements elements = document.select(".oss-result > *");
-        if (elements.size() == 0) {
+
+        String jsonResultArrayKey = "results";
+        /* below keys for the array with jsonResultArrayKey as key */
+        String jsonTitleKey = "name";
+        String jsonVideoPathKey = "path";
+        String jsonDescKey = "description";
+        String jsonPublishedKey = "published";
+        String jsonViewsKey = "views";
+        String jsonKindKey = "kind";
+        String jsonDurationKey = "duration";
+        String jsonUploaderKey = "channel_name";
+        String jsonUploaderUrlKey = "channel_path";
+
+        JsonArray results = jsonResponse.getArray(jsonResultArrayKey);
+        if (results.size() == 0) {
             return new InfoItemsPage<>(collector, null);
         }
-        Elements toParse = new Elements();
-        for (Element element : elements) {
-            if (element.tagName().equals("br")) {
-                StringBuilder sb = new StringBuilder();
-                for (Element e : toParse) {
-                    sb.append(e.outerHtml()).append(" ");
-                }
-                Element e = Jsoup.parse(sb.toString());
-                String name = e.select("div.ossfieldrdr1 a").first().text();
 
-                String url = e.select("div.ossfieldrdr1 a").first().attr("href");
+        for ( Object elem : results) {
+            if ( elem instanceof JsonObject) {
+                JsonObject result = (JsonObject) elem;
+                String name = result.getString(jsonTitleKey);
+                String url = BitchuteConstants.BASE_URL + result.getString(jsonVideoPathKey);
 
-                String thumbUrl = e.select("div.ossfieldrdr2 a img")
-                        .first().attr("src");
+                String thumbUrl = result.getObject("images").getString("thumbnail");
+                String desc = result.getString(jsonDescKey);
 
-                Element descElement = e.select("div.ossfieldrdr3").first();
-                String desc = descElement != null ? descElement.text() : "";
+                String textualDate = result.getString(jsonPublishedKey);
+                String views = result.getString(jsonViewsKey);
+                String duration = result.getString(jsonDurationKey);
+                String kind = result.getString(jsonKindKey);
+                String uploader = result.getString(jsonUploaderKey);
+                String uploaderUrl = BitchuteConstants.BASE_URL + result.getString(jsonUploaderUrlKey);
 
-                String textualDate = e.select("div.oss-item-date").first().text();
-
-                Element viewsElement = e.select("div.oss-item-views").first();
-                String views = viewsElement != null ? viewsElement.
-                        text().replace(">", "") : "0";
-
-                String type = e.select("div.oss-item-kind").first().text();
-
-                switch (type) {
-                    case "channel":
+                switch (kind) {
+                    case BitchuteConstants.KIND_CHANNEL:
                         infoItemExtractor = new BitchuteQuickChannelInfoItemExtractor(
                                 name,
                                 url,
@@ -114,30 +130,36 @@ public class BitchuteSearchExtractor extends SearchExtractor {
                                 desc
                         );
                         break;
-                    case "video":
+                    case BitchuteConstants.KIND_VIDEO:
                     default:
                         infoItemExtractor = new BitchuteQuickStreamInfoItemExtractor(
                                 name,
                                 url,
                                 thumbUrl,
                                 views,
-                                textualDate
+                                textualDate,
+                                duration,
+                                uploader,
+                                uploaderUrl
                         );
                 }
+
                 collector.commit(infoItemExtractor);
-                toParse.clear();
-            } else {
-                toParse.add(element);
             }
         }
+
         try {
-            int max = Integer.parseInt(document
-                    .select(".oss-paging > a:last-of-type").first().text());
-            int current = Integer.parseInt(document
-                    .select(".oss-paging > strong > a").first().text());
-            if (max > current) {
-                current += 1;
-                return new InfoItemsPage<>(collector, new Page(String.format(getUrl(), String.valueOf(current))));
+
+            String jsonResultsCount = "count";
+            String jsonResultsTotal = "total";
+
+            long count = jsonResponse.getLong(jsonResultsCount);
+            long total = jsonResponse.getLong(jsonResultsTotal);
+
+            int maxPages = (count != 0) ? (int) (total / count) : 0;
+            if (maxPages > currentPageNumber) {
+                currentPageNumber += 1;
+                return new InfoItemsPage<>(collector, new Page(getUrl(), String.valueOf(currentPageNumber)));
             } else {
                 return new InfoItemsPage<>(collector, null);
             }
@@ -152,14 +174,22 @@ public class BitchuteSearchExtractor extends SearchExtractor {
         String name;
         String url;
         String thumbUrl;
+        String duration;
+        String uploader;
+        String uploaderUrl;
 
         public BitchuteQuickStreamInfoItemExtractor(String name, String url, String thumbUrl,
-                                                    String viewCount, String textualDate) {
+                                                    String viewCount, String textualDate,
+                                                    String duration, String uploader,
+                                                    String uploaderUrl) {
             this.viewCount = viewCount;
             this.textualDate = textualDate;
             this.name = name;
             this.url = url;
             this.thumbUrl = thumbUrl;
+            this.duration = duration;
+            this.uploader = uploader;
+            this.uploaderUrl = uploaderUrl;
         }
 
         @Override

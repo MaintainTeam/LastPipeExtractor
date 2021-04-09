@@ -143,6 +143,36 @@ public class BitchuteParserHelper {
         }
     }
 
+    public static JsonObject getSearchResultForQuery(String query, String kind, int pageNumber)
+            throws IOException, ExtractionException {
+        if (!isInitDone()) {
+            init();
+        }
+
+        String dataWithPlaceholders = "csrfmiddlewaretoken=%s&query=%s&kind=%s&duration=&sort=&page=%d";
+
+        byte[] data = String.format(dataWithPlaceholders, csrfToken, query, kind, pageNumber)
+                .getBytes(StandardCharsets.UTF_8);
+        Response response = getDownloader().post(
+                String.format("%s/api/search/list/", BitchuteConstants.BASE_URL),
+                getPostHeader(data.length),
+                data
+        );
+
+        try {
+            JsonObject jsonObject = JsonParser.object().from(response.responseBody());
+            String keySuccess = "success";
+            String keyResults = "results";
+            if (jsonObject.has(keySuccess) && (jsonObject.getBoolean(keySuccess) == true) &&
+                jsonObject.has(keyResults)) {
+                return jsonObject;
+            }
+        } catch (JsonParserException e) {
+            throw new ParsingException("Could not parse bitchute search results JsonObject");
+        }
+        throw new ExtractionException("Server response for bitchute search results was not successful");
+    }
+
     public static class VideoCount {
         private long likeCount;
         private long dislikeCount;
