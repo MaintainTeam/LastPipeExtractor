@@ -3,9 +3,6 @@ package org.schabi.newpipe.extractor.services.bitchute.extractor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.schabi.newpipe.extractor.InfoItem;
-import org.schabi.newpipe.extractor.InfoItemExtractor;
-import org.schabi.newpipe.extractor.InfoItemsCollector;
 import org.schabi.newpipe.extractor.MediaFormat;
 import org.schabi.newpipe.extractor.MetaInfo;
 import org.schabi.newpipe.extractor.StreamingService;
@@ -19,7 +16,6 @@ import org.schabi.newpipe.extractor.services.bitchute.BitchuteParserHelper;
 import org.schabi.newpipe.extractor.stream.AudioStream;
 import org.schabi.newpipe.extractor.stream.Description;
 import org.schabi.newpipe.extractor.stream.StreamExtractor;
-import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemsCollector;
 import org.schabi.newpipe.extractor.stream.StreamSegment;
 import org.schabi.newpipe.extractor.stream.StreamType;
@@ -235,14 +231,17 @@ public class BitchuteStreamExtractor extends StreamExtractor {
 
     @Override
     public List<AudioStream> getAudioStreams() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
     public List<VideoStream> getVideoStreams() throws ExtractionException {
         try {
-            return Collections.singletonList(new VideoStream(doc.select("#player source")
-                    .first().attr("src"), MediaFormat.M4A, "480p"));
+            String videoUrl = doc.select("#player source") .first().attr("src");
+            final String extension = videoUrl.substring(videoUrl.lastIndexOf(".") + 1);
+            final MediaFormat format = MediaFormat.getFromSuffix(extension);
+
+            return Collections.singletonList(new VideoStream(videoUrl, format, "480p"));
         } catch (Exception e) {
             throw new ParsingException("Error parsing video stream");
         }
@@ -250,7 +249,7 @@ public class BitchuteStreamExtractor extends StreamExtractor {
 
     @Override
     public List<VideoStream> getVideoOnlyStreams() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Nonnull
