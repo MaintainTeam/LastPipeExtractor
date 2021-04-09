@@ -18,6 +18,7 @@ import org.schabi.newpipe.extractor.search.InfoItemsSearchCollector;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteParserHelper;
+import org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
 import org.schabi.newpipe.extractor.stream.StreamType;
 import org.schabi.newpipe.extractor.utils.Utils;
@@ -203,8 +204,8 @@ public class BitchuteSearchExtractor extends SearchExtractor {
         }
 
         @Override
-        public long getDuration() {
-            return -1;
+        public long getDuration() throws ParsingException {
+            return YoutubeParsingHelper.parseDurationString(duration);
         }
 
         @Override
@@ -214,12 +215,12 @@ public class BitchuteSearchExtractor extends SearchExtractor {
 
         @Override
         public String getUploaderName() {
-            return null;
+            return this.uploader;
         }
 
         @Override
         public String getUploaderUrl() {
-            return null;
+            return this.uploaderUrl;
         }
 
         @Override
