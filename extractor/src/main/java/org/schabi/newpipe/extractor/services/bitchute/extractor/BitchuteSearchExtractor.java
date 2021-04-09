@@ -18,6 +18,7 @@ import org.schabi.newpipe.extractor.search.InfoItemsSearchCollector;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteParserHelper;
+import org.schabi.newpipe.extractor.services.bitchute.misc.BitchuteHelpers;
 import org.schabi.newpipe.extractor.services.bitchute.misc.BitchuteTimeAgoParser;
 import org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
@@ -116,7 +117,7 @@ public class BitchuteSearchExtractor extends SearchExtractor {
                 String desc = result.getString(jsonDescKey);
 
                 String textualDate = result.getString(jsonPublishedKey);
-                String views = result.getString(jsonViewsKey);
+                String views = BitchuteHelpers.getIntAlwaysAsString(result,jsonViewsKey);
                 String duration = result.getString(jsonDurationKey);
                 String kind = result.getString(jsonKindKey);
                 String uploader = result.getString(jsonUploaderKey);
