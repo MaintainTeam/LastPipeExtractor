@@ -6,6 +6,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.InfoItemExtractor;
+import org.schabi.newpipe.extractor.MetaInfo;
+import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.channel.ChannelInfoItemExtractor;
 import org.schabi.newpipe.extractor.downloader.Downloader;
@@ -23,6 +25,7 @@ import org.schabi.newpipe.extractor.utils.Utils;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.Nonnull;
@@ -51,15 +54,27 @@ public class BitchuteSearchExtractor extends SearchExtractor {
         return null;
     }
 
+    @Override
+    public boolean isCorrectedSearch() throws ParsingException {
+        return false; // TODO evermind: this is just to get it compiled not verified
+    }
+
+    @Nonnull
+    @Override
+    public List<MetaInfo> getMetaInfo() throws ParsingException {
+        return null; // TODO evermind: this is just to get it compiled not verified
+    }
+
     @Nonnull
     @Override
     public InfoItemsPage<InfoItem> getInitialPage() throws IOException, ExtractionException {
-        return getPage(String.format(getUrl(), String.valueOf(1)));
+        return getPage(new Page(String.format(getUrl(), String.valueOf(1))));
     }
 
     @Override
-    public InfoItemsPage<InfoItem> getPage(String pageUrl) throws IOException, ExtractionException {
-        Document document = Jsoup.parse(getDownloader().get(pageUrl,
+    public InfoItemsPage<InfoItem> getPage(Page page) throws IOException, ExtractionException {
+
+        Document document = Jsoup.parse(getDownloader().get(page.getUrl(),
                 BitchuteParserHelper.getBasicHeader()).responseBody());
 
         InfoItemsSearchCollector collector = new InfoItemsSearchCollector(getServiceId());
@@ -126,18 +141,13 @@ public class BitchuteSearchExtractor extends SearchExtractor {
                     .select(".oss-paging > strong > a").first().text());
             if (max > current) {
                 current += 1;
-                return new InfoItemsPage<>(collector, String.format(getUrl(), String.valueOf(current)));
+                return new InfoItemsPage<>(collector, new Page(String.format(getUrl(), String.valueOf(current))));
             } else {
                 return new InfoItemsPage<>(collector, null);
             }
         } catch (Exception e) {
             return new InfoItemsPage<>(collector, null);
         }
-    }
-
-    @Override
-    public String getNextPageUrl() {
-        return null;
     }
 
     private static class BitchuteQuickStreamInfoItemExtractor implements StreamInfoItemExtractor {
@@ -184,6 +194,11 @@ public class BitchuteSearchExtractor extends SearchExtractor {
         @Override
         public String getUploaderUrl() {
             return null;
+        }
+
+        @Override
+        public boolean isUploaderVerified() throws ParsingException {
+            return false; // TODO evermind: this is just to get it compiled not verified
         }
 
         @Nullable
@@ -249,6 +264,11 @@ public class BitchuteSearchExtractor extends SearchExtractor {
         @Override
         public long getStreamCount() throws ParsingException {
             return -1;
+        }
+
+        @Override
+        public boolean isVerified() throws ParsingException {
+            return false; // TODO evermind: this is just to get it compiled not verified
         }
 
         @Override

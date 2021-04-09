@@ -3,6 +3,7 @@ package org.schabi.newpipe.extractor.services.bitchute.extractor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.channel.ChannelInfoItem;
 import org.schabi.newpipe.extractor.channel.ChannelInfoItemsCollector;
@@ -51,12 +52,7 @@ public class BitchuteRecommendedChannelKioskExtractor extends KioskExtractor<Cha
     }
 
     @Override
-    public String getNextPageUrl() {
-        return "";
-    }
-
-    @Override
-    public InfoItemsPage<ChannelInfoItem> getPage(String pageUrl) {
+    public InfoItemsPage<ChannelInfoItem> getPage(Page page) throws IOException, ExtractionException {
         return null;
     }
 }

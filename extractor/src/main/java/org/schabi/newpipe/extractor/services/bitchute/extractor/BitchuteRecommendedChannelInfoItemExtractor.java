@@ -28,6 +28,11 @@ public class BitchuteRecommendedChannelInfoItemExtractor implements ChannelInfoI
     }
 
     @Override
+    public boolean isVerified() throws ParsingException {
+        return false;
+    }
+
+    @Override
     public String getName() throws ParsingException {
         try {
             return element.select(".channel-card-title").first().text();

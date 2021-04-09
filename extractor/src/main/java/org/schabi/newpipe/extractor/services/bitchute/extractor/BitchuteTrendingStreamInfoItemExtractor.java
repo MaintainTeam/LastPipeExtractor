@@ -4,7 +4,7 @@ import org.jsoup.nodes.Element;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
 import org.schabi.newpipe.extractor.localization.TimeAgoParser;
-import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeParsingHelper;
+import org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
 import org.schabi.newpipe.extractor.stream.StreamType;
 import org.schabi.newpipe.extractor.utils.Utils;
@@ -70,6 +70,11 @@ public class BitchuteTrendingStreamInfoItemExtractor implements StreamInfoItemEx
         } catch (Exception e) {
             throw new ParsingException("Error parsing uploader url");
         }
+    }
+
+    @Override
+    public boolean isUploaderVerified() throws ParsingException {
+        return false;
     }
 
     @Nullable

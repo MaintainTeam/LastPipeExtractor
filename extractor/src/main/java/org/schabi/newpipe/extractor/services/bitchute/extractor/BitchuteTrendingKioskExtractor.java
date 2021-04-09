@@ -3,6 +3,7 @@ package org.schabi.newpipe.extractor.services.bitchute.extractor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
@@ -65,12 +66,7 @@ public class BitchuteTrendingKioskExtractor extends KioskExtractor<StreamInfoIte
     }
 
     @Override
-    public String getNextPageUrl() {
-        return "";
-    }
-
-    @Override
-    public InfoItemsPage<StreamInfoItem> getPage(String pageUrl) {
+    public InfoItemsPage<StreamInfoItem> getPage(Page page) throws IOException, ExtractionException {
         return null;
     }
 }

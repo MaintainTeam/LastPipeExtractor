@@ -9,6 +9,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.channel.ChannelExtractor;
 import org.schabi.newpipe.extractor.downloader.Downloader;
@@ -83,6 +84,20 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
     }
 
     @Override
+    public String getParentChannelName() throws ParsingException { return null; }
+
+    @Override
+    public String getParentChannelUrl() throws ParsingException { return null; }
+
+    @Override
+    public String getParentChannelAvatarUrl() throws ParsingException { return null; }
+
+    @Override
+    public boolean isVerified() throws ParsingException {
+        return false;
+    }
+
+    @Override
     public long getSubscriberCount() throws ParsingException {
         try {
             return Utils.mixedNumberWordToLong(BitchuteParserHelper
@@ -103,22 +118,15 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
     }
 
     @Override
-    public InfoItemsPage<StreamInfoItem> getPage(String json)
-            throws IOException, ExtractionException {
+    public InfoItemsPage<StreamInfoItem> getPage(Page page) throws IOException, ExtractionException {
         try {
-            JsonObject jsonObject = JsonParser.object().from(json);
-            System.out.println(jsonObject);
+            JsonObject jsonObject = JsonParser.object().from(page.getUrl());
             return getInfoItemsPage(BitchuteParserHelper
                             .getExtendDocumentForUrl(getUrl(), jsonObject.getString("offset")),
                     jsonObject);
         } catch (JsonParserException e) {
             throw new ParsingException("Error parsing url json");
         }
-    }
-
-    @Override
-    public String getNextPageUrl() {
-        return null;
     }
 
     @Override
@@ -131,8 +139,7 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
         return null;
     }
 
-    private InfoItemsPage<StreamInfoItem>
-    getInfoItemsPage(Document doc, final JsonObject jsonObject) {
+    private InfoItemsPage<StreamInfoItem> getInfoItemsPage(Document doc, final JsonObject jsonObject) {
         StreamInfoItemsCollector collector = new StreamInfoItemsCollector(getServiceId());
         Elements videos = doc.select(".channel-videos-container");
         for (final Element e : videos) {
@@ -146,6 +153,11 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
                 public String getUploaderUrl() throws ParsingException {
                     return jsonObject.getString("url");
                 }
+
+                @Override
+                public boolean isUploaderVerified() throws ParsingException {
+                    return false;
+                }
             });
         }
         int offset = Integer.parseInt(jsonObject.getString("offset"));
@@ -153,6 +165,6 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
             return new InfoItemsPage<>(collector, null);
         offset += 25;
         jsonObject.put("offset", String.valueOf(offset));
-        return new InfoItemsPage<>(collector, JsonWriter.string(jsonObject));
+        return new InfoItemsPage<>(collector, new Page(JsonWriter.string(jsonObject)));
     }
 }

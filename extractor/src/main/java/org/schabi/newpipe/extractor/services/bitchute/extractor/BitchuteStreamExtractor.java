@@ -3,7 +3,11 @@ package org.schabi.newpipe.extractor.services.bitchute.extractor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.schabi.newpipe.extractor.InfoItem;
+import org.schabi.newpipe.extractor.InfoItemExtractor;
+import org.schabi.newpipe.extractor.InfoItemsCollector;
 import org.schabi.newpipe.extractor.MediaFormat;
+import org.schabi.newpipe.extractor.MetaInfo;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.downloader.Response;
@@ -17,6 +21,7 @@ import org.schabi.newpipe.extractor.stream.Description;
 import org.schabi.newpipe.extractor.stream.StreamExtractor;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemsCollector;
+import org.schabi.newpipe.extractor.stream.StreamSegment;
 import org.schabi.newpipe.extractor.stream.StreamType;
 import org.schabi.newpipe.extractor.stream.SubtitlesStream;
 import org.schabi.newpipe.extractor.stream.VideoStream;
@@ -149,17 +154,9 @@ public class BitchuteStreamExtractor extends StreamExtractor {
         return videoCount.getDislikeCount();
     }
 
+    @Nullable
     @Override
-    public StreamInfoItem getNextStream() throws ExtractionException {
-        StreamInfoItemsCollector collector = new StreamInfoItemsCollector(getServiceId());
-        collector.commit(new BitchuteStreamRelatedInfoItemExtractor(
-                getTimeAgoParser(), relatedStreamAsElements.get(0),
-                getUploaderName(), getUploaderUrl()));
-        return collector.getItems().get(0);
-    }
-
-    @Override
-    public StreamInfoItemsCollector getRelatedStreams() throws ExtractionException {
+    public StreamInfoItemsCollector getRelatedItems() throws ExtractionException {
         StreamInfoItemsCollector collector = new StreamInfoItemsCollector(getServiceId());
         for (int i = 1; i < relatedStreamAsElements.size(); i++) {
             collector.commit(new BitchuteStreamRelatedInfoItemExtractor(
@@ -190,6 +187,11 @@ public class BitchuteStreamExtractor extends StreamExtractor {
         }
     }
 
+    @Override
+    public boolean isUploaderVerified() throws ParsingException {
+        return false; // TODO evermind: this is just to get it compiled not verified
+    }
+
     @Nonnull
     @Override
     public String getUploaderAvatarUrl() throws ParsingException {
@@ -199,6 +201,24 @@ public class BitchuteStreamExtractor extends StreamExtractor {
         } catch (Exception e) {
             throw new ParsingException("Error parsing upload avatar url");
         }
+    }
+
+    @Nonnull
+    @Override
+    public String getSubChannelUrl() {
+        return ""; // TODO evermind: this is just to get it compiled not verified
+    }
+
+    @Nonnull
+    @Override
+    public String getSubChannelName() {
+        return ""; // TODO evermind: this is just to get it compiled not verified
+    }
+
+    @Nonnull
+    @Override
+    public String getSubChannelAvatarUrl() {
+        return ""; // TODO evermind: this is just to get it compiled not verified
     }
 
     @Nonnull
@@ -263,8 +283,8 @@ public class BitchuteStreamExtractor extends StreamExtractor {
 
     @Nonnull
     @Override
-    public String getPrivacy() {
-        return "";
+    public Privacy getPrivacy() {
+        return Privacy.OTHER; // TODO evermind: this is just to get it compiled not verified
     }
 
     @Nonnull
@@ -299,5 +319,17 @@ public class BitchuteStreamExtractor extends StreamExtractor {
     @Override
     public String getSupportInfo() {
         return "https://www.bitchute.com/help-us-grow/";
+    }
+
+    @Nonnull
+    @Override
+    public List<StreamSegment> getStreamSegments() throws ParsingException {
+        return null; // TODO evermind: this is just to get it compiled not verified
+    }
+
+    @Nonnull
+    @Override
+    public List<MetaInfo> getMetaInfo() throws ParsingException {
+        return null; // TODO evermind: this is just to get it compiled not verified
     }
 }
