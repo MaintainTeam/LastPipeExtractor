@@ -18,26 +18,26 @@ import org.schabi.newpipe.extractor.search.InfoItemsSearchCollector;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteParserHelper;
+import org.schabi.newpipe.extractor.services.bitchute.misc.BitchuteTimeAgoParser;
 import org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
 import org.schabi.newpipe.extractor.stream.StreamType;
 import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BitchuteSearchExtractor extends SearchExtractor {
 
+    BitchuteTimeAgoParser timeAgoParser;
 
     public BitchuteSearchExtractor(StreamingService service, SearchQueryHandler linkHandler) {
         super(service, linkHandler);
+        timeAgoParser = new BitchuteTimeAgoParser();
     }
 
     @Override
@@ -122,6 +122,13 @@ public class BitchuteSearchExtractor extends SearchExtractor {
                 String uploader = result.getString(jsonUploaderKey);
                 String uploaderUrl = BitchuteConstants.BASE_URL + result.getString(jsonUploaderUrlKey);
 
+                DateWrapper uploadDate = null;
+                try {
+                    uploadDate = timeAgoParser.parse(textualDate);
+                } catch (Exception e) {
+                    throw new ParsingException("Error Parsing Upload Date: " + e.getMessage());
+                }
+
                 switch (kind) {
                     case BitchuteConstants.KIND_CHANNEL:
                         infoItemExtractor = new BitchuteQuickChannelInfoItemExtractor(
@@ -141,7 +148,8 @@ public class BitchuteSearchExtractor extends SearchExtractor {
                                 textualDate,
                                 duration,
                                 uploader,
-                                uploaderUrl
+                                uploaderUrl,
+                                uploadDate
                         );
                 }
 
@@ -178,11 +186,12 @@ public class BitchuteSearchExtractor extends SearchExtractor {
         String duration;
         String uploader;
         String uploaderUrl;
+        DateWrapper uploadDate;
 
         public BitchuteQuickStreamInfoItemExtractor(String name, String url, String thumbUrl,
                                                     String viewCount, String textualDate,
                                                     String duration, String uploader,
-                                                    String uploaderUrl) {
+                                                    String uploaderUrl, DateWrapper uploadDate) {
             this.viewCount = viewCount;
             this.textualDate = textualDate;
             this.name = name;
@@ -191,6 +200,7 @@ public class BitchuteSearchExtractor extends SearchExtractor {
             this.duration = duration;
             this.uploader = uploader;
             this.uploaderUrl = uploaderUrl;
+            this.uploadDate = uploadDate;
         }
 
         @Override
@@ -237,14 +247,7 @@ public class BitchuteSearchExtractor extends SearchExtractor {
         @Nullable
         @Override
         public DateWrapper getUploadDate() throws ParsingException {
-            try {
-                SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(sf.parse(getTextualUploadDate().split("T")[0]));
-                return new DateWrapper(calendar);
-            } catch (Exception e) {
-                throw new ParsingException("Error Parsing Upload Date");
-            }
+            return uploadDate;
         }
 
         @Override
