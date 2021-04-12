@@ -332,12 +332,12 @@ public class BitchuteStreamExtractor extends StreamExtractor {
     @Nonnull
     @Override
     public List<StreamSegment> getStreamSegments() throws ParsingException {
-        return null; // TODO evermind: this is just to get it compiled not verified
+        return Collections.emptyList();
     }
 
     @Nonnull
     @Override
     public List<MetaInfo> getMetaInfo() throws ParsingException {
-        return null; // TODO evermind: this is just to get it compiled not verified
+        return Collections.emptyList();
     }
 }
