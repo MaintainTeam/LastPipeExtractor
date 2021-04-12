@@ -28,8 +28,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,6 +41,9 @@ public class BitchuteStreamExtractor extends StreamExtractor {
     private Document doc;
     private BitchuteParserHelper.VideoCount videoCount;
     private Elements relatedStreamAsElements;
+    private Map<String,Integer> agemap = new HashMap() {{
+        put("Normal - Content that is suitable for ages 16 and over", 16);
+    }};
 
     public BitchuteStreamExtractor(StreamingService service, LinkHandler linkHandler) {
         super(service, linkHandler);
@@ -121,8 +126,12 @@ public class BitchuteStreamExtractor extends StreamExtractor {
     }
 
     @Override
-    public int getAgeLimit() {
-        return 16;
+    public int getAgeLimit() throws ParsingException {
+        try {
+            return agemap.get(doc.select("#video-description + table tbody  td:nth-child(2) > a").get(1).text());
+        } catch (Exception e) {
+            throw new ParsingException("Error parsing age limit");
+        }
     }
 
     @Override
