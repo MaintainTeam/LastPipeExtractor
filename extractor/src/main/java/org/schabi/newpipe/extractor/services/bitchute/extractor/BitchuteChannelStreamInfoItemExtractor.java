@@ -3,6 +3,7 @@ package org.schabi.newpipe.extractor.services.bitchute.extractor;
 import org.jsoup.nodes.Element;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
+import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
 import org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
 import org.schabi.newpipe.extractor.stream.StreamType;
@@ -56,10 +57,10 @@ public abstract class BitchuteChannelStreamInfoItemExtractor implements StreamIn
 
         Date date;
         try {
-            SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy");
+            SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy", BitchuteConstants.BITCHUTE_LOCALE);
             date = df.parse(getTextualUploadDate());
         } catch (ParseException e) {
-            throw new ParsingException("Couldn't parse date");
+            throw new ParsingException("Couldn't parse date:" + getTextualUploadDate());
         }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
