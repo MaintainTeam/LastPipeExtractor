@@ -21,11 +21,16 @@ public class BitchuteSuggestionExtractor extends SuggestionExtractor {
 
     @Override
     public List<String> suggestionList(String query) {
+        /*
         try {
             Response response = NewPipe.getDownloader().get(AUTOCOMPLETE_URL + query);
             return Arrays.asList(response.responseBody().split("\n", 0));
         } catch (Exception e) {
             return Collections.emptyList();
         }
+
+         */
+        // there is no support for autosuggestion for Bitchute atm. 20210412
+        return Collections.emptyList();
     }
 }
