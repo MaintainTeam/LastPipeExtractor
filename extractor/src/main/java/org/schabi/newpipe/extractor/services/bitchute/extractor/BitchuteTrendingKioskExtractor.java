@@ -50,14 +50,14 @@ public class BitchuteTrendingKioskExtractor extends KioskExtractor<StreamInfoIte
         String selector;
         switch (getId()) {
             case TRENDING_MONTH:
-                selector = "#trending-month  div.video-trending-container";
+                selector = "#trending-month div.video-result-container";
                 break;
             case TRENDING_WEEK:
-                selector = "#trending-week  div.video-trending-container";
+                selector = "#trending-week div.video-result-container";
                 break;
             case TRENDING_DAY:
             default:
-                selector = "#trending-day  div.video-trending-container";
+                selector = "#trending-day div.video-result-container";
         }
         for (final Element e : doc.select(selector)) {
             collector.commit(new BitchuteTrendingStreamInfoItemExtractor(getTimeAgoParser(), e));
