@@ -12,6 +12,7 @@ import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
+import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteParserHelper;
 import org.schabi.newpipe.extractor.stream.AudioStream;
 import org.schabi.newpipe.extractor.stream.Description;
@@ -85,22 +86,23 @@ public class BitchuteStreamExtractor extends StreamExtractor {
     @Nullable
     @Override
     public DateWrapper getUploadDate() throws ParsingException {
+        int in = getTextualUploadDate().indexOf("on");
+        in += 2;
+        String textualDate = getTextualUploadDate().substring(in)
+                .replaceAll("(?<=\\d)(st|nd|rd|th)", "").trim();
         try {
-            int in = getTextualUploadDate().indexOf("on");
-            in += 2;
             Date date;
             try {
-                SimpleDateFormat df = new SimpleDateFormat("MMM d, yyyy.");
-                date = df.parse(getTextualUploadDate().substring(in)
-                        .replaceAll("(?<=\\d)(st|nd|rd|th)", "").trim());
+                SimpleDateFormat df = new SimpleDateFormat("MMM d, yyyy.", BitchuteConstants.BITCHUTE_LOCALE);
+                date = df.parse(textualDate);
             } catch (ParseException e) {
-                throw new ParsingException("Couldn't parse Date");
+                throw new ParsingException("Couldn't parse Date: " + textualDate);
             }
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
             return new DateWrapper(calendar);
         } catch (Exception e) {
-            throw new ParsingException("Error parsing upload date");
+            throw new ParsingException("Error parsing upload date: " +  textualDate);
         }
     }
 
