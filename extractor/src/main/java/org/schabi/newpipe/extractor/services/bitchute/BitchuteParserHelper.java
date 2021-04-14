@@ -77,17 +77,13 @@ public class BitchuteParserHelper {
         if (!isInitDone()) {
             init();
         }
-        System.out.println("Seeeeeeeeeeee");
-        System.out.println(channelID);
+
         byte[] data = String.format("csrfmiddlewaretoken=%s", csrfToken).getBytes(StandardCharsets.UTF_8);
         Response response = getDownloader().post(
                 String.format("https://www.bitchute.com/channel/%s/counts/", channelID),
                 getPostHeader(data.length),
                 data
         );
-
-
-        System.out.println(response.responseBody());
 
         try {
             JsonObject jsonObject = JsonParser.object().from(response.responseBody());

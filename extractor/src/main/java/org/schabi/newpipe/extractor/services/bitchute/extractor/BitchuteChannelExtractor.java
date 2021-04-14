@@ -17,20 +17,20 @@ import org.schabi.newpipe.extractor.downloader.Response;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler;
+import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteParserHelper;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemsCollector;
 import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 import javax.annotation.Nonnull;
 
 public class BitchuteChannelExtractor extends ChannelExtractor {
     private Document doc;
     private String channelName;
-    private String channelUrl;
+    private String avatarUrl;
 
     public BitchuteChannelExtractor(StreamingService service, ListLinkHandler linkHandler) {
         super(service, linkHandler);
@@ -44,8 +44,10 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
         doc = Jsoup.parse(response.responseBody(), getUrl());
     }
 
-    private String getChannelID() throws ParsingException, MalformedURLException {
-        return Utils.stringToURL(getAvatarUrl()).getPath().split("/", 0)[3];
+    private String getChannelID() {
+        String canonicalUrl = doc.getElementById("canonical").attr("href");
+        String[] urlSegments = canonicalUrl.split("/");
+        return urlSegments[urlSegments.length-1];
     }
 
     @Nonnull
@@ -64,11 +66,14 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
     @Override
     public String getAvatarUrl() throws ParsingException {
         try {
-            if (channelUrl == null) {
-                channelUrl = doc.select("#page-bar > div > div > div.image-container > a > img")
+            if (avatarUrl == null) {
+                avatarUrl = doc.select("#page-bar > div > div > div.image-container > a > img")
                         .first().attr("data-src");
+                if ( avatarUrl.startsWith("/")) {
+                    avatarUrl = BitchuteConstants.BASE_URL + avatarUrl;
+                }
             }
-            return channelUrl;
+            return avatarUrl;
         } catch (Exception e) {
             throw new ParsingException("Error parsing Channel Avatar Url");
         }
