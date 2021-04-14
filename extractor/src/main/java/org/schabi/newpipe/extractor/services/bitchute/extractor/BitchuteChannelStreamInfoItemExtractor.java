@@ -83,4 +83,29 @@ public abstract class BitchuteChannelStreamInfoItemExtractor implements StreamIn
         return element.select("div.channel-videos-image > img").first()
                 .absUrl("data-src");
     }
+
+    @Override
+    /**
+     * create a json object. Basically this is useful for compact unit testing or exporting the data
+     */
+    public String toString() {
+        try {
+            return "{" +
+                    "\"streamType\": \"" + getStreamType().toString() +
+                    "\", \"isAd\": \"" + isAd() +
+                    "\", \"duration\": \"" + getDuration() +
+                    "\", \"viewCount\": \"" + getViewCount() +
+                    "\", \"uploadDate\": \"" + getUploadDate().offsetDateTime().toString() +
+                    "\", \"uploaderName\": \"" + getUploaderName() +
+                    "\", \"uploaderUrl\": \"" + getUploaderUrl() +
+                    "\", \"name\": \"" + getName() +
+                    "\", \"url\": \"" + getUrl() +
+                    "\", \"thumbnailUrl\": \"" + getThumbnailUrl() +
+                    "\", \"isUploaderVerified\": \"" + isUploaderVerified() +
+                    "\"}";
+        } catch (ParsingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
