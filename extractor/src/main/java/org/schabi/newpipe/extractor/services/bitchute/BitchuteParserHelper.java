@@ -80,7 +80,7 @@ public class BitchuteParserHelper {
 
         byte[] data = String.format("csrfmiddlewaretoken=%s", csrfToken).getBytes(StandardCharsets.UTF_8);
         Response response = getDownloader().post(
-                String.format("https://www.bitchute.com/channel/%s/counts/", channelID),
+                String.format(BitchuteConstants.BASE_URL_CHANNEL + "/%s/counts/", channelID),
                 getPostHeader(data.length),
                 data
         );
