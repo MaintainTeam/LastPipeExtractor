@@ -101,7 +101,7 @@ public class BitchuteParserHelper {
 
         byte[] data = String.format("csrfmiddlewaretoken=%s", csrfToken).getBytes(StandardCharsets.UTF_8);
         Response response = getDownloader().post(
-                String.format("https://www.bitchute.com/video/%s/counts/", streamID),
+                String.format(BitchuteConstants.BASE_URL_VIDEO + "/%s/counts/", streamID),
                 getPostHeader(data.length),
                 data
         );

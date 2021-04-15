@@ -2,6 +2,7 @@ package org.schabi.newpipe.extractor.services.bitchute.linkHandler;
 
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandlerFactory;
+import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
 import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.net.MalformedURLException;
@@ -16,7 +17,6 @@ public class BitchuteStreamLinkHandlerFactory extends LinkHandlerFactory {
     }
 
     private static String assertsID(String id) throws ParsingException {
-        System.out.println("assertID: " + id + "\n");
         if (id == null || !id.matches("[a-zA-Z0-9_-]{11,}")) {
             throw new ParsingException("Given string is not a Bitchute Video ID");
         }
@@ -25,7 +25,7 @@ public class BitchuteStreamLinkHandlerFactory extends LinkHandlerFactory {
 
     @Override
     public String getUrl(String id) {
-        return "https://www.bitchute.com/video/" + id;
+        return BitchuteConstants.BASE_URL_VIDEO + "/" + id;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class BitchuteStreamLinkHandlerFactory extends LinkHandlerFactory {
 
         try {
             String[] splitPath = path.split("/", 0);
-            if (splitPath[0].equalsIgnoreCase("video"))
+            if (splitPath[0].equalsIgnoreCase("video") || splitPath[0].equalsIgnoreCase("embed"))
                 return assertsID(splitPath[1]);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new ParsingException("Error getting ID");
