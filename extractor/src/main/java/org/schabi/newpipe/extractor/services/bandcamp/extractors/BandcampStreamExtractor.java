@@ -16,6 +16,7 @@ import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
+import org.schabi.newpipe.extractor.playlist.PlaylistInfoItemsCollector;
 import org.schabi.newpipe.extractor.stream.*;
 import org.schabi.newpipe.extractor.utils.JsonUtils;
 import org.schabi.newpipe.extractor.utils.Utils;
@@ -245,8 +246,17 @@ public class BandcampStreamExtractor extends StreamExtractor {
     }
 
     @Override
-    public StreamInfoItemsCollector getRelatedItems() {
-        return null;
+    public PlaylistInfoItemsCollector getRelatedItems() {
+
+        PlaylistInfoItemsCollector collector = new PlaylistInfoItemsCollector(getServiceId());
+
+        Elements recommendedAlbums = document.getElementsByClass("recommended-album");
+
+        for (Element album : recommendedAlbums) {
+            collector.commit(new BandcampRelatedPlaylistInfoItemExtractor(album));
+        }
+
+        return collector;
     }
 
     @Override
@@ -281,7 +291,9 @@ public class BandcampStreamExtractor extends StreamExtractor {
 
         int license = current.getInt("license_type");
 
-        // Tests resulted in this mapping of ints to licence: https://cloud.disroot.org/s/ZTWBxbQ9fKRmRWJ/preview
+        /* Tests resulted in this mapping of ints to licence: https://cloud.disroot.org/s/ZTWBxbQ9fKRmRWJ/preview
+         * (screenshot from a Bandcamp artist's account)
+         */
 
         switch (license) {
             case 1:

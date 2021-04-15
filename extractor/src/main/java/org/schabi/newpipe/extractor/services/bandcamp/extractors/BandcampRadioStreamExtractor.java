@@ -1,5 +1,6 @@
 package org.schabi.newpipe.extractor.services.bandcamp.extractors;
 
+import com.grack.nanojson.JsonArray;
 import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonParser;
 import com.grack.nanojson.JsonParserException;
@@ -13,8 +14,10 @@ import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.exceptions.ReCaptchaException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
+import org.schabi.newpipe.extractor.playlist.PlaylistInfoItemsCollector;
 import org.schabi.newpipe.extractor.stream.AudioStream;
 import org.schabi.newpipe.extractor.stream.Description;
+import org.schabi.newpipe.extractor.stream.StreamSegment;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,7 +54,10 @@ public class BandcampRadioStreamExtractor extends BandcampStreamExtractor {
     @Nonnull
     @Override
     public String getName() throws ParsingException {
-        return showInfo.getString("subtitle"); // "audio_title" is a boring title
+        /* Select "subtitle" and not "audio_title", as the latter would cause a lot of
+         * items to show the same title, e.g. "Bandcamp Weekly".
+         */
+        return showInfo.getString("subtitle");
     }
 
     @Nonnull
@@ -125,6 +131,23 @@ public class BandcampRadioStreamExtractor extends BandcampStreamExtractor {
 
     @Nonnull
     @Override
+    public List<StreamSegment> getStreamSegments() throws ParsingException {
+        final JsonArray tracks = showInfo.getArray("tracks");
+        final List<StreamSegment> segments = new ArrayList<>(tracks.size());
+        for (final Object t : tracks) {
+            final JsonObject track = (JsonObject) t;
+            final StreamSegment segment = new StreamSegment(
+                    track.getString("title"), track.getInt("timecode"));
+            // "track art" is the track's album cover
+            segment.setPreviewUrl(getImageUrl(track.getLong("track_art_id"), true));
+            segment.setChannelName(track.getString("artist"));
+            segments.add(segment);
+        }
+        return segments;
+    }
+
+    @Nonnull
+    @Override
     public String getLicence() {
         return "";
     }
@@ -145,5 +168,11 @@ public class BandcampRadioStreamExtractor extends BandcampStreamExtractor {
     @Override
     public Privacy getPrivacy() {
         return Privacy.PUBLIC;
+    }
+
+    @Override
+    public PlaylistInfoItemsCollector getRelatedItems() {
+        // Contrary to other Bandcamp streams, radio streams don't have related items
+        return null;
     }
 }
