@@ -1,0 +1,50 @@
+{
+  "request": {
+    "httpMethod": "GET",
+    "url": "https://rumble.com/embedJS/u3/?request\u003dvideo\u0026ver\u003d2\u0026v\u003dvd7ojp",
+    "headers": {
+      "Accept-Language": [
+        "en-GB, en;q\u003d0.9"
+      ]
+    },
+    "localization": {
+      "languageCode": "en",
+      "countryCode": "GB"
+    }
+  },
+  "response": {
+    "responseCode": 200,
+    "responseMessage": "OK",
+    "responseHeaders": {
+      "access-control-allow-origin": [
+        "*"
+      ],
+      "connection": [
+        "keep-alive"
+      ],
+      "content-type": [
+        "application/json"
+      ],
+      "date": [
+        "Mon, 26 Apr 2021 14:48:30 GMT"
+      ],
+      "link": [
+        "\u003chttps://rumble.com/vftupt-governor-ron-desantis-signs-hallmark-anti-riot-legislation-in-florida-41920.html\u003e; rel\u003d\"canonical\""
+      ],
+      "server": [
+        "nginx"
+      ],
+      "strict-transport-security": [
+        "max-age\u003d31536000;includeSubDomains;preload"
+      ],
+      "transfer-encoding": [
+        "chunked"
+      ],
+      "vary": [
+        "Accept-Encoding"
+      ]
+    },
+    "responseBody": "{\"fps\":60,\"w\":1920,\"h\":1080,\"u\":{\"mp4\":{\"url\":\"https://sp.rmbl.ws/s8/2/b/_/A/L/b_ALb.caa.1.mp4\",\"meta\":{\"bitrate\":820,\"size\":198814495,\"w\":854,\"h\":480}},\"webm\":{\"url\":\"https://sp.rmbl.ws/s8/2/b/_/A/L/b_ALb.daa.1.webm\",\"meta\":{\"bitrate\":817,\"size\":197899346,\"w\":854,\"h\":480}}},\"ua\":{\"mp4\":{\"360\":{\"url\":\"https://sp.rmbl.ws/s8/2/b/_/A/L/b_ALb.baa.1.mp4\",\"meta\":{\"bitrate\":639,\"size\":154845482,\"w\":640,\"h\":360}},\"480\":{\"url\":\"https://sp.rmbl.ws/s8/2/b/_/A/L/b_ALb.caa.1.mp4\",\"meta\":{\"bitrate\":820,\"size\":198814495,\"w\":854,\"h\":480}},\"1080\":{\"url\":\"https://sp.rmbl.ws/s8/2/b/_/A/L/b_ALb.haa.1.mp4\",\"meta\":{\"bitrate\":2704,\"size\":655071493,\"w\":1920,\"h\":1080}},\"240\":{\"url\":\"https://sp.rmbl.ws/s8/2/b/_/A/L/b_ALb.oaa.1.mp4\",\"meta\":{\"bitrate\":203,\"size\":49314510,\"w\":640,\"h\":360}}},\"webm\":{\"480\":{\"url\":\"https://sp.rmbl.ws/s8/2/b/_/A/L/b_ALb.daa.1.webm\",\"meta\":{\"bitrate\":817,\"size\":197899346,\"w\":854,\"h\":480}}}},\"i\":\"https://i.rmbl.ws/s8/1/b/_/A/L/b_ALb.OvCc-small-Governor-Ron-DeSantis-Signs.jpg\",\"t\":[{\"i\":\"https://i.rmbl.ws/s8/1/b/_/A/L/b_ALb.OvCc-small-Governor-Ron-DeSantis-Signs.jpg\",\"w\":640,\"h\":360},{\"i\":\"https://i.rmbl.ws/s8/1/b/_/A/L/b_ALb.adyb-small-Governor-Ron-DeSantis-Signs.jpg\",\"w\":360,\"h\":640}],\"evt\":{\"v\":\"/l/view...d7ojp.sqvl50\",\"e\":\"/l/pte...d7ojp.lskflm\",\"wt\":0,\"t\":\"/l/timeline...d7ojp.1ht.uyjpf6\"},\"cc\":[],\"l\":\"/vftupt-governor-ron-desantis-signs-hallmark-anti-riot-legislation-in-florida-41920.html\",\"r\":1,\"title\":\"Governor Ron DeSantis Signs Hallmark Anti-Riot Legislation in Florida 4/19/2021\",\"author\":{\"name\":\"Ron DeSantis\",\"url\":\"https://rumble.com/c/GovRonDeSantis\"},\"player\":false,\"duration\":1937,\"pubDate\":\"2021-04-19T19:11:31+00:00\",\"loaded\":1,\"vid\":22193413,\"timeline\":[0,0],\"own\":false,\"mod\":[],\"restrict\":[-3,0],\"autoplay\":0,\"track\":0,\"live\":0,\"a\":{\"timeout\":-1,\"u\":\"3\",\"aden\":[1,0,1],\"ov\":false,\"ads\":[],\"a\":\".3.k33h9.d7ojp.c.iq.cms7io\",\"ae\":\".3.k33h9.d7ojp.c.iq.6v73xh\",\"ap\":[false,0],\"loop\":[]}}",
+    "latestUrl": "https://rumble.com/embedJS/u3/?request\u003dvideo\u0026ver\u003d2\u0026v\u003dvd7ojp"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "request": {
+    "httpMethod": "GET",
+    "url": "https://rumble.com/embedJS/u3/?request\u003dvideo\u0026ver\u003d2\u0026v\u003dvdlb0f",
+    "headers": {
+      "Accept-Language": [
+        "en-GB, en;q\u003d0.9"
+      ]
+    },
+    "localization": {
+      "languageCode": "en",
+      "countryCode": "GB"
+    }
+  },
+  "response": {
+    "responseCode": 200,
+    "responseMessage": "OK",
+    "responseHeaders": {
+      "access-control-allow-origin": [
+        "*"
+      ],
+      "connection": [
+        "keep-alive"
+      ],
+      "content-type": [
+        "application/json"
+      ],
+      "date": [
+        "Wed, 28 Apr 2021 14:34:30 GMT"
+      ],
+      "link": [
+        "\u003chttps://rumble.com/vg7h6j-ep-2422-9am-ukrainians-used-by-fbi-to-spy-on-americans-fisa-warrants-issued.html\u003e; rel\u003d\"canonical\""
+      ],
+      "server": [
+        "nginx"
+      ],
+      "strict-transport-security": [
+        "max-age\u003d31536000;includeSubDomains;preload"
+      ],
+      "transfer-encoding": [
+        "chunked"
+      ],
+      "vary": [
+        "Accept-Encoding"
+      ]
+    },
+    "responseBody": "{\"fps\":29.97,\"w\":1920,\"h\":1080,\"u\":{\"hls\":{\"url\":\"https://live-c348a30.rmbl.ws/slot-7/ngrp:x0ma-ihia_all/playlist.m3u8\",\"meta\":{\"live\":true}}},\"ua\":{\"mp4\":[],\"webm\":[],\"hls\":{\"auto\":{\"url\":\"https://live-c348a30.rmbl.ws/slot-7/ngrp:x0ma-ihia_all/playlist.m3u8\",\"meta\":{\"live\":true}}}},\"i\":\"https://i.rmbl.ws/s8/1/7/k/2/N/7k2Nb.OvCc-small-EP-2422-9AM-UKRAINIANS-USED.jpg\",\"t\":[{\"i\":\"https://i.rmbl.ws/s8/1/7/k/2/N/7k2Nb.OvCc-small-EP-2422-9AM-UKRAINIANS-USED.jpg\",\"w\":640,\"h\":360},{\"i\":\"https://i.rmbl.ws/s8/1/7/k/2/N/7k2Nb.adyb-small-EP-2422-9AM-UKRAINIANS-USED.jpg\",\"w\":360,\"h\":640}],\"evt\":{\"v\":\"/l/view...dlb0f.gt2vix\",\"e\":\"/l/pte...dlb0f.w05cli\",\"wt\":0,\"t\":\"/l/timeline...dlb0f.59.w22rz2\"},\"cc\":[],\"l\":\"/vg7h6j-ep-2422-9am-ukrainians-used-by-fbi-to-spy-on-americans-fisa-warrants-issued.html\",\"r\":1,\"title\":\"EP 2422-9AM UKRAINIANS USED BY FBI TO SPY ON AMERICANS?  FISA Warrants Issued MONTHS Before Jan 6th\",\"author\":{\"name\":\"The Pete Santilli Show - LIVE Channel\",\"url\":\"https://rumble.com/c/PeteLive\"},\"player\":false,\"duration\":59,\"pubDate\":\"2021-04-28T12:07:24+00:00\",\"loaded\":1,\"vid\":22829055,\"timeline\":[0,0],\"own\":false,\"mod\":[],\"restrict\":[-3,0],\"autoplay\":0,\"track\":0,\"live\":2,\"a\":{\"timeout\":-1,\"u\":\"3\",\"aden\":[1,0,1],\"ov\":false,\"ads\":[{\"timecode\":0,\"linear\":1,\"type\":\"video\",\"autoplay\":0,\"waterfall\":[{\"url\":\"https://pubads.g.doubleclick.net/gampad/ads?sz\u003d[dfpsz]\u0026iu\u003d/101598325/Rumble_Tracking_Premium\u0026cust_params\u003dpubuid%3D3%26playerWidth%3D[w]%26playerHeight%3D[h]%26ip%3D80.136.177.194%26ua%3DMozilla%2F5.0+%28Windows+NT+10.0%3B+rv%3A78.0%29+Gecko%2F20100101+Firefox%2F78.0%26ownVideo%3D%26enOl%3D0%26fullslot%3D1%26enFs%3D1%26enFb%3D1%26fbPlacement%3D358719497878746_398918750525487\u0026impl\u003ds\u0026gdfp_req\u003d1\u0026env\u003dvp\u0026output\u003dvast\u0026unviewed_position_start\u003d1\u0026url\u003dhttps%3A%2F%2Frumble.com%2FembedJS%2Fu3%2F%3Frequest%3Dvideo%26ver%3D2%26v%3Dvdlb0f\u0026description_url\u003dhttps%3A%2F%2Frumble.com%2Fvg7h6j-ep-2422-9am-ukrainians-used-by-fbi-to-spy-on-americans-fisa-warrants-issued.html\u0026correlator\u003d1619620470[gdpr:\u0026npa\u003d1,,]\",\"sys\":12,\"autoplay\":0},{\"url\":\"https://pubads.g.doubleclick.net/gampad/ads?sz\u003d[dfpsz]\u0026iu\u003d/101598325/Rumble_Tracking_Remnant\u0026cust_params\u003dpubuid%3D3%26playerWidth%3D[w]%26playerHeight%3D[h]%26ip%3D80.136.177.194%26ua%3DMozilla%2F5.0+%28Windows+NT+10.0%3B+rv%3A78.0%29+Gecko%2F20100101+Firefox%2F78.0%26ownVideo%3D%26enOl%3D0%26fullslot%3D1%26enFs%3D1%26enFb%3D1%26fbPlacement%3D358719497878746_398918750525487\u0026impl\u003ds\u0026gdfp_req\u003d1\u0026env\u003dvp\u0026output\u003dvast\u0026unviewed_position_start\u003d1\u0026url\u003dhttps%3A%2F%2Frumble.com%2FembedJS%2Fu3%2F%3Frequest%3Dvideo%26ver%3D2%26v%3Dvdlb0f\u0026description_url\u003dhttps%3A%2F%2Frumble.com%2Fvg7h6j-ep-2422-9am-ukrainians-used-by-fbi-to-spy-on-americans-fisa-warrants-issued.html\u0026correlator\u003d1619620470[gdpr:\u0026npa\u003d1,,]\",\"sys\":12,\"autoplay\":0}]}],\"a\":\".3.24ns9.dlb0f.c.h6.6uduor\",\"ae\":\".3.24ns9.dlb0f.c.h6.1bsknix\",\"ap\":[false,0],\"loop\":[]}}",
+    "latestUrl": "https://rumble.com/embedJS/u3/?request\u003dvideo\u0026ver\u003d2\u0026v\u003dvdlb0f"
+  }
+}
