@@ -5,6 +5,7 @@ import org.jsoup.nodes.Node;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
 import org.schabi.newpipe.extractor.localization.TimeAgoParser;
+import org.schabi.newpipe.extractor.services.rumble.RumbleParsingHelper;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
 import org.schabi.newpipe.extractor.stream.StreamType;
 
@@ -47,8 +48,8 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
     public long getDuration() throws ParsingException {
         try {
 
-            String data = ""; // TODO
-            long duration = -1; // TODO
+            String data = element.select("small.medialist-duration").first().text();
+            long duration = RumbleParsingHelper.parseDurationString(data);
             return duration;
         } catch (Exception e) {
             throw new ParsingException("Error parsing duration");
@@ -57,12 +58,12 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
 
     @Override
     public long getViewCount() throws ParsingException {
-        return -1; // TODO
+        return -1; // there is nothing we could extract the data from
     }
 
     @Override
     public String getUploaderName() {
-        String res = ""; // TODO
+        String res = element.select("h4.mediaList-by-heading").first().text();
 
         return res;
     }
@@ -93,7 +94,7 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
     public String getName() throws ParsingException {
 
         try {
-            String title = ""; // TODO
+            String title = element.select("h3.mediaList-heading").first().text();
             return title;
         } catch (Exception e) {
             throw new ParsingException("Error parsing Stream title");
@@ -103,7 +104,7 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
     @Override
     public String getUrl() throws ParsingException {
         try {
-            String url = ""; // TODO
+            String url = element.select("a.mediaList-link").first().absUrl("href");
             return url;
         } catch (Exception e) {
             throw new ParsingException("Error parsing Stream url");
@@ -113,7 +114,7 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
     @Override
     public String getThumbnailUrl() throws ParsingException {
         try {
-            String thumbUrl = ""; // TODO
+            String thumbUrl = element.select("img.mediaList-image").first().attr("src");
             return thumbUrl;
         } catch (Exception e) {
             throw new ParsingException("Error parsing thumbnail url");
