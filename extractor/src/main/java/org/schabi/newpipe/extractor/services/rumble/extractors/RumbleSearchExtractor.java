@@ -118,17 +118,23 @@ public class RumbleSearchExtractor extends SearchExtractor {
 
 
         Page nextPage = null;
+        boolean hasMorePages = true; // initialze with true
 
         // check if there is a next page
         if (elements.size() > 0) { // if .size() is 0 than we have no results at all -> assume no more pages
             String currentPageStrNumber = doc.getElementsByClass("paginator--link--current").attr("aria-label");
-            int currentPageNumber = Integer.parseInt(currentPageStrNumber);
-
-            // check if we are on the last page of available search results
-            int currentPageIsLastPageIfGreaterThanZero = doc.getElementsByClass("paginator--link").last().getElementsByClass("paginator--link paginator--link--current").size();
-            boolean hasMorePages = (currentPageIsLastPageIfGreaterThanZero > 0 ) ? false : true;
+            if (currentPageStrNumber.isEmpty()) {
+                hasMorePages = false;
+            } else {
+                // check if we are on the last page of available search results
+                int currentPageIsLastPageIfGreaterThanZero =
+                        doc.getElementsByClass("paginator--link").last()
+                                .getElementsByClass("paginator--link paginator--link--current").size();
+                hasMorePages = (currentPageIsLastPageIfGreaterThanZero > 0 ) ? false : true;
+            }
 
             if (hasMorePages) {
+                int currentPageNumber = Integer.parseInt(currentPageStrNumber);
                 nextPage = new Page(getUrl()+ "&page=" + ++currentPageNumber);
             }
         }
