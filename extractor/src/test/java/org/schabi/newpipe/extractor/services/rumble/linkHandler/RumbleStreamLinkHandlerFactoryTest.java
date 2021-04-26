@@ -7,6 +7,7 @@ import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -25,7 +26,7 @@ public class RumbleStreamLinkHandlerFactoryTest {
     @Test
     public void getId() throws Exception {
         String correctIdExpectSuccess = "vdofb7";
-        String tooShortIdExpectError = "vdofb";
+        String tooShortIdExpectError = "vdof";
         String tooLongIdExpectError = "vdofb34";
         String noIdExpectError = "";
 
@@ -63,6 +64,20 @@ public class RumbleStreamLinkHandlerFactoryTest {
             ParsingException what = assertThrows(ParsingException.class, () -> linkHandler.fromUrl(testUrl).getId());
             assertTrue(what instanceof ParsingException);
         }
+
+        String[] invalidVideoUrls = {
+                "https://pumble.com",
+                "https://sumble.com/vdofb7",
+                "https://rumble.com",
+                "https://rumble.com/",
+                "https://rumble.com/category/v23",
+                "https://rumble.com/category/v23/"
+        };
+
+        for (String invalidVideoUrl : invalidVideoUrls) {
+            assertThrows("This URL is invalid: " + invalidVideoUrl, ParsingException.class,
+                    () -> linkHandler.getId(invalidVideoUrl));
+        }
     }
 
     @Test
@@ -83,10 +98,12 @@ public class RumbleStreamLinkHandlerFactoryTest {
 
     @Test
     public void testAcceptUrl() throws ParsingException {
-        String inputVideoUrl = "https://rumble.com/vdofb7";
-        //String inputEmbedUrl = "https://www.rumble.com/embed/8gwdyYJ8BUk/";
+        String validShortVideoUrl = "https://rumble.com/vdofb7";
+        String validLongVideoUrl = "https://rumble.com/vg1hkl-youtube-ceo-wins-major-award-and-you-wont-believe-for-what.html";
+        String validWithCategoryVideoUrl = "https://rumble.com/sports/v1850-teeterboard-training-for-cirque-du-soleil.html";
 
-        assertTrue(linkHandler.acceptUrl(inputVideoUrl));
-        //assertTrue(linkHandler.acceptUrl(inputEmbedUrl));
+        assertTrue(linkHandler.acceptUrl(validShortVideoUrl));
+        assertTrue(linkHandler.acceptUrl(validLongVideoUrl));
+        assertTrue(linkHandler.acceptUrl(validWithCategoryVideoUrl));
     }
 }

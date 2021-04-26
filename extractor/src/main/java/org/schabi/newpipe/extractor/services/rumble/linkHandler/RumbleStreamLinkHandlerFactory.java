@@ -12,6 +12,7 @@ public class RumbleStreamLinkHandlerFactory extends LinkHandlerFactory {
     private static final RumbleStreamLinkHandlerFactory instance = new RumbleStreamLinkHandlerFactory();
 
     String BASE_URL = "https://rumble.com";
+    private String patternMatchId = "^v[a-zA-Z0-9_-]{4,5}";
 
     private RumbleStreamLinkHandlerFactory() {
     }
@@ -21,38 +22,41 @@ public class RumbleStreamLinkHandlerFactory extends LinkHandlerFactory {
     }
 
     private String assertsID(String id) throws ParsingException {
-        if (id == null || !id.matches("v[a-zA-Z0-9_-]{5}")) {
+        if (id == null || !id.matches(patternMatchId)) {
             throw new ParsingException("Given string is not a Rumble Video ID");
         }
         return id;
     }
 
     @Override
-    public String getUrl(String id) {
-        return BASE_URL + "/" + id;
+    public String getUrl(String id) throws ParsingException {
+        return BASE_URL + "/" + assertsID(id);
     }
 
-    public String getId(String urlString) throws ParsingException, IllegalArgumentException {
+    @Override
+    public String getId(String urlString) throws ParsingException {
         URL url;
         try {
             url = Utils.stringToURL(urlString);
+            if (!url.getAuthority().equals(Utils.stringToURL(BASE_URL).getAuthority())
+                    || !url.getProtocol().equals(Utils.stringToURL(BASE_URL).getProtocol())) {
+                throw new MalformedURLException();
+            }
         } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("The given URL is not valid");
+            throw new ParsingException("The given URL is not valid: " + urlString);
         }
 
         String path = url.getPath();
 
-        if (!path.isEmpty()) {
-            //remove leading "/"
-            path = path.substring(1);
-        }
-
         try {
+            path = path.substring(path.lastIndexOf("/") + 1);
+
             String[] splitPath = path.split("-", 0);
             path = splitPath[0];
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new ParsingException("Error getting ID");
         }
+
         return assertsID(path);
     }
 
