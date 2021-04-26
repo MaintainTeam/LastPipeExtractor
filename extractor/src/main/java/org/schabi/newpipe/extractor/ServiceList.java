@@ -4,6 +4,7 @@ import org.schabi.newpipe.extractor.services.bitchute.BitchuteService;
 import org.schabi.newpipe.extractor.services.bandcamp.BandcampService;
 import org.schabi.newpipe.extractor.services.media_ccc.MediaCCCService;
 import org.schabi.newpipe.extractor.services.peertube.PeertubeService;
+import org.schabi.newpipe.extractor.services.rumble.RumbleService;
 import org.schabi.newpipe.extractor.services.soundcloud.SoundcloudService;
 import org.schabi.newpipe.extractor.services.youtube.YoutubeService;
 
@@ -43,6 +44,7 @@ public final class ServiceList {
     public static final PeertubeService PeerTube;
     public static final BandcampService Bandcamp;
     public static final BitchuteService Bitchute;
+    public static final RumbleService Rumble;
 
     /**
      * When creating a new service, put this service in the end of this list,
@@ -55,7 +57,8 @@ public final class ServiceList {
                     MediaCCC = new MediaCCCService(2),
                     PeerTube = new PeertubeService(3),
                     Bandcamp = new BandcampService(4),
-                    Bitchute = new BitchuteService(5)
+                    Bitchute = new BitchuteService(5),
+                    Rumble = new RumbleService(6)
             ));
 
     /**
