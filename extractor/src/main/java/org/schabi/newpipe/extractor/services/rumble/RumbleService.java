@@ -106,6 +106,7 @@ public class RumbleService extends StreamingService {
                 list.addKioskEntry(trendingKioskExtractorFactory,
                         RumbleTrendingLinkHandlerFactory.getInstance(), kioskId);
             }
+            list.setDefaultKiosk(RumbleTrendingLinkHandlerFactory.DEFAULT_TRENDING);
         } catch (Exception e) {
             throw new ExtractionException(e);
         }

@@ -17,6 +17,8 @@ public class RumbleTrendingLinkHandlerFactory extends ListLinkHandlerFactory {
     public static final String TODAYS_BATTLE_LEADERBOARD_TOP_50 = "Today's Battle Leaderboard Top 50";
     public static final String SPORTS = "Sports";
 
+    public static final String DEFAULT_TRENDING = EDITOR_PICKS;
+
     final private List<String> trendingIdList = new LinkedList<>();
     final private Map<String, String> trendingId2UrlMap = new HashMap();
     final private Map<String,String> trendingUrl2IdMap = new HashMap();
@@ -46,7 +48,11 @@ public class RumbleTrendingLinkHandlerFactory extends ListLinkHandlerFactory {
         return trendingIdList;
     }
 
+    @Override
     public String getUrl(String id, List<String> contentFilters, String sortFilter) {
+        if ("".equals(id)) {
+            return trendingId2UrlMap.get(DEFAULT_TRENDING);
+        }
         return trendingId2UrlMap.get(id);
     }
 
