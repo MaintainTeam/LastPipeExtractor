@@ -23,7 +23,11 @@ import javax.annotation.Nonnull;
 
 import static org.schabi.newpipe.extractor.ServiceList.Rumble;
 
+/**
+ * TODO This implementation is build on RumbleSearchExtractor and should be merged into one class later.
+ */
 public class RumbleTrendingExtractor extends KioskExtractor<StreamInfoItem> {
+    private Document doc;
 
     public RumbleTrendingExtractor(StreamingService service,
                                     ListLinkHandler linkHandler,
@@ -33,7 +37,7 @@ public class RumbleTrendingExtractor extends KioskExtractor<StreamInfoItem> {
 
     @Override
     public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
-        // TODO
+        doc = Jsoup.parse(getDownloader().get(getUrl()).responseBody());
     }
 
     @Override
@@ -41,18 +45,87 @@ public class RumbleTrendingExtractor extends KioskExtractor<StreamInfoItem> {
         if (null == page)
             return null;
 
-        return null; // TODO
+        doc = Jsoup.parse(getDownloader().get(page.getUrl()).responseBody());
+        return extractAndGetInfoItemsFromPage();
+    }
+
+    private String getClassValue(Element element, String className, String attr) {
+        return element.getElementsByClass(className).first().attr(attr);
+    }
+
+    private InfoItemsPage<StreamInfoItem> extractAndGetInfoItemsFromPage() throws IOException, ExtractionException {
+        final StreamInfoItemsCollector collector = new StreamInfoItemsCollector(getServiceId());
+
+        Elements elements = doc.select("li.video-listing-entry");
+        StreamInfoItemExtractor infoItemExtractor;
+
+        for (Element element : elements) {
+            String duration = getClassValue(element, "video-item--duration", "data-value");
+            // TODO make this catch exception for live events or no views at all
+            String views = getClassValue(element, "video-item--views", "data-value");
+            String textualDate = getClassValue(element, "video-item--time", "datetime");
+            String title = element.select("h3.video-item--title").first().childNodes().get(0).toString();
+            String thumbUrl = element.select("img.video-item--img").first().absUrl("src");
+            String url = Rumble.getBaseUrl() + element.select("a.video-item--a").first().attr("href");
+            String uploaderUrl = Rumble.getBaseUrl() + element.select("address.video-item--by > a").first().attr("href");
+            String uploader = element.select("address.video-item--by").first().getElementsByTag("div").first().text();
+            DateWrapper uploadDate = new DateWrapper(OffsetDateTime.parse(textualDate), false);
+
+            //switch (kind) {
+            //    case BitchuteConstants.KIND_CHANNEL:
+            //        infoItemExtractor = new BitchuteSearchExtractor.BitchuteQuickChannelInfoItemExtractor(
+            //                name,
+            //                url,
+            //                thumbUrl,
+            //                desc
+            //        );
+            //        break;
+            //    case BitchuteConstants.KIND_VIDEO:
+            //    default:
+                    infoItemExtractor = new RumbleSearchExtractor.RumbleSearchVideoStreamInfoItemExtractor(
+                            title,
+                            url,
+                            thumbUrl,
+                            views,
+                            textualDate,
+                            duration,
+                            uploader,
+                            uploaderUrl,
+                            uploadDate
+                    );
+            //}
+
+            collector.commit(infoItemExtractor);
+        }
+
+
+        Page nextPage = null;
+
+        // check if there is a next page
+        if (elements.size() > 0) { // if .size() is 0 than we have no results at all -> assume no more pages
+            String currentPageStrNumber = doc.getElementsByClass("paginator--link--current").attr("aria-label");
+            int currentPageNumber = Integer.parseInt(currentPageStrNumber);
+
+            // check if we are on the last page of available search results
+            int currentPageIsLastPageIfGreaterThanZero = doc.getElementsByClass("paginator--link").last().getElementsByClass("paginator--link paginator--link--current").size();
+            boolean hasMorePages = (currentPageIsLastPageIfGreaterThanZero > 0 ) ? false : true;
+            if (hasMorePages) {
+                nextPage = new Page(getUrl()+ "?page=" + ++currentPageNumber);
+            }
+        }
+
+        return new InfoItemsPage<>(collector, nextPage);
     }
 
     @Nonnull
     @Override
     public String getName() throws ParsingException {
-        return ""; // TODO
+        return getId();
     }
 
     @Nonnull
     @Override
     public InfoItemsPage<StreamInfoItem> getInitialPage() throws IOException, ExtractionException {
-        return null; // TODO
+        return extractAndGetInfoItemsFromPage();
     }
 }
