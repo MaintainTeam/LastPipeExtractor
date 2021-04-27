@@ -17,6 +17,7 @@ import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
+import org.schabi.newpipe.extractor.services.rumble.RumbleParsingHelper;
 import org.schabi.newpipe.extractor.services.youtube.ItagItem;
 import org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper;
 import org.schabi.newpipe.extractor.stream.*;
@@ -27,7 +28,6 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.regex.Pattern;
 
 import static org.schabi.newpipe.extractor.utils.Utils.isNullOrEmpty;
 
@@ -169,11 +169,12 @@ public class RumbleStreamExtractor extends StreamExtractor {
         assertPageFetched();
         Elements elems = doc.getElementsByClass("media-by--a");
         String theUserPathToHisAvatar = elems.get(0).getElementsByTag("i").first().attributes().get("class");
-        Pattern patternHour = Pattern.compile(theUserPathToHisAvatar + "(\\w+)");
-        String url = null;
-
-        // TODO check that out later
-        return "";
+        try {
+            String thumbnailUrl = RumbleParsingHelper.totalMessMethodToGetUploaderThumbnailUrl(theUserPathToHisAvatar, doc);
+            return thumbnailUrl;
+        } catch (Exception e) {
+            throw new ParsingException("Could not extract the avatar url: " + theUserPathToHisAvatar);
+        }
     }
 
     @Nonnull
