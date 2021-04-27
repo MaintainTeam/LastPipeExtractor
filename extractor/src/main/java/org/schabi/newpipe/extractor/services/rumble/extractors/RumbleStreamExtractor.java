@@ -270,7 +270,7 @@ public class RumbleStreamExtractor extends StreamExtractor {
         StreamInfoItemsCollector collector = new StreamInfoItemsCollector(getServiceId());
         for (Node node : nodes) {
             collector.commit(new RumbleStreamRelatedInfoItemExtractor(
-                    getTimeAgoParser(), node
+                    getTimeAgoParser(), node, doc
             ));
         }
 

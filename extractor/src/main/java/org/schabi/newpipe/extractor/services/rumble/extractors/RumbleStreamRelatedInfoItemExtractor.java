@@ -1,5 +1,6 @@
 package org.schabi.newpipe.extractor.services.rumble.extractors;
 
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
@@ -15,6 +16,7 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
 
     private final Element element;
     private final TimeAgoParser parser;
+    private Document doc;
     private String channelName;
     private String channelUrl;
 
@@ -22,9 +24,10 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
         this.element = element;
         this.parser = parser;
     }
-    public RumbleStreamRelatedInfoItemExtractor(TimeAgoParser parser, Node element) {
+    public RumbleStreamRelatedInfoItemExtractor(TimeAgoParser parser, Node element, Document doc) {
         this.element = (Element)element;
         this.parser = parser;
+        this.doc = doc;
     }
 
     public RumbleStreamRelatedInfoItemExtractor(TimeAgoParser parser, Element element, String channelName, String channelUrl) {
@@ -74,8 +77,16 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
     }
 
     @Override
-    public String getUploaderUrl() {
-        return channelUrl;
+    public String getUploaderUrl() throws ParsingException {
+        try {
+            if (channelUrl == null) {
+                String classStr = element.getElementsByClass("user-image").first().attr("class");
+                channelUrl = RumbleParsingHelper.moreTotalMessMethodToGenerateUploaderUrl(classStr, doc, getUploaderName());
+            }
+            return channelUrl;
+        } catch (Exception e) {
+            throw new ParsingException("Error parsing uploader url: " + e.getMessage() + ". Cause:" + e.getCause());
+        }
     }
 
     @Override
