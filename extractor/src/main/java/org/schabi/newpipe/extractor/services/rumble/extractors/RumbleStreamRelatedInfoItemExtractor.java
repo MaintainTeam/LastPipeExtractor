@@ -62,10 +62,15 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
     }
 
     @Override
-    public String getUploaderName() {
-        String res = element.select("h4.mediaList-by-heading").first().text();
-
-        return res;
+    public String getUploaderName() throws ParsingException {
+        try {
+            if (channelName == null) {
+                channelName = element.select("h4.mediaList-by-heading").first().text();
+            }
+            return channelName;
+        } catch (Exception e) {
+            throw new ParsingException("Error parsing Stream uploader name");
+        }
     }
 
     @Override
@@ -92,7 +97,6 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
 
     @Override
     public String getName() throws ParsingException {
-
         try {
             String title = element.select("h3.mediaList-heading").first().text();
             return title;
