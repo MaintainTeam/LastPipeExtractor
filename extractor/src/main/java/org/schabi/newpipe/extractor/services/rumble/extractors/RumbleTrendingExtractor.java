@@ -73,7 +73,16 @@ public class RumbleTrendingExtractor extends KioskExtractor<StreamInfoItem> {
             }
             String textualDate = getClassValue(element, "video-item--time", "datetime");
             String title = element.select("h3.video-item--title").first().childNodes().get(0).toString();
-            String thumbUrl = element.select("img.video-item--img").first().absUrl("src");
+
+            String thumbUrl = null;
+            try {
+                thumbUrl = element.select("img.video-item--img").first().absUrl("src");
+            } catch (NullPointerException e) {
+                /**
+                 * In case of the battle-leaderboard the image might be found here
+                 * see {@link RumbleTrendingLinkHandlerFactory.TODAYS_BATTLE_LEADERBOARD_TOP_50} */
+                thumbUrl = element.select("img.video-item--img-img").first().absUrl("src");
+            }
             String url = Rumble.getBaseUrl() + element.select("a.video-item--a").first().attr("href");
             String uploaderUrl = Rumble.getBaseUrl() + element.select("address.video-item--by > a").first().attr("href");
             String uploader = element.select("address.video-item--by").first().getElementsByTag("div").first().text();
