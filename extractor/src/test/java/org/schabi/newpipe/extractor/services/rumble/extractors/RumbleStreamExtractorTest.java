@@ -62,6 +62,12 @@ public class RumbleStreamExtractorTest {
             extractor.fetchPage();
         }
 
+        @Test
+        public void testAvatarThumbnailPicture () throws Exception {
+            final String url = extractor().getUploaderAvatarUrl();
+            assertTrue(!url.isEmpty() || url == null);
+        }
+
         @Override
         public StreamExtractor extractor () {
             return extractor;
