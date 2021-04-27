@@ -106,21 +106,9 @@ public class RumbleTrendingExtractor extends KioskExtractor<StreamInfoItem> {
             collector.commit(infoItemExtractor);
         }
 
-
-        Page nextPage = null;
-
-        // check if there is a next page
-        if (elements.size() > 0) { // if .size() is 0 than we have no results at all -> assume no more pages
-            String currentPageStrNumber = doc.getElementsByClass("paginator--link--current").attr("aria-label");
-            int currentPageNumber = Integer.parseInt(currentPageStrNumber);
-
-            // check if we are on the last page of available search results
-            int currentPageIsLastPageIfGreaterThanZero = doc.getElementsByClass("paginator--link").last().getElementsByClass("paginator--link paginator--link--current").size();
-            boolean hasMorePages = (currentPageIsLastPageIfGreaterThanZero > 0 ) ? false : true;
-            if (hasMorePages) {
-                nextPage = new Page(getUrl()+ "?page=" + ++currentPageNumber);
-            }
-        }
+        Page nextPage = RumbleSearchExtractor.CommonCodeBetweenTrendingAndSearching
+                .getNewPageIfThereAreMoreThanOnePageResults(
+                elements, doc, getUrl()+ "?page=" );
 
         return new InfoItemsPage<>(collector, nextPage);
     }

@@ -116,28 +116,8 @@ public class RumbleSearchExtractor extends SearchExtractor {
             collector.commit(infoItemExtractor);
         }
 
-
-        Page nextPage = null;
-        boolean hasMorePages = true; // initialze with true
-
-        // check if there is a next page
-        if (elements.size() > 0) { // if .size() is 0 than we have no results at all -> assume no more pages
-            String currentPageStrNumber = doc.getElementsByClass("paginator--link--current").attr("aria-label");
-            if (currentPageStrNumber.isEmpty()) {
-                hasMorePages = false;
-            } else {
-                // check if we are on the last page of available search results
-                int currentPageIsLastPageIfGreaterThanZero =
-                        doc.getElementsByClass("paginator--link").last()
-                                .getElementsByClass("paginator--link paginator--link--current").size();
-                hasMorePages = (currentPageIsLastPageIfGreaterThanZero > 0 ) ? false : true;
-            }
-
-            if (hasMorePages) {
-                int currentPageNumber = Integer.parseInt(currentPageStrNumber);
-                nextPage = new Page(getUrl()+ "&page=" + ++currentPageNumber);
-            }
-        }
+        Page nextPage = CommonCodeBetweenTrendingAndSearching.getNewPageIfThereAreMoreThanOnePageResults(
+                elements, doc, getUrl()+ "&page=" );
 
         return new InfoItemsPage<>(collector, nextPage);
     }
@@ -292,4 +272,34 @@ public class RumbleSearchExtractor extends SearchExtractor {
             return thumbUrl;
         }
     }
+
+    public static class CommonCodeBetweenTrendingAndSearching {
+
+        public static Page getNewPageIfThereAreMoreThanOnePageResults(Elements elements, Document doc, String urlPrefix) {
+
+            Page nextPage = null;
+            boolean hasMorePages = true; // initialze with true
+
+            // check if there is a next page
+            if (elements.size() > 0) { // if .size() is 0 than we have no results at all -> assume no more pages
+                String currentPageStrNumber = doc.getElementsByClass("paginator--link--current").attr("aria-label");
+                if (currentPageStrNumber.isEmpty()) {
+                    hasMorePages = false;
+                } else {
+                    // check if we are on the last page of available search results
+                    int currentPageIsLastPageIfGreaterThanZero =
+                            doc.getElementsByClass("paginator--link").last()
+                                    .getElementsByClass("paginator--link paginator--link--current").size();
+                    hasMorePages = (currentPageIsLastPageIfGreaterThanZero > 0) ? false : true;
+                }
+
+                if (hasMorePages) {
+                    int currentPageNumber = Integer.parseInt(currentPageStrNumber);
+                    nextPage = new Page(urlPrefix + ++currentPageNumber);
+                }
+            }
+            return nextPage;
+        }
+    }
+
 }
