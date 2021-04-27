@@ -192,6 +192,42 @@ public class RumbleStreamExtractorTest {
         public boolean expectedHasAudioStreams () {
             return expectedHasAudioStreams;
         }
+
+        /**
+         *  Test for {@link RumbleStreamRelatedInfoItemExtractor}
+         */
+        @Test
+        public void RumbleStreamRelatedInfoItemsExtractorTest () throws ExtractionException {
+            StreamInfoItemsCollector page = extractor.getRelatedItems();
+            List<StreamInfoItem> actualResultsList = page.getItems();
+
+            List<Throwable> errors = page.getErrors();
+            defaultTestListOfItems(extractor.getService(), actualResultsList, errors);
+
+            // if the mock is changed you need to update these here too.
+            // Get it from actualResultsList.get(x).toString() and update someExpectedResults
+            String[] someExpectedResults = {
+                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Ron DeSantis', textualUploadDate='null', viewCount=-1, duration=262, uploaderUrl='https://rumble.com/user/GovRonDeSantis', infoType=STREAM, serviceId=6, url='https://rumble.com/vfvdep-florida-gov.-desantis-rips-bidens-reckless-ice-policies.html', name='Florida Gov. DeSantis rips Biden's 'reckless' ICE policies', thumbnailUrl='https://i.rmbl.ws/s8/6/H/s/S/L/HsSLb.0kob.1.jpg', uploaderVerified='false'}",
+                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Vlemx', textualUploadDate='null', viewCount=-1, duration=48, uploaderUrl='https://rumble.com/user/Vlemx', infoType=STREAM, serviceId=6, url='https://rumble.com/vbxxz3-florida-governor-ron-desantis-declined-a-reporters-request-..html', name='Florida Governor Ron DeSantis declined a reporter’s request .', thumbnailUrl='https://i.rmbl.ws/s8/6/_/u/H/m/_uHmb.0kob.1.jpg', uploaderVerified='false'}",
+                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='WFTX', textualUploadDate='null', viewCount=-1, duration=47, uploaderUrl='https://rumble.com/user/WFTX', infoType=STREAM, serviceId=6, url='https://rumble.com/vf6b53-governor-desantis-signs-covid-liability-bill-today.html', name='Governor DeSantis signs COVID liability bill today', thumbnailUrl='https://i.rmbl.ws/s8/1/N/Z/o/H/NZoHb.0kob-small-Governor-DeSantis-signs-COV.jpg', uploaderVerified='false'}"
+            };
+
+            // test if someExpectedResults are matching actualResultsList entries
+            List<Integer> foundEntries = new LinkedList<>();
+            for (StreamInfoItem actualResult : actualResultsList) {
+                for (int i = 0; i < someExpectedResults.length; i++) {
+                    String expectedResult = someExpectedResults[i];
+                    if (expectedResult.equals(actualResult.toString())) {
+                        foundEntries.add(i);
+                    }
+                }
+            }
+
+            // verify if all someExpectedResults were found
+            for (int i = 0; i < someExpectedResults.length; i++) {
+                assertTrue("Not found: " + someExpectedResults[i], foundEntries.contains(i));
+            }
+        }
     }
 
     public static class LiveStreamExtractorTest extends NormalStreamExtractorTest {
@@ -224,6 +260,14 @@ public class RumbleStreamExtractorTest {
             extractor = (RumbleStreamExtractor) Rumble
                     .getStreamExtractor(url);
             extractor.fetchPage();
+        }
+
+        /**
+         *  Test for {@link RumbleStreamRelatedInfoItemExtractor}
+         */
+        @Test
+        public void RumbleStreamRelatedInfoItemsExtractorTest () throws ExtractionException {
+
         }
     }
 }
