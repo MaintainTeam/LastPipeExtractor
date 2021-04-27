@@ -194,6 +194,8 @@ public class RumbleSearchExtractor extends SearchExtractor {
 
         @Override
         public long getViewCount() throws ParsingException {
+            if (null == viewCount)
+                return -1;
             return Utils.mixedNumberWordToLong(viewCount);
         }
 

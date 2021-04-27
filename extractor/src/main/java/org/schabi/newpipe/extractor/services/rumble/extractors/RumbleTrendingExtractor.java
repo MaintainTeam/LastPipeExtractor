@@ -12,6 +12,7 @@ import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.kiosk.KioskExtractor;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
+import org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleTrendingLinkHandlerFactory;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemsCollector;
@@ -61,8 +62,15 @@ public class RumbleTrendingExtractor extends KioskExtractor<StreamInfoItem> {
 
         for (Element element : elements) {
             String duration = getClassValue(element, "video-item--duration", "data-value");
-            // TODO make this catch exception for live events or no views at all
-            String views = getClassValue(element, "video-item--views", "data-value");
+            String views = null;
+
+            /**
+             * catch exception for live events there are sometimes no views at all
+             * see {@link RumbleTrendingLinkHandlerFactory.LIVE} */
+            try {
+                views = getClassValue(element, "video-item--views", "data-value");
+            } catch (NullPointerException e) {
+            }
             String textualDate = getClassValue(element, "video-item--time", "datetime");
             String title = element.select("h3.video-item--title").first().childNodes().get(0).toString();
             String thumbUrl = element.select("img.video-item--img").first().absUrl("src");
