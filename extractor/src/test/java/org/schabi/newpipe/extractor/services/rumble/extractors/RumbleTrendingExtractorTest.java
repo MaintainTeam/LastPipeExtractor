@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.schabi.newpipe.extractor.ServiceList.Rumble;
+import static org.schabi.newpipe.extractor.services.DefaultTests.assertNoMoreItems;
 import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestMoreItems;
 import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestRelatedItems;
 
@@ -116,6 +117,12 @@ public class RumbleTrendingExtractorTest {
             }};
             Trending.setUp();
         }
+
+        @Override
+        public void testMoreRelatedItems() throws Exception {
+            assertNoMoreItems(extractor);
+
+        }
     }
 
     public static class Sports extends Trending {
@@ -137,7 +144,7 @@ public class RumbleTrendingExtractorTest {
         public enum keysForTestDataMap {
             name, id, url, originalUrl
         }
-        private static ListExtractor extractor;
+        protected static ListExtractor extractor;
         protected static Map<keysForTestDataMap,String> testDataMap;
 
         public static void setUp() throws Exception {
