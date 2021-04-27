@@ -1,7 +1,14 @@
 package org.schabi.newpipe.extractor.services.rumble;
 
+import org.jsoup.nodes.Document;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.utils.Utils;
+
+import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.schabi.newpipe.extractor.ServiceList.Rumble;
 
 public class RumbleParsingHelper {
 
@@ -49,5 +56,69 @@ public class RumbleParsingHelper {
                 + Integer.parseInt(Utils.removeNonDigitCharacters(hours))) * 60
                 + Integer.parseInt(Utils.removeNonDigitCharacters(minutes))) * 60
                 + Integer.parseInt(Utils.removeNonDigitCharacters(seconds));
+    }
+
+    /**
+     *  TODO implement a faster/easier way to achive same goals
+     * @param classStr
+     * @return null if there was a letter and not a image, xor url with the uploader thumbnail
+     * @throws Exception
+     */
+    public static String totalMessMethodToGetUploaderThumbnailUrl(String classStr, Document doc) throws Exception {
+
+        // special case there is only a letter and no image as user thumbnail
+        if (classStr.contains("user-image--letter")) {
+            // assume uploader name will do the job
+            return null;
+        }
+
+        // extract checksum
+        Pattern matchChecksum = Pattern.compile("([a-fA-F0-9]{32})");
+        Matcher match2 = matchChecksum.matcher(classStr);
+        if (match2.find()) {
+            String chkSum = match2.group(1);
+
+            // extract uploader thumbnail url
+            String matchThat = doc.toString();
+            int pos = matchThat.indexOf(chkSum);
+            String precislyMatchHere = matchThat.substring(pos);
+
+            Pattern channelUrl = Pattern.compile("\\W+background-image:\\W+url(?:\\()([^)]*)(?:\\));");
+            Matcher match = channelUrl.matcher(precislyMatchHere);
+            if (match.find()) {
+                String myUrl= match.group(1);
+                myUrl= match.group(1);
+                return myUrl;
+            }
+        }
+
+        throw new Exception(classStr);
+    }
+
+    public static String moreTotalMessMethodToGenerateUploaderUrl(String classStr, Document doc, String uploaderName) throws Exception {
+
+        String thumbnailUrl = totalMessMethodToGetUploaderThumbnailUrl(classStr, doc);
+        if (thumbnailUrl == null) {
+            String uploaderUrl = Rumble.getBaseUrl() + "/user/" + uploaderName;
+            return uploaderUrl;
+        }
+
+        // Again another special case here
+        URL url = Utils.stringToURL(thumbnailUrl);
+        if (!url.getAuthority().equals(Utils.stringToURL("i.rmbl.ws").getAuthority())) {
+            // there is no img hosted on rumble so we can't rely on it to extract the Channel.
+            // So we try to use the name here too.
+            String uploaderUrl = Rumble.getBaseUrl() + "/user/"  + uploaderName;
+            return uploaderUrl;
+        }
+
+        // extract uploader name
+        String path = thumbnailUrl.substring(thumbnailUrl.lastIndexOf("/") + 1);
+        String[] splitPath = path.split("-", 0);
+        String theUploader = splitPath[1];
+
+        // the uploaderUrl
+        String uploaderUrl = Rumble.getBaseUrl() + "/user/"  + theUploader;
+        return uploaderUrl;
     }
 }
