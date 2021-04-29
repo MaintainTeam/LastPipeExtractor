@@ -209,7 +209,30 @@ public class RumbleStreamExtractor extends StreamExtractor {
 
     @Override
     public List<AudioStream> getAudioStreams() throws ExtractionException {
-        return Collections.emptyList();
+        if (videoStreams == null) {
+            videoStreams = extractVideoStreams();
+        }
+
+        final Map<String,Integer> mapResolutionToAudioBitrate= new HashMap() {{
+            put("240p",96);
+            put("360p",128);
+            put("480p", 160);
+            put("720p", 192);
+            put("1080p", 200);
+
+        }};
+        final List<AudioStream> audioStreams = new ArrayList<>();
+
+        for (VideoStream stream : videoStreams){
+            Integer res = mapResolutionToAudioBitrate.get(stream.getResolution());
+            if ( null == res) {
+                res = new Integer(-1);
+            }
+            AudioStream audioStream = new AudioStream(stream.getUrl(),
+                    stream.getFormat(), res);
+            audioStreams.add(audioStream);
+        }
+        return audioStreams;
     }
 
     @Override
