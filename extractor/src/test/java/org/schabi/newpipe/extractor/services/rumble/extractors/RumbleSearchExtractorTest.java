@@ -18,8 +18,6 @@ import org.schabi.newpipe.extractor.services.DefaultSearchExtractorTest;
 
 import org.schabi.newpipe.extractor.channel.ChannelInfoItem;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
-import org.schabi.newpipe.extractor.stream.StreamInfoItem;
-import org.schabi.newpipe.extractor.stream.StreamInfoItemsCollector;
 
 import javax.annotation.Nullable;
 
@@ -68,7 +66,7 @@ public class RumbleSearchExtractorTest {
 
         /**
          *
-         *  Test for {@link RumbleSearchExtractor.RumbleSearchVideoStreamInfoItemExtractor}
+         *  Test for {@link RumbleSearchVideoStreamInfoItemExtractor}
          */
         @Test
         public void RumbleSearchVideoStreamInfoItemExtractorTest() throws ExtractionException, IOException {
