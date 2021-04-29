@@ -59,6 +59,33 @@ public class RumbleParsingHelper {
     }
 
     /**
+     *
+     * @param shouldThrowOnError if true a ParsingException is thrown if function failed for whatever reason
+     * @param msg in case of Exception the error message that is passed
+     * @param function the function that extract the desired string
+     * @return the extracted string or null if shouldThrowOnError is set to false
+     * @throws ParsingException
+     */
+    public static String extractSafely(boolean shouldThrowOnError, String msg , ExtractFunction function) throws ParsingException {
+        String retValue = null;
+        try {
+            retValue = function.run();
+        } catch (Exception e) {
+            if (shouldThrowOnError) {
+                throw new ParsingException(msg + ": " + e);
+            }
+        }
+        return retValue;
+    }
+
+    /**
+     * interface for {@link #extractSafely} extractor function
+     */
+    public interface ExtractFunction {
+        String run();
+    }
+
+    /**
      *  TODO implement a faster/easier way to achive same goals
      * @param classStr
      * @return null if there was a letter and not a image, xor url with the uploader thumbnail
