@@ -23,7 +23,6 @@ import javax.annotation.Nullable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -31,7 +30,6 @@ import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.schabi.newpipe.extractor.ExtractorAsserts.assertEmptyErrors;
 import static org.schabi.newpipe.extractor.services.DefaultTests.assertNoDuplicatedItems;
-import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestListOfItems;
 import static org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleSearchQueryHandlerFactory.CHANNELS;
 import static org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleSearchQueryHandlerFactory.VIDEOS;
 import static org.schabi.newpipe.extractor.utils.Utils.UTF_8;
@@ -70,35 +68,19 @@ public class RumbleSearchExtractorTest {
          */
         @Test
         public void RumbleSearchVideoStreamInfoItemExtractorTest() throws ExtractionException, IOException {
-            ListExtractor.InfoItemsPage<InfoItem> page = extractor.getInitialPage();
-            List<InfoItem> actualResultsList = page.getItems();
 
-            List<Throwable> errors = page.getErrors();
-            defaultTestListOfItems(extractor.getService(), actualResultsList, errors);
-
-            // if the mock is changed you need to update these here too.
-            // Get it from actualResultsList.get(x).toString() and update someExpectedResults
+            /** more info see: {@link RumbleSharedTests#infoItemsResultsTest} */
             String[] someExpectedResults = {
                     "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Dinesh D'Souza', textualUploadDate='2021-04-21T19:28:06-04:00', viewCount=33779, duration=125, uploaderUrl='https://rumble.com/c/DineshDsouza', infoType=STREAM, serviceId=6, url='https://rumble.com/vfx78t-rand-paul-eviscerates-fauci-with-facts.html', name='Rand Paul EVISCERATES Fauci with Facts', thumbnailUrl='https://sp.rmbl.ws/s8/6/T/h/b/M/ThbMb.oq1b.1.jpg', uploaderVerified='false'}",
                     "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='BonginoReport', textualUploadDate='2021-02-25T11:50:36-04:00', viewCount=660701, duration=334, uploaderUrl='https://rumble.com/user/BonginoReport', infoType=STREAM, serviceId=6, url='https://rumble.com/ve5yg1-rand-paul-grills-bidens-transgender-hhs-nominee-gets-arrogant-answer.html', name='Rand Paul GRILLS Biden's Transgender HHS Nominee, Gets Arrogant Answer', thumbnailUrl='https://sp.rmbl.ws/s8/6/H/U/W/A/HUWAb.oq1b.1.jpg', uploaderVerified='false'}",
                     "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Dailycaller', textualUploadDate='2021-04-13T16:44:01-04:00', viewCount=97480, duration=432, uploaderUrl='https://rumble.com/user/Dailycaller', infoType=STREAM, serviceId=6, url='https://rumble.com/vfn27x-sen.-rand-paul-rips-anthony-fauci-over-conflicting-pandemic-advice.html', name='Sen. Rand Paul Rips Anthony Fauci Over Conflicting Pandemic Advice', thumbnailUrl='https://i.rmbl.ws/s8/6/9/N/n/K/9NnKb.oq1b.1.jpg', uploaderVerified='false'}"
             };
 
-            // test if someExpectedResults are matching actualResultsList entries
-            List<Integer> foundEntries = new LinkedList<>();
-            for (InfoItem actualResult : actualResultsList) {
-                for (int i = 0; i < someExpectedResults.length; i++) {
-                    String expectedResult = someExpectedResults[i];
-                    if (expectedResult.equals(actualResult.toString())) {
-                        foundEntries.add(i);
-                    }
-                }
-            }
-
-            // verify if all someExpectedResults were found
-            for (int i = 0; i < someExpectedResults.length; i++) {
-                assertTrue("Not found: " + someExpectedResults[i], foundEntries.contains(i));
-            }
+            RumbleSharedTests.infoItemsResultsTest(extractor.getService(),
+                    extractor.getInitialPage().getItems(),
+                    extractor.getInitialPage().getErrors(),
+                    someExpectedResults
+            );
         }
     }
 
