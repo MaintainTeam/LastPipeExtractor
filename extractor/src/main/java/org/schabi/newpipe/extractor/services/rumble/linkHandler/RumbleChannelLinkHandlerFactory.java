@@ -19,14 +19,14 @@ public class RumbleChannelLinkHandlerFactory extends ListLinkHandlerFactory {
     /**
      * Returns URL to channel from an ID
      *
-     * @param id Channel ID including e.g. 'channel/'
+     * @param id Channel ID including e.g. 'c/id' or 'user/id'
      * @param contentFilters
      * @param searchFilter
      * @return URL to channel
      */
     @Override
     public String getUrl(String id, List<String> contentFilters, String searchFilter) {
-        return "https://www.rumble.com/user/" + id;
+        return "https://rumble.com/" + id;
     }
     
     @Override
