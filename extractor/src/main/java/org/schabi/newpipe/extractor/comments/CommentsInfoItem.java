@@ -17,8 +17,13 @@ public class CommentsInfoItem extends InfoItem {
     @Nullable
     private DateWrapper uploadDate;
     private int likeCount;
+    private String textualLikeCount;
     private boolean heartedByUploader;
     private boolean pinned;
+    private int streamPosition;
+
+    public static final int NO_LIKE_COUNT = -1;
+    public static final int NO_STREAM_POSITION = -1;
 
     public CommentsInfoItem(int serviceId, String url, String name) {
         super(InfoType.COMMENT, serviceId, url, name);
@@ -81,12 +86,24 @@ public class CommentsInfoItem extends InfoItem {
         this.uploadDate = uploadDate;
     }
 
+    /**
+     * @return the comment's like count
+     *         or {@link CommentsInfoItem#NO_LIKE_COUNT} if it is unavailable
+     */
     public int getLikeCount() {
         return likeCount;
     }
 
     public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
+    }
+
+    public String getTextualLikeCount() {
+        return textualLikeCount;
+    }
+
+    public void setTextualLikeCount(String textualLikeCount) {
+        this.textualLikeCount = textualLikeCount;
     }
 
     public void setHeartedByUploader(boolean isHeartedByUploader) {
@@ -111,5 +128,18 @@ public class CommentsInfoItem extends InfoItem {
 
     public boolean isUploaderVerified() {
         return uploaderVerified;
+    }
+
+    public void setStreamPosition(final int streamPosition) {
+        this.streamPosition = streamPosition;
+    }
+
+    /**
+     * Get the playback position of the stream to which this comment belongs.
+     * This is not supported by all services.
+     * @return the playback position in seconds or {@link #NO_STREAM_POSITION} if not available
+     */
+    public int getStreamPosition() {
+        return streamPosition;
     }
 }

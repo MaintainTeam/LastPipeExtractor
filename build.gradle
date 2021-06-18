@@ -8,7 +8,7 @@ allprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    version 'v0.21.2'
+    version 'v0.21.4'
     group 'com.github.TeamNewPipe'
 
     repositories {
@@ -48,6 +48,12 @@ task aggregatedJavadocs(type: Javadoc, group: 'Documentation') {
     // options.memberLevel = JavadocMemberLevel.PRIVATE
     options.links 'https://docs.oracle.com/javase/8/docs/api/'
     options.encoding 'UTF-8'
+    // Fixes unknown tag @implNote; the other two were added precautionary
+    options.tags = [
+            "apiNote:a:API Note:",
+            "implSpec:a:Implementation Requirements:",
+            "implNote:a:Implementation Note:"
+            ]
 
     subprojects.each { project ->
         project.tasks.withType(Javadoc).each { javadocTask ->

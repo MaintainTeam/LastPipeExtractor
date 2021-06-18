@@ -6,7 +6,6 @@ import org.schabi.newpipe.extractor.exceptions.ParsingException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public class CommentsInfoItemsCollector extends InfoItemsCollector<CommentsInfoItem, CommentsInfoItemExtractor> {
 
@@ -66,6 +65,11 @@ public class CommentsInfoItemsCollector extends InfoItemsCollector<CommentsInfoI
             addError(e);
         }
         try {
+            resultItem.setTextualLikeCount(extractor.getTextualLikeCount());
+        } catch (Exception e) {
+            addError(e);
+        }
+        try {
             resultItem.setThumbnailUrl(extractor.getThumbnailUrl());
         } catch (Exception e) {
             addError(e);
@@ -79,6 +83,12 @@ public class CommentsInfoItemsCollector extends InfoItemsCollector<CommentsInfoI
 
         try {
             resultItem.setPinned(extractor.isPinned());
+        } catch (Exception e) {
+            addError(e);
+        }
+
+        try {
+            resultItem.setStreamPosition(extractor.getStreamPosition());
         } catch (Exception e) {
             addError(e);
         }
