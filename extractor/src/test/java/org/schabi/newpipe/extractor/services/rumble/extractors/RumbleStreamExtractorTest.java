@@ -7,6 +7,7 @@ import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.services.DefaultStreamExtractorTest;
+import org.schabi.newpipe.extractor.stream.AudioStream;
 import org.schabi.newpipe.extractor.stream.StreamExtractor;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemsCollector;
 import org.schabi.newpipe.extractor.stream.StreamType;
@@ -15,8 +16,11 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.schabi.newpipe.downloader.DownloaderFactory.RESOURCE_PATH;
+import static org.schabi.newpipe.extractor.ExtractorAsserts.assertIsSecureUrl;
 import static org.schabi.newpipe.extractor.ServiceList.Rumble;
 
 public class RumbleStreamExtractorTest {
@@ -43,7 +47,7 @@ public class RumbleStreamExtractorTest {
         protected static StreamExtractor.Privacy expectedPrivacy = StreamExtractor.Privacy.PUBLIC;
         protected static String expectedUploaderUrl = "https://rumble.com/c/GovRonDeSantis";
         protected static String expectedSupportInfo = "";
-        protected static boolean expectedHasAudioStreams = false;
+        protected static boolean expectedHasAudioStreams = true;
         protected static boolean expectedHasVideoStreams = true;
         protected static String expectedArtistProfilePictureInfix = ".rumble.com/live/channel_images/"; // TODO
         protected static long expectedLength = 1937;
@@ -209,6 +213,25 @@ public class RumbleStreamExtractorTest {
                     page.getErrors(),
                     someExpectedResults
             );
+        }
+
+        // as we fake the audio stream with with video streams for background functionality
+        // we have to override this test as we don't want to check if the audio stream has
+        // a correct format id - because it can not have a correct id.
+        @Override
+        public void testAudioStreams() throws Exception {
+            final List<AudioStream> audioStreams = extractor().getAudioStreams();
+            assertNotNull(audioStreams);
+
+            if (expectedHasAudioStreams()) {
+                assertFalse(audioStreams.isEmpty());
+
+                for (final AudioStream stream : audioStreams) {
+                    assertIsSecureUrl(stream.getUrl());
+                }
+            } else {
+                assertTrue(audioStreams.isEmpty());
+            }
         }
     }
 
