@@ -7,6 +7,7 @@ import com.grack.nanojson.JsonParserException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.schabi.newpipe.extractor.MediaFormat;
 import org.schabi.newpipe.extractor.MetaInfo;
@@ -57,7 +58,7 @@ public class RumbleStreamExtractor extends StreamExtractor {
     @Override
     public String getName() throws ParsingException {
         assertPageFetched();
-        String title = embedJsonStreamInfoObj.getString(videoTitleJsonKey);
+        String title = Parser.unescapeEntities(embedJsonStreamInfoObj.getString(videoTitleJsonKey), true);
 
         return title;
     }
