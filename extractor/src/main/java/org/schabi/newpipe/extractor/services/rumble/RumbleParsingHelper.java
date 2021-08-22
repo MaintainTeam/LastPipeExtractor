@@ -108,14 +108,13 @@ public class RumbleParsingHelper {
             // extract uploader thumbnail url
             String matchThat = doc.toString();
             int pos = matchThat.indexOf(chkSum);
-            String precislyMatchHere = matchThat.substring(pos);
+            String preciselyMatchHere = matchThat.substring(pos);
 
             Pattern channelUrl = Pattern.compile("\\W+background-image:\\W+url(?:\\()([^)]*)(?:\\));");
-            Matcher match = channelUrl.matcher(precislyMatchHere);
+            Matcher match = channelUrl.matcher(preciselyMatchHere);
             if (match.find()) {
-                String myUrl= match.group(1);
-                myUrl= match.group(1);
-                return myUrl;
+                String thumbnailUrl = match.group(1);
+                return thumbnailUrl;
             }
         }
 
