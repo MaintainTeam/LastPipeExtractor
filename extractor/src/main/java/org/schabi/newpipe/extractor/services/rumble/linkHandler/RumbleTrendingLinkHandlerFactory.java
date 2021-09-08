@@ -17,7 +17,7 @@ public class RumbleTrendingLinkHandlerFactory extends ListLinkHandlerFactory {
     public static final String TODAYS_BATTLE_LEADERBOARD_TOP_50 = "Today's Battle Leaderboard Top 50";
     public static final String SPORTS = "Sports";
 
-    public static final String DEFAULT_TRENDING = EDITOR_PICKS;
+    public static final String DEFAULT_TRENDING = TODAYS_BATTLE_LEADERBOARD_TOP_50;
 
     final private List<String> trendingIdList = new LinkedList<>();
     final private Map<String, String> trendingId2UrlMap = new HashMap();
