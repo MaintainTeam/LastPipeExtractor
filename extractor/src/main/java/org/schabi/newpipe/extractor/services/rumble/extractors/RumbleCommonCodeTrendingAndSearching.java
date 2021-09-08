@@ -2,6 +2,7 @@ package org.schabi.newpipe.extractor.services.rumble.extractors;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
@@ -104,7 +105,7 @@ public class RumbleCommonCodeTrendingAndSearching {
             //    case BitchuteConstants.KIND_VIDEO:
             //    default:
             infoItemExtractor = new RumbleSearchVideoStreamInfoItemExtractor(
-                    title,
+                    Parser.unescapeEntities(title, false),
                     url,
                     thumbUrl,
                     views,
