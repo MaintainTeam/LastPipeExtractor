@@ -104,4 +104,10 @@ public class RumbleSearchVideoStreamInfoItemExtractor implements StreamInfoItemE
     public String getThumbnailUrl() throws ParsingException {
         return thumbUrl;
     }
+
+    @Nullable
+    @Override
+    public String getUploaderAvatarUrl() throws ParsingException {
+        return null;
+    }
 }

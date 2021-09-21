@@ -108,4 +108,10 @@ public abstract class BitchuteChannelStreamInfoItemExtractor implements StreamIn
         }
         return null;
     }
+
+    @Nullable
+    @Override
+    public String getUploaderAvatarUrl() throws ParsingException {
+        return null;
+    }
 }

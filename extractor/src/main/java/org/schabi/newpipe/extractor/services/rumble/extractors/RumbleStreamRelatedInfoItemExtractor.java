@@ -135,4 +135,10 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
             throw new ParsingException("Error parsing thumbnail url");
         }
     }
+
+    @Nullable
+    @Override
+    public String getUploaderAvatarUrl() throws ParsingException {
+        return null;
+    }
 }

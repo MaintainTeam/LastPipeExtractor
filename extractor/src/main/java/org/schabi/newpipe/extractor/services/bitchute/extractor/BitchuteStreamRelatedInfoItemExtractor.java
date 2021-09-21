@@ -120,4 +120,9 @@ public class BitchuteStreamRelatedInfoItemExtractor implements StreamInfoItemExt
         }
     }
 
+    @Nullable
+    @Override
+    public String getUploaderAvatarUrl() throws ParsingException {
+        return null;
+    }
 }

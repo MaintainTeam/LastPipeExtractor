@@ -234,6 +234,12 @@ public class BitchuteSearchExtractor extends SearchExtractor {
             return this.uploaderUrl;
         }
 
+        @Nullable
+        @Override
+        public String getUploaderAvatarUrl() throws ParsingException {
+            return null;
+        }
+
         @Override
         public boolean isUploaderVerified() throws ParsingException {
             return false; // TODO evermind: this is just to get it compiled not verified
