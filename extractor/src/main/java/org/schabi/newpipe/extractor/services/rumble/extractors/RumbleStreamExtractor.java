@@ -96,7 +96,7 @@ public class RumbleStreamExtractor extends StreamExtractor {
     public Description getDescription() throws ParsingException {
         assertPageFetched();
         String description = doc.select("p.media-description").first().childNodes().get(2).toString();
-        return new Description(description, Description.PLAIN_TEXT);
+        return new Description(Parser.unescapeEntities(description, false), Description.PLAIN_TEXT);
     }
 
     @Override
