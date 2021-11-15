@@ -95,7 +95,14 @@ public class RumbleStreamExtractor extends StreamExtractor {
     @Override
     public Description getDescription() throws ParsingException {
         assertPageFetched();
-        String description = doc.select("p.media-description").first().childNodes().get(2).toString();
+        List<Node> nodes = doc.select("p.media-description").first().childNodes();
+        String description = "";
+
+        // the 3rd item has the description. Some videos do not have a description
+        // therefore check if there are enough nodes.
+        if (nodes.size() >= 3) {
+            doc.select("p.media-description").first().childNodes().get(2).toString();
+        }
         return new Description(Parser.unescapeEntities(description, false), Description.PLAIN_TEXT);
     }
 
