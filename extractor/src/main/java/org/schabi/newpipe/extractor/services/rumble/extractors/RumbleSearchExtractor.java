@@ -4,13 +4,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.MetaInfo;
+import org.schabi.newpipe.extractor.MultiInfoItemsCollector;
 import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler;
-import org.schabi.newpipe.extractor.search.InfoItemsSearchCollector;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
 
@@ -58,7 +58,7 @@ public class RumbleSearchExtractor extends SearchExtractor {
     }
 
     private InfoItemsPage<InfoItem> extractAndGetInfoItemsFromPage() throws IOException, ExtractionException {
-        final InfoItemsSearchCollector collector = new InfoItemsSearchCollector(getServiceId());
+        final MultiInfoItemsCollector collector = new MultiInfoItemsCollector(getServiceId());
 
         List<StreamInfoItemExtractor> infoItemsList =
                 rumbleCommonCodeTrendingAndSearching.getSearchOrTrendingResultsItemList(doc);
