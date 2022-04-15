@@ -6,6 +6,7 @@ import com.grack.nanojson.JsonObject;
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.InfoItemExtractor;
 import org.schabi.newpipe.extractor.MetaInfo;
+import org.schabi.newpipe.extractor.MultiInfoItemsCollector;
 import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.channel.ChannelInfoItemExtractor;
@@ -14,7 +15,6 @@ import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
-import org.schabi.newpipe.extractor.search.InfoItemsSearchCollector;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteParserHelper;
@@ -87,7 +87,7 @@ public class BitchuteSearchExtractor extends SearchExtractor {
         int currentPageNumber = Integer.parseInt(page.getId());
         JsonObject jsonResponse = BitchuteParserHelper.getSearchResultForQuery(query, BitchuteConstants.KIND_VIDEO, currentPageNumber);
 
-        InfoItemsSearchCollector collector = new InfoItemsSearchCollector(getServiceId());
+        MultiInfoItemsCollector collector = new MultiInfoItemsCollector(getServiceId());
         InfoItemExtractor infoItemExtractor;
 
         String jsonResultArrayKey = "results";
