@@ -24,9 +24,9 @@ public class RumbleStreamLinkHandlerFactoryTest {
 
     @Test
     public void getId() throws Exception {
-        String correctIdExpectSuccess = "vdofb7";
+        String correctIdExpectSuccess = "vdofb67";
         String tooShortIdExpectError = "vdof";
-        String tooLongIdExpectError = "vdofb34";
+        String tooLongIdExpectError = "vdofb6789";
         String noIdExpectError = "";
 
 
