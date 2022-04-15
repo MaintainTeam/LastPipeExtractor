@@ -12,7 +12,7 @@ public class RumbleStreamLinkHandlerFactory extends LinkHandlerFactory {
     private static final RumbleStreamLinkHandlerFactory instance = new RumbleStreamLinkHandlerFactory();
 
     String BASE_URL = "https://rumble.com";
-    private String patternMatchId = "^v[a-zA-Z0-9_-]{4,5}";
+    private String patternMatchId = "^v[a-zA-Z0-9]{4,6}-?";
 
     private RumbleStreamLinkHandlerFactory() {
     }
