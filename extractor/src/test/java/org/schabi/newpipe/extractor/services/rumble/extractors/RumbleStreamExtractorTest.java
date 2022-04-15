@@ -1,7 +1,7 @@
 package org.schabi.newpipe.extractor.services.rumble.extractors;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderFactory;
 import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.StreamingService;
@@ -16,9 +16,9 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.schabi.newpipe.downloader.DownloaderFactory.RESOURCE_PATH;
 import static org.schabi.newpipe.extractor.ExtractorAsserts.assertIsSecureUrl;
 import static org.schabi.newpipe.extractor.ServiceList.Rumble;
@@ -52,7 +52,7 @@ public class RumbleStreamExtractorTest {
         protected static String expectedArtistProfilePictureInfix = ".rumble.com/live/channel_images/"; // TODO
         protected static long expectedLength = 1937;
 
-        @BeforeClass
+        @BeforeAll
         public static void setUp () throws ExtractionException, IOException {
             System.setProperty("downloader", "MOCK");
             //System.setProperty("downloader", "RECORDING");
@@ -238,7 +238,7 @@ public class RumbleStreamExtractorTest {
     public static class LiveStreamExtractorTest extends NormalStreamExtractorTest {
 
 
-        @BeforeClass
+        @BeforeAll
         public static void setUp () throws ExtractionException, IOException {
             url = "https://rumble.com/vg7h6j";
             expectedUrl = "https://rumble.com/vg7h6j";

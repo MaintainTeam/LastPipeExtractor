@@ -3,9 +3,10 @@ package org.schabi.newpipe.extractor.services.rumble.extractors;
 import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonParser;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderFactory;
+import org.schabi.newpipe.extractor.ExtractorAsserts;
 import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.services.BaseChannelExtractorTest;
@@ -13,9 +14,10 @@ import org.schabi.newpipe.extractor.services.BaseChannelExtractorTest;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.schabi.newpipe.downloader.DownloaderFactory.RESOURCE_PATH;
 import static org.schabi.newpipe.extractor.ExtractorAsserts.assertIsSecureUrl;
 import static org.schabi.newpipe.extractor.ServiceList.Rumble;
@@ -28,7 +30,7 @@ import static org.schabi.newpipe.extractor.services.rumble.extractors.RumbleShar
 public class RumbleChannelExtractorTest {
 
     public static class SinglePageChannel extends TestChannel {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.channelUrl, "https://rumble.com/c/GovRonDeSantis");
@@ -60,7 +62,7 @@ public class RumbleChannelExtractorTest {
     }
 
     public static class MultiplePageChannel extends TestChannel {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.channelUrl, "https://rumble.com/c/Bongino");
@@ -91,7 +93,7 @@ public class RumbleChannelExtractorTest {
         }
     }
     public static class MultiplePageUser extends TestChannel {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.channelUrl, "https://rumble.com/user/Vlemx");
@@ -206,14 +208,14 @@ public class RumbleChannelExtractorTest {
 
         @Test
         public void testDescription () throws Exception {
-            assertThat(extractor.getDescription(), containsString(testDataMap.get(keysForTestDataMap.expectedDescription)));
+            ExtractorAsserts.assertContains(testDataMap.get(keysForTestDataMap.expectedDescription), extractor.getDescription());
         }
 
         @Test
         public void testAvatarUrl () throws Exception {
             String avatarUrl = extractor.getAvatarUrl();
             assertIsSecureUrl(avatarUrl);
-            assertTrue(avatarUrl, avatarUrl.contains(testDataMap.get(keysForTestDataMap.expectedAvatarUrl)));
+            assertTrue(avatarUrl.contains(testDataMap.get(keysForTestDataMap.expectedAvatarUrl)), avatarUrl);
         }
 
         @Test
@@ -227,7 +229,7 @@ public class RumbleChannelExtractorTest {
             if (hasBanner)
                 assertIsSecureUrl(bannerUrl);
 
-            assertTrue(bannerUrl, bannerUrl.contains(expectedBannerUrl));
+            assertTrue(bannerUrl.contains(expectedBannerUrl), bannerUrl);
         }
 
         @Test
@@ -238,7 +240,7 @@ public class RumbleChannelExtractorTest {
         @Test
         public void testSubscriberCount () throws Exception {
             long subscriberCount = Long.parseLong(testDataMap.get(keysForTestDataMap.expectedMinSubscriberCount));
-            assertTrue("Wrong subscriber count", extractor.getSubscriberCount() >= subscriberCount );
+            assertTrue(extractor.getSubscriberCount() >= subscriberCount, "Wrong subscriber count");
         }
 
         @Override

@@ -1,10 +1,11 @@
 package org.schabi.newpipe.extractor.services.rumble.linkHandler;
 
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.schabi.newpipe.extractor.ServiceList.Rumble;
 import static org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleSearchQueryHandlerFactory.CHANNELS;
 import static org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleSearchQueryHandlerFactory.VIDEOS;

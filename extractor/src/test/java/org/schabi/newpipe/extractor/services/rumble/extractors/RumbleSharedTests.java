@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestListOfItems;
 
 public class RumbleSharedTests {
@@ -31,7 +31,7 @@ public class RumbleSharedTests {
         List<B> actualResultsList = items;
         defaultTestListOfItems(service, actualResultsList, errors);
 
-        assertTrue("Misconfigured test please provide someExpectedResults[] array", null != someExpectedResults);
+        assertTrue(null != someExpectedResults, "Misconfigured test please provide someExpectedResults[] array");
 
         String listOfResultsInCaseOfError = "List of actual Results:\n" +
                                             "=======================\n";
@@ -50,7 +50,7 @@ public class RumbleSharedTests {
 
         // verify if all someExpectedResults were found
         for (int i = 0; i < someExpectedResults.length; i++) {
-            assertTrue("Not found: " + someExpectedResults[i] + "\n\n but we found: " + listOfResultsInCaseOfError, foundEntries.contains(i));
+            assertTrue(foundEntries.contains(i), "Not found: " + someExpectedResults[i] + "\n\n but we found: " + listOfResultsInCaseOfError);
         }
     }
 }

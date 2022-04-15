@@ -1,7 +1,7 @@
 package org.schabi.newpipe.extractor.services.rumble.linkHandler;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderTestImpl;
 import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
@@ -10,10 +10,10 @@ import org.schabi.newpipe.extractor.linkhandler.LinkHandlerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.schabi.newpipe.extractor.ServiceList.Rumble;
 
 /**
@@ -38,7 +38,7 @@ public class RumbleTrendingLinkHandlerFactoryTest {
         put("https://rumble.com/category/sports",   "Sports");
     }};
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws Exception {
         // get the one and only instance. All 'trending' thingies use the same.
         linkHandlerFactory = Rumble.getKioskList().getListLinkHandlerFactoryByType(expectedTrendingUrl2IdMap.get(LIVE_KEY));

@@ -1,13 +1,14 @@
 package org.schabi.newpipe.extractor.services.rumble.extractors;
 
-import org.junit.BeforeClass;
-
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.schabi.newpipe.downloader.DownloaderFactory.RESOURCE_PATH;
 import static org.schabi.newpipe.extractor.ServiceList.Rumble;
 
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderFactory;
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.ListExtractor;
@@ -26,8 +27,6 @@ import java.net.URLEncoder;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.schabi.newpipe.extractor.ExtractorAsserts.assertEmptyErrors;
 import static org.schabi.newpipe.extractor.services.DefaultTests.assertNoDuplicatedItems;
 import static org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleSearchQueryHandlerFactory.CHANNELS;
@@ -41,7 +40,7 @@ public class RumbleSearchExtractorTest {
 
     public static class MultiplePagesResults extends AbstractSearchBaseTest {
 
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             QUERY = "paul";
             expectedSearchBaseUrl = "rumble.com/search/video?q=";
@@ -86,7 +85,7 @@ public class RumbleSearchExtractorTest {
 
     public static class onlyOnePageResults extends AbstractSearchBaseTest {
 
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             QUERY = "desantis bomb";
             expectedSearchBaseUrl = "rumble.com/search/video?q=";
@@ -103,13 +102,13 @@ public class RumbleSearchExtractorTest {
         @Test
         public void testMoreRelatedItems() throws Exception {
             final ListExtractor.InfoItemsPage<InfoItem> initialPage = extractor().getInitialPage();
-            assertFalse("More items available when it shouldn't", initialPage.hasNextPage());
+            assertFalse(initialPage.hasNextPage(), "More items available when it shouldn't");
         }
     }
 
     public static class NoResultsAtAll extends AbstractSearchBaseTest {
 
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             QUERY = "p3423n dkje ";
             expectedSearchBaseUrl = "rumble.com/search/video?q=";
@@ -126,22 +125,22 @@ public class RumbleSearchExtractorTest {
         @Test
         public void testRelatedItems() throws Exception {
             final ListExtractor.InfoItemsPage initialPage = extractor.getInitialPage();
-            assertFalse("Does have more items, when it should not", initialPage.hasNextPage());
+            assertFalse(initialPage.hasNextPage(), "Does have more items, when it should not");
             final List items = initialPage.getItems();
-            assertTrue("Page items list is empty", items.isEmpty());
+            assertTrue(items.isEmpty(), "Page items list is empty");
             assertEmptyErrors("Page have errors", initialPage.getErrors());
         }
         @Test
         public void testMoreRelatedItems() throws Exception {
             final ListExtractor.InfoItemsPage<InfoItem> initialPage = extractor().getInitialPage();
-            assertFalse("More items available when it shouldn't", initialPage.hasNextPage());
+            assertFalse(initialPage.hasNextPage(), "More items available when it shouldn't");
         }
     }
 
     public static class Channel extends AbstractSearchBaseTest {
         private static SearchExtractor extractor;
 
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             QUERY = "test";
             expectedSearchBaseUrl = "rumble.com/search/channel?q=";
@@ -174,7 +173,7 @@ public class RumbleSearchExtractorTest {
 
     public static class ChannelVerified extends AbstractSearchBaseTest {
 
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             QUERY = "Mark Dice";
             expectedSearchBaseUrl = "rumble.com/search/channel?q=";

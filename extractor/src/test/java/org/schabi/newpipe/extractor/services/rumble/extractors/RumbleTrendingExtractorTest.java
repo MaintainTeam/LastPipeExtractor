@@ -1,11 +1,8 @@
 package org.schabi.newpipe.extractor.services.rumble.extractors;
 
-import static org.junit.Assert.*;
-
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderTestImpl;
 import org.schabi.newpipe.extractor.ListExtractor;
 import org.schabi.newpipe.extractor.NewPipe;
@@ -18,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.schabi.newpipe.extractor.ServiceList.Rumble;
 import static org.schabi.newpipe.extractor.services.DefaultTests.assertNoMoreItems;
 import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestMoreItems;
@@ -42,7 +40,7 @@ import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestRela
 public class RumbleTrendingExtractorTest {
 
     public static class Live extends Trending {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.name, "Live");
@@ -55,7 +53,7 @@ public class RumbleTrendingExtractorTest {
     }
 
     public static class EditorPicks extends Trending {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.name, "Editor Picks");
@@ -68,7 +66,7 @@ public class RumbleTrendingExtractorTest {
     }
 
     public static class News extends Trending {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.name, "News");
@@ -81,7 +79,7 @@ public class RumbleTrendingExtractorTest {
     }
 
     public static class Viral extends Trending {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.name, "Viral");
@@ -94,7 +92,7 @@ public class RumbleTrendingExtractorTest {
     }
 
     public static class Podcasts extends Trending {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.name, "Podcasts");
@@ -107,7 +105,7 @@ public class RumbleTrendingExtractorTest {
     }
 
     public static class BattleLeaderboard extends Trending {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.name, "Today's Battle Leaderboard Top 50");
@@ -126,7 +124,7 @@ public class RumbleTrendingExtractorTest {
     }
 
     public static class Sports extends Trending {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.name, "Sports");
@@ -154,7 +152,7 @@ public class RumbleTrendingExtractorTest {
             extractor.fetchPage();
         }
 
-        @AfterClass
+        @AfterAll
         public static void tearDown() throws IOException, ExtractionException {
             List<Throwable> errors = extractor.getInitialPage().getErrors();
             System.out.println(errors.toString());
