@@ -9,8 +9,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
 
@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.schabi.newpipe.downloader.DownloaderFactory.RESOURCE_PATH;
 
 /**
@@ -50,7 +50,7 @@ public class BitchuteChannelStreamInfoItemExtractorTest {
     private static JsonObject testInputHelperJsonMock;
     private static JsonArray testExpectedResultsJsonMock;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws JsonParserException, IOException {
 
         channelStreamInfoExtractors = new LinkedList<>();

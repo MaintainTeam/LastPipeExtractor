@@ -1,8 +1,8 @@
 package org.schabi.newpipe.extractor.services.bitchute.extractor;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderTestImpl;
 import org.schabi.newpipe.extractor.ListExtractor;
 import org.schabi.newpipe.extractor.NewPipe;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.schabi.newpipe.extractor.ServiceList.Bitchute;
 import static org.schabi.newpipe.extractor.services.DefaultTests.assertNoMoreItems;
 import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestRelatedItems;
@@ -38,7 +38,7 @@ import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestRela
 public class BitchuteTrendingKioskExtractorTest {
 
     public static class TrendingWeek extends Trending {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.name, BitchuteKioskLinkHandlerFactory.TRENDING_WEEK);
@@ -51,7 +51,7 @@ public class BitchuteTrendingKioskExtractorTest {
     }
 
     public static class TrendingDay extends Trending {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.name, BitchuteKioskLinkHandlerFactory.TRENDING_DAY);
@@ -64,7 +64,7 @@ public class BitchuteTrendingKioskExtractorTest {
     }
 
     public static class TrendingMonth extends Trending {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.name, BitchuteKioskLinkHandlerFactory.TRENDING_MONTH);
@@ -77,7 +77,7 @@ public class BitchuteTrendingKioskExtractorTest {
     }
 
     public static class RecommendedChannel extends Trending {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.name, BitchuteKioskLinkHandlerFactory.RECOMMENDED_CHANNEL);
@@ -104,7 +104,7 @@ public class BitchuteTrendingKioskExtractorTest {
             extractor.fetchPage();
         }
 
-        @AfterClass
+        @AfterAll
         public static void tearDown() throws IOException, ExtractionException {
             List<Throwable> errors = extractor.getInitialPage().getErrors();
             System.out.println(errors.toString());

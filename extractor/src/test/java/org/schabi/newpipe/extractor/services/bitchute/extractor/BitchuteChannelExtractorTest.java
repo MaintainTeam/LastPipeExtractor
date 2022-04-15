@@ -1,19 +1,20 @@
 package org.schabi.newpipe.extractor.services.bitchute.extractor;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderTestImpl;
+import org.schabi.newpipe.extractor.ExtractorAsserts;
 import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.services.BaseChannelExtractorTest;
-import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteChannelExtractor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.schabi.newpipe.extractor.ExtractorAsserts.assertIsSecureUrl;
 import static org.schabi.newpipe.extractor.ServiceList.Bitchute;
 import static org.schabi.newpipe.extractor.services.DefaultTests.*;
@@ -24,7 +25,7 @@ import static org.schabi.newpipe.extractor.services.DefaultTests.*;
 public class BitchuteChannelExtractorTest {
 
     public static class TestMarkDiceChannel extends TestChannel {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.channelUrl, "https://www.bitchute.com/channel/u3QMwGD7bSW6");
@@ -43,7 +44,7 @@ public class BitchuteChannelExtractorTest {
     }
 
     public static class TestMissionCommanderChannel extends TestChannel {
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
                 put(keysForTestDataMap.channelUrl, "https://www.bitchute.com/channel/missoncommander/");
@@ -139,21 +140,21 @@ public class BitchuteChannelExtractorTest {
 
         @Test
         public void testDescription () throws Exception {
-            assertThat(extractor.getDescription(), containsString(testDataMap.get(keysForTestDataMap.expectedDescription)));
+            ExtractorAsserts.assertContains(testDataMap.get(keysForTestDataMap.expectedDescription), extractor.getDescription());
         }
 
         @Test
         public void testAvatarUrl () throws Exception {
             String avatarUrl = extractor.getAvatarUrl();
             assertIsSecureUrl(avatarUrl);
-            assertTrue(avatarUrl, avatarUrl.contains(testDataMap.get(keysForTestDataMap.expectedAvatarUrl)));
+            assertTrue(avatarUrl.contains(testDataMap.get(keysForTestDataMap.expectedAvatarUrl)), avatarUrl);
         }
 
         @Test
         public void testBannerUrl () throws Exception {
             String bannerUrl = extractor.getBannerUrl();
             assertIsSecureUrl(bannerUrl);
-            assertTrue(bannerUrl, bannerUrl.contains(testDataMap.get(keysForTestDataMap.expectedBannerlUrl)));
+            assertTrue(bannerUrl.contains(testDataMap.get(keysForTestDataMap.expectedBannerlUrl)), bannerUrl);
         }
 
         @Test
@@ -164,7 +165,7 @@ public class BitchuteChannelExtractorTest {
         @Test
         public void testSubscriberCount () throws Exception {
             long subscriberCount = Long.parseLong(testDataMap.get(keysForTestDataMap.expectedMinSubscriberCount));
-            assertTrue("Wrong subscriber count", extractor.getSubscriberCount() >= subscriberCount );
+            assertTrue(extractor.getSubscriberCount() >= subscriberCount, "Wrong subscriber count");
         }
 
         @Override

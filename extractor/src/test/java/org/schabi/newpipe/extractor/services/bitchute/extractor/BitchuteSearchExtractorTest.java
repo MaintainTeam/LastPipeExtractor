@@ -1,7 +1,7 @@
 package org.schabi.newpipe.extractor.services.bitchute.extractor;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderTestImpl;
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.ListExtractor;
@@ -18,7 +18,9 @@ import java.io.IOException;
 
 import javax.annotation.Nullable;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.schabi.newpipe.extractor.ServiceList.Bitchute;
 
 /**
@@ -27,7 +29,7 @@ import static org.schabi.newpipe.extractor.ServiceList.Bitchute;
 public class BitchuteSearchExtractorTest {
 
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         NewPipe.init(DownloaderTestImpl.getInstance());
     }
@@ -80,7 +82,7 @@ public class BitchuteSearchExtractorTest {
         private static SearchExtractor extractor;
         private static final String QUERY = "noise";
 
-        @BeforeClass
+        @BeforeAll
         public static void setUp() throws Exception {
             NewPipe.init(DownloaderTestImpl.getInstance());
             extractor = Bitchute.getSearchExtractor(QUERY);

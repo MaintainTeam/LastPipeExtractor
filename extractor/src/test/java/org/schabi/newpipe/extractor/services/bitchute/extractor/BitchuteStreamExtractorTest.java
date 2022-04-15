@@ -1,7 +1,7 @@
 package org.schabi.newpipe.extractor.services.bitchute.extractor;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderTestImpl;
 import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.StreamingService;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.schabi.newpipe.extractor.ServiceList.Bitchute;
 
 public class BitchuteStreamExtractorTest extends DefaultStreamExtractorTest {
@@ -39,7 +39,7 @@ public class BitchuteStreamExtractorTest extends DefaultStreamExtractorTest {
     private static boolean expectedHasVideoStreams = true;
     private static String expectedArtistProfilePictureInfix = ".bitchute.com/live/channel_images/";
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws ExtractionException, IOException {
         NewPipe.init(DownloaderTestImpl.getInstance());
 

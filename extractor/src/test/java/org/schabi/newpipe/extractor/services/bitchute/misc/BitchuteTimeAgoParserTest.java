@@ -1,11 +1,11 @@
 package org.schabi.newpipe.extractor.services.bitchute.misc;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 
 import java.time.OffsetDateTime;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BitchuteTimeAgoParserTest {
 
