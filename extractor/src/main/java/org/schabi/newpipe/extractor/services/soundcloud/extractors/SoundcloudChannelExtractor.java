@@ -25,6 +25,7 @@ public class SoundcloudChannelExtractor extends ChannelExtractor {
     private String userId;
     private JsonObject user;
     private static final String USERS_ENDPOINT = SOUNDCLOUD_API_V2_URL + "users/";
+    private static final String USERS_STREAM_ENDPOINT = SOUNDCLOUD_API_V2_URL + "stream/users/";
 
     public SoundcloudChannelExtractor(final StreamingService service,
                                       final ListLinkHandler linkHandler) {
@@ -105,6 +106,11 @@ public class SoundcloudChannelExtractor extends ChannelExtractor {
         return user.getBoolean("verified");
     }
 
+    private String getEndpointOptions() throws ExtractionException, IOException {
+        return "?client_id=" + SoundcloudParsingHelper.clientId()
+                + "&limit=20" + "&linked_partitioning=1";
+    }
+
     @Nonnull
     @Override
     public InfoItemsPage<StreamInfoItem> getInitialPage() throws ExtractionException {
@@ -112,11 +118,25 @@ public class SoundcloudChannelExtractor extends ChannelExtractor {
             final StreamInfoItemsCollector streamInfoItemsCollector =
                     new StreamInfoItemsCollector(getServiceId());
 
-            final String apiUrl = USERS_ENDPOINT + getId() + "/tracks" + "?client_id="
-                    + SoundcloudParsingHelper.clientId() + "&limit=20" + "&linked_partitioning=1";
+            // at least one entry is needed in apiUrls
+            final String[] apiUrls = {
+                    // apiUrl for tracks the user uploaded -> default tracks endpoint
+                    USERS_ENDPOINT + getId() + "/tracks" + getEndpointOptions(),
+                    // if there are no uploaded tracks in the user track endpoint, then look into
+                    // the stream endpoint if there are any tracks in reposts.
+                    // We may have something to list:)
+                    USERS_STREAM_ENDPOINT + getId() + "/reposts" + getEndpointOptions()
+            };
 
-            final String nextPageUrl = SoundcloudParsingHelper.getStreamsFromApiMinItems(15,
-                    streamInfoItemsCollector, apiUrl);
+            String nextPageUrl = null;
+            for (final String apiUrl : apiUrls) {
+                if (streamInfoItemsCollector.getItems().size() == 0) {
+                    nextPageUrl = SoundcloudParsingHelper.getStreamsFromApiMinItems(15,
+                            streamInfoItemsCollector, apiUrl);
+                } else {
+                    break; // We are happy if we find one apiUrl with tracks.
+                }
+            }
 
             return new InfoItemsPage<>(streamInfoItemsCollector, new Page(nextPageUrl));
         } catch (final Exception e) {
