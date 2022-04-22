@@ -10,8 +10,8 @@ class RumbleChannelSearchInfoItemExtractor implements ChannelInfoItemExtractor {
     String url;
     String thumbUrl;
 
-    public RumbleChannelSearchInfoItemExtractor(String name, String url,
-                                                String thumbUrl, String description) {
+    RumbleChannelSearchInfoItemExtractor(final String name, final String url,
+                                         final String thumbUrl, final String description) {
         this.description = description;
         this.name = name;
         this.url = url;

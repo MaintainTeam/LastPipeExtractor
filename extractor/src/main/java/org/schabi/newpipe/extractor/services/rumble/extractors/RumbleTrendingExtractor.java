@@ -20,20 +20,22 @@ public class RumbleTrendingExtractor extends KioskExtractor<StreamInfoItem> {
     private RumbleCommonCodeTrendingAndChannel sharedTrendingAndChannelCode;
     private Document doc;
 
-    public RumbleTrendingExtractor(StreamingService service,
-                                    ListLinkHandler linkHandler,
-                                    String kioskId) {
+    public RumbleTrendingExtractor(final StreamingService service,
+                                   final ListLinkHandler linkHandler,
+                                   final String kioskId) {
         super(service, linkHandler, kioskId);
 
         try {
-            sharedTrendingAndChannelCode = new RumbleCommonCodeTrendingAndChannel(getServiceId(), getUrl());
-        } catch (ParsingException e) {
+            sharedTrendingAndChannelCode =
+                    new RumbleCommonCodeTrendingAndChannel(getServiceId(), getUrl());
+        } catch (final ParsingException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
+    public void onFetchPage(@Nonnull final Downloader downloader)
+            throws IOException, ExtractionException {
         doc = Jsoup.parse(getDownloader().get(getUrl()).responseBody());
     }
 
@@ -44,9 +46,11 @@ public class RumbleTrendingExtractor extends KioskExtractor<StreamInfoItem> {
     }
 
     @Override
-    public InfoItemsPage<StreamInfoItem> getPage(final Page page) throws IOException, ExtractionException {
-        if (null == page)
+    public InfoItemsPage<StreamInfoItem> getPage(final Page page)
+            throws IOException, ExtractionException {
+        if (null == page) {
             return null;
+        }
 
         doc = Jsoup.parse(getDownloader().get(page.getUrl()).responseBody());
         return sharedTrendingAndChannelCode.extractAndGetInfoItemsFromPage(doc);

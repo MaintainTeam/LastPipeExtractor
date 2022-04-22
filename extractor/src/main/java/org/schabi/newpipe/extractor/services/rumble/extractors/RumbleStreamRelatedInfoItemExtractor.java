@@ -20,17 +20,20 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
     private String channelName;
     private String channelUrl;
 
-    public RumbleStreamRelatedInfoItemExtractor(TimeAgoParser parser, Element element) {
+    public RumbleStreamRelatedInfoItemExtractor(final TimeAgoParser parser, final Element element) {
         this.element = element;
         this.parser = parser;
     }
-    public RumbleStreamRelatedInfoItemExtractor(TimeAgoParser parser, Node element, Document doc) {
-        this.element = (Element)element;
+
+    public RumbleStreamRelatedInfoItemExtractor(final TimeAgoParser parser, final Node element,
+                                                final Document doc) {
+        this.element = (Element) element;
         this.parser = parser;
         this.doc = doc;
     }
 
-    public RumbleStreamRelatedInfoItemExtractor(TimeAgoParser parser, Element element, String channelName, String channelUrl) {
+    public RumbleStreamRelatedInfoItemExtractor(final TimeAgoParser parser, final Element element,
+                                                final String channelName, final String channelUrl) {
         this.element = element;
         this.parser = parser;
         this.channelName = channelName;
@@ -51,10 +54,10 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
     public long getDuration() throws ParsingException {
         try {
 
-            String data = element.select("small.medialist-duration").first().text();
-            long duration = RumbleParsingHelper.parseDurationString(data);
+            final String data = element.select("small.medialist-duration").first().text();
+            final long duration = RumbleParsingHelper.parseDurationString(data);
             return duration;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing duration");
         }
     }
@@ -71,7 +74,7 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
                 channelName = element.select("h4.mediaList-by-heading").first().text();
             }
             return channelName;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Stream uploader name");
         }
     }
@@ -80,12 +83,15 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
     public String getUploaderUrl() throws ParsingException {
         try {
             if (channelUrl == null) {
-                String classStr = element.getElementsByClass("user-image").first().attr("class");
-                channelUrl = RumbleParsingHelper.moreTotalMessMethodToGenerateUploaderUrl(classStr, doc, getUploaderName());
+                final String classStr =
+                        element.getElementsByClass("user-image").first().attr("class");
+                channelUrl = RumbleParsingHelper
+                        .moreTotalMessMethodToGenerateUploaderUrl(classStr, doc, getUploaderName());
             }
             return channelUrl;
-        } catch (Exception e) {
-            throw new ParsingException("Error parsing uploader url: " + e.getMessage() + ". Cause:" + e.getCause());
+        } catch (final Exception e) {
+            throw new ParsingException(
+                    "Error parsing uploader url: " + e.getMessage() + ". Cause:" + e.getCause());
         }
     }
 
@@ -109,9 +115,9 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
     @Override
     public String getName() throws ParsingException {
         try {
-            String title = element.select("h3.mediaList-heading").first().text();
+            final String title = element.select("h3.mediaList-heading").first().text();
             return title;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Stream title");
         }
     }
@@ -119,9 +125,9 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
     @Override
     public String getUrl() throws ParsingException {
         try {
-            String url = element.select("a.mediaList-link").first().absUrl("href");
+            final String url = element.select("a.mediaList-link").first().absUrl("href");
             return url;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Stream url");
         }
     }
@@ -129,9 +135,9 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
     @Override
     public String getThumbnailUrl() throws ParsingException {
         try {
-            String thumbUrl = element.select("img.mediaList-image").first().attr("src");
+            final String thumbUrl = element.select("img.mediaList-image").first().attr("src");
             return thumbUrl;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing thumbnail url");
         }
     }

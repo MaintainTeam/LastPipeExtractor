@@ -8,16 +8,15 @@ import org.schabi.newpipe.extractor.utils.Utils;
 
 public class RumbleChannelInfoItemExtractor implements ChannelInfoItemExtractor {
 
-    public RumbleChannelInfoItemExtractor(String something) {
+    public RumbleChannelInfoItemExtractor(final String something) {
     }
 
     @Override
     public String getThumbnailUrl() throws ParsingException {
         try {
-            String url = "" ; // TODO
-
+            final String url = ""; // TODO
             return url;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Could not get thumbnail url", e);
         }
     }
@@ -25,8 +24,8 @@ public class RumbleChannelInfoItemExtractor implements ChannelInfoItemExtractor 
     @Override
     public String getName() throws ParsingException {
         try {
-            return "" ; // TODO
-        } catch (Exception e) {
+            return ""; // TODO
+        } catch (final Exception e) {
             throw new ParsingException("Could not get name", e);
         }
     }
@@ -34,9 +33,9 @@ public class RumbleChannelInfoItemExtractor implements ChannelInfoItemExtractor 
     @Override
     public String getUrl() throws ParsingException {
         try {
-            String id = "" ; // TODO
+            final String id = ""; // TODO
             return RumbleChannelLinkHandlerFactory.getInstance().getUrl(id);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Could not get url", e);
         }
     }
@@ -44,14 +43,14 @@ public class RumbleChannelInfoItemExtractor implements ChannelInfoItemExtractor 
     @Override
     public long getSubscriberCount() throws ParsingException {
         try {
-            String subscriptionCount = ""; // TODO
-            if (! true /* hasSubscriberCountText*/) {
+            final String subscriptionCount = ""; // TODO
+            if (false /* hasSubscriberCountText*/) {
                 // Subscription count is not available for this channel item.
                 return -1;
             }
 
             return Utils.mixedNumberWordToLong(subscriptionCount);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Could not get subscriber count", e);
         }
     }
@@ -59,14 +58,14 @@ public class RumbleChannelInfoItemExtractor implements ChannelInfoItemExtractor 
     @Override
     public long getStreamCount() throws ParsingException {
         try {
-            String streamCount = ""; // TODO
-            if (! true /*hasVideoCountText*/) {
+            final String streamCount = ""; // TODO
+            if (false /*hasVideoCountText*/) {
                 // Video count is not available, channel probably has no public uploads.
                 return ListExtractor.ITEM_COUNT_UNKNOWN;
             }
 
             return Long.parseLong(Utils.removeNonDigitCharacters(streamCount));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Could not get stream count", e);
         }
     }
@@ -79,13 +78,13 @@ public class RumbleChannelInfoItemExtractor implements ChannelInfoItemExtractor 
     @Override
     public String getDescription() throws ParsingException {
         try {
-            if (! true /* hasDescriptionSnippet*/) {
+            if (false /* hasDescriptionSnippet*/) {
                 // Channel has no description.
                 return null;
             }
 
             return ""; // TODO
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Could not get description", e);
         }
     }

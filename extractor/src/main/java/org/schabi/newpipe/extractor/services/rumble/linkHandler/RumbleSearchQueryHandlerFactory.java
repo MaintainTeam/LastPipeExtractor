@@ -23,7 +23,9 @@ public class RumbleSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
     }
 
     @Override
-    public String getUrl(String searchString, List<String> contentFilters, String sortFilter) throws ParsingException {
+    public String getUrl(final String searchString, final List<String> contentFilters,
+                         final String sortFilter)
+            throws ParsingException {
         try {
             if (!contentFilters.isEmpty()) {
 
@@ -36,20 +38,20 @@ public class RumbleSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
                         return SEARCH_VIDEOS_URL + URLEncoder.encode(searchString, UTF_8);
                     case CHANNELS:
                         return SEARCH_CHANNEL_URL + URLEncoder.encode(searchString, UTF_8);
-                        //TODO case for user as we can search for search/user?=...
+                    //TODO case for user as we can search for search/user?=...
                 }
             }
 
             // we default to searching videos
             return SEARCH_VIDEOS_URL + URLEncoder.encode(searchString, UTF_8);
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             throw new ParsingException("Could not encode query", e);
         }
     }
 
     @Override
     public String[] getAvailableContentFilter() {
-        return new String[]{
+        return new String[] {
                 ALL,
                 VIDEOS,
                 CHANNELS

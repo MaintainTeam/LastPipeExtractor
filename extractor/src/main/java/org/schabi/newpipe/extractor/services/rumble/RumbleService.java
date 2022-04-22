@@ -31,7 +31,7 @@ import static org.schabi.newpipe.extractor.ServiceList.Rumble;
 
 public class RumbleService extends StreamingService {
 
-    public RumbleService(int id) {
+    public RumbleService(final int id) {
         super(id, "Rumble", asList(ServiceInfo.MediaCapability.VIDEO,
                 ServiceInfo.MediaCapability.AUDIO, ServiceInfo.MediaCapability.LIVE));
     }
@@ -62,12 +62,12 @@ public class RumbleService extends StreamingService {
     }
 
     @Override
-    public StreamExtractor getStreamExtractor(LinkHandler linkHandler) {
+    public StreamExtractor getStreamExtractor(final LinkHandler linkHandler) {
         return new RumbleStreamExtractor(this, linkHandler);
     }
 
     @Override
-    public ChannelExtractor getChannelExtractor(ListLinkHandler linkHandler) {
+    public ChannelExtractor getChannelExtractor(final ListLinkHandler linkHandler) {
         return new RumbleChannelExtractor(this, linkHandler);
     }
 
@@ -77,7 +77,7 @@ public class RumbleService extends StreamingService {
     }
 
     @Override
-    public SearchExtractor getSearchExtractor(SearchQueryHandler query) {
+    public SearchExtractor getSearchExtractor(final SearchQueryHandler query) {
         return new RumbleSearchExtractor(this, query);
     }
 
@@ -89,25 +89,28 @@ public class RumbleService extends StreamingService {
     @Override
     public KioskList getKioskList() throws ExtractionException {
 
-        KioskList.KioskExtractorFactory trendingKioskExtractorFactory = new KioskList.KioskExtractorFactory() {
-            @Override
-            public KioskExtractor createNewKiosk(StreamingService streamingService, String url
-                    , String kioskId) throws ExtractionException {
-                return new RumbleTrendingExtractor(
-                        Rumble,
-                        RumbleTrendingLinkHandlerFactory.getInstance().fromId(kioskId),
-                        kioskId);
-            }
-        };
+        final KioskList.KioskExtractorFactory trendingKioskExtractorFactory =
+                new KioskList.KioskExtractorFactory() {
+                    @Override
+                    public KioskExtractor createNewKiosk(final StreamingService streamingService,
+                                                         final String url,
+                                                         final String kioskId)
+                            throws ExtractionException {
+                        return new RumbleTrendingExtractor(Rumble,
+                                RumbleTrendingLinkHandlerFactory.getInstance().fromId(kioskId),
+                                kioskId);
+                    }
+                };
 
-        KioskList list = new KioskList(this);
+        final KioskList list = new KioskList(this);
         try {
-            for (String kioskId : RumbleTrendingLinkHandlerFactory.getInstance().getTrendingKioskIdsList()) {
+            for (final String kioskId : RumbleTrendingLinkHandlerFactory.getInstance()
+                    .getTrendingKioskIdsList()) {
                 list.addKioskEntry(trendingKioskExtractorFactory,
                         RumbleTrendingLinkHandlerFactory.getInstance(), kioskId);
             }
             list.setDefaultKiosk(RumbleTrendingLinkHandlerFactory.DEFAULT_TRENDING);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ExtractionException(e);
         }
 
@@ -125,7 +128,7 @@ public class RumbleService extends StreamingService {
     }
 
     @Override
-    public CommentsExtractor getCommentsExtractor(ListLinkHandler urlIdHandler)
+    public CommentsExtractor getCommentsExtractor(final ListLinkHandler urlIdHandler)
             throws ExtractionException {
         return null;
     }

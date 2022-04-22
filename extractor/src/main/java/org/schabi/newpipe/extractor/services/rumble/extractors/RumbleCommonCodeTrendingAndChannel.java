@@ -19,26 +19,28 @@ public class RumbleCommonCodeTrendingAndChannel {
     private final String baseUrl;
     private final RumbleCommonCodeTrendingAndSearching rumbleCommonCodeTrendingAndSearching;
 
-    RumbleCommonCodeTrendingAndChannel(int serviceId,
-                                       String baseUrl) {
+    RumbleCommonCodeTrendingAndChannel(final int serviceId,
+                                       final String baseUrl) {
         this.serviceId = serviceId;
         this.rumbleCommonCodeTrendingAndSearching = new RumbleCommonCodeTrendingAndSearching();
         this.baseUrl = baseUrl;
     }
 
-    public ListExtractor.InfoItemsPage<StreamInfoItem> extractAndGetInfoItemsFromPage(Document doc) throws IOException, ExtractionException {
+    public ListExtractor.InfoItemsPage<StreamInfoItem> extractAndGetInfoItemsFromPage(
+            final Document doc)
+            throws IOException, ExtractionException {
         final StreamInfoItemsCollector collector = new StreamInfoItemsCollector(serviceId);
 
-        List<StreamInfoItemExtractor> infoItemsList =
+        final List<StreamInfoItemExtractor> infoItemsList =
                 rumbleCommonCodeTrendingAndSearching.getSearchOrTrendingResultsItemList(doc);
 
-        for (StreamInfoItemExtractor infoItemExtractor : infoItemsList) {
+        for (final StreamInfoItemExtractor infoItemExtractor : infoItemsList) {
             collector.commit(infoItemExtractor);
         }
 
-        Page nextPage = rumbleCommonCodeTrendingAndSearching
+        final Page nextPage = rumbleCommonCodeTrendingAndSearching
                 .getNewPageIfThereAreMoreThanOnePageResults(
-                        infoItemsList.size(), doc, baseUrl + "?page=" );
+                        infoItemsList.size(), doc, baseUrl + "?page=");
 
         return new ListExtractor.InfoItemsPage<>(collector, nextPage);
     }

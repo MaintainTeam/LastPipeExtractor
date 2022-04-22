@@ -24,14 +24,16 @@ public class RumbleSearchExtractor extends SearchExtractor {
     private Document doc;
     RumbleCommonCodeTrendingAndSearching rumbleCommonCodeTrendingAndSearching;
 
-    public RumbleSearchExtractor(final StreamingService service, final SearchQueryHandler linkHandler) {
+    public RumbleSearchExtractor(final StreamingService service,
+                                 final SearchQueryHandler linkHandler) {
         super(service, linkHandler);
         rumbleCommonCodeTrendingAndSearching = new RumbleCommonCodeTrendingAndSearching();
 
     }
 
     @Override
-    public void onFetchPage(@Nonnull final Downloader downloader) throws IOException, ExtractionException {
+    public void onFetchPage(@Nonnull final Downloader downloader)
+            throws IOException, ExtractionException {
         doc = Jsoup.parse(getDownloader().get(getUrl()).responseBody());
     }
 
@@ -57,26 +59,30 @@ public class RumbleSearchExtractor extends SearchExtractor {
         return extractAndGetInfoItemsFromPage();
     }
 
-    private InfoItemsPage<InfoItem> extractAndGetInfoItemsFromPage() throws IOException, ExtractionException {
+    private InfoItemsPage<InfoItem> extractAndGetInfoItemsFromPage()
+            throws IOException, ExtractionException {
         final MultiInfoItemsCollector collector = new MultiInfoItemsCollector(getServiceId());
 
-        List<StreamInfoItemExtractor> infoItemsList =
+        final List<StreamInfoItemExtractor> infoItemsList =
                 rumbleCommonCodeTrendingAndSearching.getSearchOrTrendingResultsItemList(doc);
 
-        for (StreamInfoItemExtractor infoItemExtractor : infoItemsList) {
+        for (final StreamInfoItemExtractor infoItemExtractor : infoItemsList) {
             collector.commit(infoItemExtractor);
         }
 
-        Page nextPage = rumbleCommonCodeTrendingAndSearching.getNewPageIfThereAreMoreThanOnePageResults(
-                infoItemsList.size(), doc, getUrl()+ "&page=" );
+        final Page nextPage =
+                rumbleCommonCodeTrendingAndSearching.getNewPageIfThereAreMoreThanOnePageResults(
+                        infoItemsList.size(), doc, getUrl() + "&page=");
 
         return new InfoItemsPage<>(collector, nextPage);
     }
 
     @Override
-    public InfoItemsPage<InfoItem> getPage(final Page page) throws IOException, ExtractionException {
-        if (null == page)
+    public InfoItemsPage<InfoItem> getPage(final Page page)
+            throws IOException, ExtractionException {
+        if (null == page) {
             return null;
+        }
 
         doc = Jsoup.parse(getDownloader().get(page.getUrl()).responseBody());
         return extractAndGetInfoItemsFromPage();

@@ -23,18 +23,21 @@ public class RumbleChannelExtractor extends ChannelExtractor {
     private RumbleCommonCodeTrendingAndChannel sharedTrendingAndChannelCode;
     private Document doc;
 
-    public RumbleChannelExtractor(StreamingService service, ListLinkHandler linkHandler) {
+    public RumbleChannelExtractor(final StreamingService service,
+                                  final ListLinkHandler linkHandler) {
         super(service, linkHandler);
 
         try {
-            sharedTrendingAndChannelCode = new RumbleCommonCodeTrendingAndChannel(getServiceId(), getUrl());
-        } catch (ParsingException e) {
+            sharedTrendingAndChannelCode =
+                    new RumbleCommonCodeTrendingAndChannel(getServiceId(), getUrl());
+        } catch (final ParsingException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
+    public void onFetchPage(@Nonnull final Downloader downloader)
+            throws IOException, ExtractionException {
         doc = Jsoup.parse(getDownloader().get(getUrl()).responseBody());
     }
 
@@ -42,8 +45,8 @@ public class RumbleChannelExtractor extends ChannelExtractor {
     @Override
     public String getUrl() throws ParsingException {
         try {
-            return RumbleChannelLinkHandlerFactory.getInstance().getUrl( getId());
-        } catch (ParsingException e) {
+            return RumbleChannelLinkHandlerFactory.getInstance().getUrl(getId());
+        } catch (final ParsingException e) {
             return super.getUrl();
         }
     }
@@ -51,12 +54,12 @@ public class RumbleChannelExtractor extends ChannelExtractor {
     @Nonnull
     @Override
     public String getId() throws ParsingException {
-        String channelId = RumbleParsingHelper.extractSafely(true,
+        final String channelId = RumbleParsingHelper.extractSafely(true,
                 "Could not get channel id",
-                ()-> {
+                () -> {
                     final String cssQuery = "div.listing-header--content > div > button";
-                    String channelName =doc.select(cssQuery).first().attr("data-slug");
-                    String type = doc.select(cssQuery).first().attr("data-type");
+                    final String channelName = doc.select(cssQuery).first().attr("data-slug");
+                    final String type = doc.select(cssQuery).first().attr("data-type");
                     if ("channel".equals(type)) {
                         return "c/" + channelName;
                     } else if ("user".equals(type)) {
@@ -70,7 +73,7 @@ public class RumbleChannelExtractor extends ChannelExtractor {
     @Nonnull
     @Override
     public String getName() throws ParsingException {
-        String name = RumbleParsingHelper.extractSafely(true,
+        final String name = RumbleParsingHelper.extractSafely(true,
                 "Could not get channel name",
                 () -> doc.getElementsByTag("title").first().text()
         );
@@ -79,16 +82,16 @@ public class RumbleChannelExtractor extends ChannelExtractor {
 
     @Override
     public String getAvatarUrl() throws ParsingException {
-        String url = RumbleParsingHelper.extractSafely(true,
+        final String url = RumbleParsingHelper.extractSafely(true,
                 "Could not get avatar url",
-                ()-> doc.select("div.listing-header--content > img").attr("src")
+                () -> doc.select("div.listing-header--content > img").attr("src")
         );
         return url;
     }
 
     @Override
     public String getBannerUrl() throws ParsingException {
-        String bannerUrl = RumbleParsingHelper.extractSafely(false,
+        final String bannerUrl = RumbleParsingHelper.extractSafely(false,
                 "Could not get banner",
                 () -> doc.select("div.listing-header--backsplash > div > img").attr("src")
         );
@@ -104,7 +107,7 @@ public class RumbleChannelExtractor extends ChannelExtractor {
     public long getSubscriberCount() throws ParsingException {
         final String errorMsg = "Could not get subscriber count";
 
-        String viewCount = RumbleParsingHelper.extractSafely(true,
+        final String viewCount = RumbleParsingHelper.extractSafely(true,
                 errorMsg,
                 () -> doc.select("span.subscribe-button-count").first().text()
         );
@@ -112,7 +115,7 @@ public class RumbleChannelExtractor extends ChannelExtractor {
         if (null != viewCount) {
             try {
                 return Utils.mixedNumberWordToLong(viewCount);
-            } catch (NumberFormatException e) {
+            } catch (final NumberFormatException e) {
                 throw new ParsingException(errorMsg, e);
             }
         } else {
@@ -142,22 +145,21 @@ public class RumbleChannelExtractor extends ChannelExtractor {
 
     @Override
     public boolean isVerified() throws ParsingException {
-        String verified = RumbleParsingHelper.extractSafely(false,
+        final String verified = RumbleParsingHelper.extractSafely(false,
                 "",
                 () -> doc.select("svg.listing-header--verified").first().text()
         );
 
-        if (verified == null)
-            return false;
-        else
-            return true;
+        return verified != null;
     }
 
 
     @Override
-    public InfoItemsPage<StreamInfoItem> getPage(final Page page) throws IOException, ExtractionException {
-        if (null == page)
+    public InfoItemsPage<StreamInfoItem> getPage(final Page page)
+            throws IOException, ExtractionException {
+        if (null == page) {
             return null;
+        }
 
         doc = Jsoup.parse(getDownloader().get(page.getUrl()).responseBody());
         return sharedTrendingAndChannelCode.extractAndGetInfoItemsFromPage(doc);

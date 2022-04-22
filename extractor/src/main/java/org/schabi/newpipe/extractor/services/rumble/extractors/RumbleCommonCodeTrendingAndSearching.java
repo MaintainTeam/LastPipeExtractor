@@ -22,22 +22,28 @@ import static org.schabi.newpipe.extractor.ServiceList.Rumble;
  */
 public class RumbleCommonCodeTrendingAndSearching {
 
-    public Page getNewPageIfThereAreMoreThanOnePageResults(int numberOfCollectedItems, Document doc, String urlPrefix) {
+    public Page getNewPageIfThereAreMoreThanOnePageResults(final int numberOfCollectedItems,
+                                                           final Document doc,
+                                                           final String urlPrefix) {
 
         Page nextPage = null;
 
-        // check if there is a next page
-        if (numberOfCollectedItems > 0) { // if numberOfCollectedItems is 0 than we have no results at all -> assume no more pages
-            String currentPageStrNumber = doc.getElementsByClass("paginator--link--current").attr("aria-label");
-            boolean hasMorePages;
+        // -- check if there is a next page --
+        // If numberOfCollectedItems is 0 than we have no results at all
+        // -> assume no more pages
+        if (numberOfCollectedItems > 0) {
+            final String currentPageStrNumber =
+                    doc.getElementsByClass("paginator--link--current").attr("aria-label");
+            final boolean hasMorePages;
             if (currentPageStrNumber.isEmpty()) {
                 hasMorePages = false;
             } else {
                 // check if we are on the last page of available search results
-                int currentPageIsLastPageIfGreaterThanZero =
+                final int currentPageIsLastPageIfGreaterThanZero =
                         doc.getElementsByClass("paginator--link").last()
-                                .getElementsByClass("paginator--link paginator--link--current").size();
-                hasMorePages = (currentPageIsLastPageIfGreaterThanZero > 0) ? false : true;
+                                .getElementsByClass("paginator--link paginator--link--current")
+                                .size();
+                hasMorePages = !(currentPageIsLastPageIfGreaterThanZero > 0);
             }
 
             if (hasMorePages) {
@@ -48,54 +54,71 @@ public class RumbleCommonCodeTrendingAndSearching {
         return nextPage;
     }
 
-    public List<StreamInfoItemExtractor> getSearchOrTrendingResultsItemList(Document doc) throws ParsingException {
-        List<StreamInfoItemExtractor> list = new LinkedList<>();
+    @SuppressWarnings("checkstyle:InvalidJavadocPosition")
+    public List<StreamInfoItemExtractor> getSearchOrTrendingResultsItemList(final Document doc)
+            throws ParsingException {
+        final List<StreamInfoItemExtractor> list = new LinkedList<>();
 
-        Elements elements = doc.select("li.video-listing-entry");
+        final Elements elements = doc.select("li.video-listing-entry");
         StreamInfoItemExtractor infoItemExtractor;
 
-        for (Element element : elements) {
+        for (final Element element : elements) {
 
             /** set {@value shouldThrowOnError} to 'false' as live events sometimes have no views
              * or obviously no duration at all. see {@link RumbleTrendingLinkHandlerFactory.LIVE} */
-            String views = RumbleParsingHelper.extractSafely(false, "Could not extract the view count",
-                    () -> getClassValue(element, "video-item--views", "data-value") );
-            String duration = RumbleParsingHelper.extractSafely(false, "Could not extract the duration",
-                    () -> getClassValue(element, "video-item--duration", "data-value"));
+            final String views =
+                    RumbleParsingHelper.extractSafely(false, "Could not extract the view count",
+                            () -> getClassValue(element, "video-item--views", "data-value"));
+            final String duration =
+                    RumbleParsingHelper.extractSafely(false, "Could not extract the duration",
+                            () -> getClassValue(element, "video-item--duration", "data-value"));
 
-            String msg = "Could not extract the thumbnail url";
+            final String msg = "Could not extract the thumbnail url";
             String thumbUrl = RumbleParsingHelper.extractSafely(false, msg,
-                    () -> element.select("img.video-item--img").first().absUrl("src") );
+                    () -> element.select("img.video-item--img").first().absUrl("src"));
             if (null == thumbUrl) {
                 /** In case of the battle-leaderboard the image might be found here
                  * see {@link RumbleTrendingLinkHandlerFactory.TODAYS_BATTLE_LEADERBOARD_TOP_50} */
                 thumbUrl = RumbleParsingHelper.extractSafely(true, msg,
-                        () -> element.select("img.video-item--img-img").first().absUrl("src") );
+                        () -> element.select("img.video-item--img-img").first().absUrl("src"));
             }
 
-            String textualDate = RumbleParsingHelper.extractSafely(true, "Could not extract the textual upload date",
-                    () -> getClassValue(element, "video-item--time", "datetime") );
-            String title = RumbleParsingHelper.extractSafely(true, "Could not extract the stream title",
-                    () -> element.select("h3.video-item--title").first().childNodes().get(0).toString() );
-            String url = RumbleParsingHelper.extractSafely(true, "Could not extract the stream url",
-                    () -> Rumble.getBaseUrl() + element.select("a.video-item--a").first().attr("href") );
-            String uploaderUrl = RumbleParsingHelper.extractSafely(true, "Could not extract the uploader url",
-                    () -> Rumble.getBaseUrl() + element.select("address.video-item--by > a").first().attr("href") );
-            String uploader = RumbleParsingHelper.extractSafely(true, "Could not extract the uploader name",
-                    () -> element.select("address.video-item--by").first().getElementsByTag("div").first().text() );
+            final String textualDate = RumbleParsingHelper
+                    .extractSafely(true, "Could not extract the textual upload date",
+                            () -> getClassValue(element, "video-item--time", "datetime"));
+            final String title =
+                    RumbleParsingHelper.extractSafely(true, "Could not extract the stream title",
+                            () -> element.select("h3.video-item--title").first().childNodes().get(0)
+                                    .toString());
+            final String url =
+                    RumbleParsingHelper.extractSafely(true, "Could not extract the stream url",
+                            () -> Rumble.getBaseUrl()
+                                    + element.select("a.video-item--a").first().attr("href"));
+            final String uploaderUrl =
+                    RumbleParsingHelper.extractSafely(true, "Could not extract the uploader url",
+                            () -> Rumble.getBaseUrl()
+                                    + element.select("address.video-item--by > a").first()
+                                    .attr("href"));
+            final String uploader =
+                    RumbleParsingHelper.extractSafely(true, "Could not extract the uploader name",
+                            () -> element.select("address.video-item--by").first()
+                                    .getElementsByTag("div").first().text());
 
             boolean isLive = false;
-            String liveStream = RumbleParsingHelper.extractSafely(false, "Could not extract the live thingy",
-                    () -> getClassValue(element, "video-item--live", "data-value") );
+            final String liveStream =
+                    RumbleParsingHelper.extractSafely(false, "Could not extract the live thingy",
+                            () -> getClassValue(element, "video-item--live", "data-value"));
             if ("LIVE".equals(liveStream)) {
                 isLive = true;
             }
 
-            DateWrapper uploadDate = new DateWrapper(OffsetDateTime.parse(textualDate), false);
+            final DateWrapper uploadDate =
+                    new DateWrapper(OffsetDateTime.parse(textualDate), false);
 
             //switch (kind) {
             //    case BitchuteConstants.KIND_CHANNEL:
-            //        infoItemExtractor = new BitchuteSearchExtractor.BitchuteQuickChannelInfoItemExtractor(
+            //        infoItemExtractor =
+            //           new BitchuteSearchExtractor.BitchuteQuickChannelInfoItemExtractor(
             //                name,
             //                url,
             //                thumbUrl,
@@ -124,7 +147,7 @@ public class RumbleCommonCodeTrendingAndSearching {
         return list;
     }
 
-    private String getClassValue(Element element, String className, String attr) {
+    private String getClassValue(final Element element, final String className, final String attr) {
         return element.getElementsByClass(className).first().attr(attr);
     }
 }

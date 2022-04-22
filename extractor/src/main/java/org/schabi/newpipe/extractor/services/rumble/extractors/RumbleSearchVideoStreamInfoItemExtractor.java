@@ -21,10 +21,13 @@ public class RumbleSearchVideoStreamInfoItemExtractor implements StreamInfoItemE
     DateWrapper uploadDate;
     boolean isLive;
 
-    public RumbleSearchVideoStreamInfoItemExtractor(String name, String url, String thumbUrl,
-                                                    String viewCount, String textualDate,
-                                                    String duration, String uploader,
-                                                    String uploaderUrl, DateWrapper uploadDate, boolean isLive) {
+    @SuppressWarnings("checkstyle:ParameterNumber")
+    public RumbleSearchVideoStreamInfoItemExtractor(final String name, final String url,
+                                                    final String thumbUrl, final String viewCount,
+                                                    final String textualDate, final String duration,
+                                                    final String uploader, final String uploaderUrl,
+                                                    final DateWrapper uploadDate,
+                                                    final boolean isLive) {
         this.viewCount = viewCount;
         this.textualDate = textualDate;
         this.name = name;
@@ -39,8 +42,9 @@ public class RumbleSearchVideoStreamInfoItemExtractor implements StreamInfoItemE
 
     @Override
     public StreamType getStreamType() {
-        if (isLive)
+        if (isLive) {
             return StreamType.LIVE_STREAM;
+        }
         return StreamType.VIDEO_STREAM;
     }
 
@@ -51,15 +55,17 @@ public class RumbleSearchVideoStreamInfoItemExtractor implements StreamInfoItemE
 
     @Override
     public long getDuration() throws ParsingException {
-        if (null == duration)
+        if (null == duration) {
             return -1;
+        }
         return YoutubeParsingHelper.parseDurationString(duration);
     }
 
     @Override
     public long getViewCount() throws ParsingException {
-        if (null == viewCount)
+        if (null == viewCount) {
             return -1;
+        }
         return Long.parseLong(Utils.removeNonDigitCharacters(viewCount));
     }
 
