@@ -32,22 +32,23 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
     private String channelName;
     private String avatarUrl;
 
-    public BitchuteChannelExtractor(StreamingService service, ListLinkHandler linkHandler) {
+    public BitchuteChannelExtractor(final StreamingService service,
+                                    final ListLinkHandler linkHandler) {
         super(service, linkHandler);
     }
 
     @Override
-    public void onFetchPage(@Nonnull Downloader downloader)
+    public void onFetchPage(@Nonnull final Downloader downloader)
             throws IOException, ExtractionException {
-        Response response = getDownloader().get(getUrl(),
+        final Response response = getDownloader().get(getUrl(),
                 BitchuteParserHelper.getBasicHeader());
         doc = Jsoup.parse(response.responseBody(), getUrl());
     }
 
     private String getChannelID() {
-        String canonicalUrl = doc.getElementById("canonical").attr("href");
-        String[] urlSegments = canonicalUrl.split("/");
-        return urlSegments[urlSegments.length-1];
+        final String canonicalUrl = doc.getElementById("canonical").attr("href");
+        final String[] urlSegments = canonicalUrl.split("/");
+        return urlSegments[urlSegments.length - 1];
     }
 
     @Nonnull
@@ -58,7 +59,7 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
                 channelName = doc.select("#channel-title").first().text();
             }
             return channelName;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Channel Name");
         }
     }
@@ -69,12 +70,12 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
             if (avatarUrl == null) {
                 avatarUrl = doc.select("#page-bar > div > div > div.image-container > a > img")
                         .first().attr("data-src");
-                if ( avatarUrl.startsWith("/")) {
+                if (avatarUrl.startsWith("/")) {
                     avatarUrl = BitchuteConstants.BASE_URL + avatarUrl;
                 }
             }
             return avatarUrl;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Channel Avatar Url");
         }
     }
@@ -83,19 +84,25 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
     public String getDescription() throws ParsingException {
         try {
             return doc.select("#channel-description").first().text();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Channel Description");
         }
     }
 
     @Override
-    public String getParentChannelName() throws ParsingException { return null; }
+    public String getParentChannelName() throws ParsingException {
+        return null;
+    }
 
     @Override
-    public String getParentChannelUrl() throws ParsingException { return null; }
+    public String getParentChannelUrl() throws ParsingException {
+        return null;
+    }
 
     @Override
-    public String getParentChannelAvatarUrl() throws ParsingException { return null; }
+    public String getParentChannelAvatarUrl() throws ParsingException {
+        return null;
+    }
 
     @Override
     public boolean isVerified() throws ParsingException {
@@ -107,7 +114,7 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
         try {
             return Utils.mixedNumberWordToLong(BitchuteParserHelper
                     .getSubscriberCountForChannelID(getChannelID()));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Channel Subscribers");
         }
     }
@@ -115,7 +122,7 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
     @Nonnull
     @Override
     public InfoItemsPage<StreamInfoItem> getInitialPage() throws IOException, ExtractionException {
-        JsonObject jsonObject = new JsonObject();
+        final JsonObject jsonObject = new JsonObject();
         jsonObject.put("offset", "0");
         jsonObject.put("name", getName());
         jsonObject.put("url", getUrl());
@@ -123,13 +130,14 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
     }
 
     @Override
-    public InfoItemsPage<StreamInfoItem> getPage(Page page) throws IOException, ExtractionException {
+    public InfoItemsPage<StreamInfoItem> getPage(final Page page)
+            throws IOException, ExtractionException {
         try {
-            JsonObject jsonObject = JsonParser.object().from(page.getUrl());
+            final JsonObject jsonObject = JsonParser.object().from(page.getUrl());
             return getInfoItemsPage(BitchuteParserHelper
                             .getExtendDocumentForUrl(getUrl(), jsonObject.getString("offset")),
                     jsonObject);
-        } catch (JsonParserException e) {
+        } catch (final JsonParserException e) {
             throw new ParsingException("Error parsing url json");
         }
     }
@@ -144,9 +152,10 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
         return null;
     }
 
-    private InfoItemsPage<StreamInfoItem> getInfoItemsPage(Document doc, final JsonObject jsonObject) {
-        StreamInfoItemsCollector collector = new StreamInfoItemsCollector(getServiceId());
-        Elements videos = doc.select(".channel-videos-container");
+    private InfoItemsPage<StreamInfoItem> getInfoItemsPage(final Document document,
+                                                           final JsonObject jsonObject) {
+        final StreamInfoItemsCollector collector = new StreamInfoItemsCollector(getServiceId());
+        final Elements videos = document.select(".channel-videos-container");
         for (final Element e : videos) {
             collector.commit(new BitchuteChannelStreamInfoItemExtractor(e) {
                 @Override
@@ -166,8 +175,9 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
             });
         }
         int offset = Integer.parseInt(jsonObject.getString("offset"));
-        if (videos.size() < 25)
+        if (videos.size() < 25) {
             return new InfoItemsPage<>(collector, null);
+        }
         offset += 25;
         jsonObject.put("offset", String.valueOf(offset));
         return new InfoItemsPage<>(collector, new Page(JsonWriter.string(jsonObject)));

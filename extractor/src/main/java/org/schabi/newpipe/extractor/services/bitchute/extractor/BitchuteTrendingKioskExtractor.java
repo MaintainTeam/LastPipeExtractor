@@ -26,15 +26,17 @@ public class BitchuteTrendingKioskExtractor extends KioskExtractor<StreamInfoIte
 
     private Document doc;
 
-    public BitchuteTrendingKioskExtractor(StreamingService streamingService,
-                                          ListLinkHandler linkHandler, String kioskId) {
+    public BitchuteTrendingKioskExtractor(final StreamingService streamingService,
+                                          final ListLinkHandler linkHandler,
+                                          final String kioskId) {
         super(streamingService, linkHandler, kioskId);
     }
 
     @Override
-    public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
-        doc = Jsoup.parse(downloader.get(BITCHUTE_LINK, getExtractorLocalization()).responseBody()
-                , BITCHUTE_LINK);
+    public void onFetchPage(@Nonnull final Downloader downloader)
+            throws IOException, ExtractionException {
+        doc = Jsoup.parse(downloader.get(BITCHUTE_LINK, getExtractorLocalization()).responseBody(),
+                BITCHUTE_LINK);
     }
 
     @Nonnull
@@ -46,8 +48,8 @@ public class BitchuteTrendingKioskExtractor extends KioskExtractor<StreamInfoIte
     @Nonnull
     @Override
     public InfoItemsPage<StreamInfoItem> getInitialPage() {
-        StreamInfoItemsCollector collector = new StreamInfoItemsCollector(getServiceId());
-        String selector;
+        final StreamInfoItemsCollector collector = new StreamInfoItemsCollector(getServiceId());
+        final String selector;
         switch (getId()) {
             case TRENDING_MONTH:
                 selector = "#trending-month div.video-result-container";
@@ -66,7 +68,8 @@ public class BitchuteTrendingKioskExtractor extends KioskExtractor<StreamInfoIte
     }
 
     @Override
-    public InfoItemsPage<StreamInfoItem> getPage(Page page) throws IOException, ExtractionException {
+    public InfoItemsPage<StreamInfoItem> getPage(final Page page)
+            throws IOException, ExtractionException {
         return null;
     }
 }

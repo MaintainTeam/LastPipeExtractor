@@ -23,15 +23,17 @@ public class BitchuteRecommendedChannelKioskExtractor extends KioskExtractor<Cha
 
     private Document doc;
 
-    public BitchuteRecommendedChannelKioskExtractor(StreamingService streamingService,
-                                                    ListLinkHandler linkHandler, String kioskId) {
+    public BitchuteRecommendedChannelKioskExtractor(final StreamingService streamingService,
+                                                    final ListLinkHandler linkHandler,
+                                                    final String kioskId) {
         super(streamingService, linkHandler, kioskId);
     }
 
     @Override
-    public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
-        doc = Jsoup.parse(downloader.get(BITCHUTE_LINK, getExtractorLocalization()).responseBody()
-                , BITCHUTE_LINK);
+    public void onFetchPage(@Nonnull final Downloader downloader)
+            throws IOException, ExtractionException {
+        doc = Jsoup.parse(downloader.get(BITCHUTE_LINK, getExtractorLocalization()).responseBody(),
+                BITCHUTE_LINK);
     }
 
     @Nonnull
@@ -43,8 +45,8 @@ public class BitchuteRecommendedChannelKioskExtractor extends KioskExtractor<Cha
     @Nonnull
     @Override
     public InfoItemsPage<ChannelInfoItem> getInitialPage() {
-        ChannelInfoItemsCollector collector = new ChannelInfoItemsCollector(getServiceId());
-        String selector = "#channel-list .channel-card";
+        final ChannelInfoItemsCollector collector = new ChannelInfoItemsCollector(getServiceId());
+        final String selector = "#channel-list .channel-card";
         for (final Element e : doc.select(selector)) {
             collector.commit(new BitchuteRecommendedChannelInfoItemExtractor(e));
         }
@@ -52,7 +54,8 @@ public class BitchuteRecommendedChannelKioskExtractor extends KioskExtractor<Cha
     }
 
     @Override
-    public InfoItemsPage<ChannelInfoItem> getPage(Page page) throws IOException, ExtractionException {
+    public InfoItemsPage<ChannelInfoItem> getPage(final Page page)
+            throws IOException, ExtractionException {
         return null;
     }
 }

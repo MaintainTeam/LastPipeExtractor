@@ -10,7 +10,8 @@ import java.util.List;
 
 public class BitchuteSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
 
-    private static BitchuteSearchQueryHandlerFactory instance = new BitchuteSearchQueryHandlerFactory();
+    private static BitchuteSearchQueryHandlerFactory instance =
+            new BitchuteSearchQueryHandlerFactory();
 
     public static BitchuteSearchQueryHandlerFactory getInstance() {
         return instance;
@@ -20,10 +21,11 @@ public class BitchuteSearchQueryHandlerFactory extends SearchQueryHandlerFactory
     private static final String SEARCH_URL = BitchuteConstants.SEARCH_URL_PREFIX;
 
     @Override
-    public String getUrl(String query, List<String> contentFilter, String sortFilter) throws ParsingException {
+    public String getUrl(final String query, final List<String> contentFilter,
+                         final String sortFilter) throws ParsingException {
         try {
             return SEARCH_URL + URLEncoder.encode(query, CHARSET_UTF_8);
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             throw new ParsingException("Could not encode query", e);
         }
     }

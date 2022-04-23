@@ -20,7 +20,7 @@ public abstract class BitchuteChannelStreamInfoItemExtractor implements StreamIn
 
     private Element element;
 
-    public BitchuteChannelStreamInfoItemExtractor(Element element) {
+    public BitchuteChannelStreamInfoItemExtractor(final Element element) {
         this.element = element;
     }
 
@@ -55,14 +55,15 @@ public abstract class BitchuteChannelStreamInfoItemExtractor implements StreamIn
     @Override
     public DateWrapper getUploadDate() throws ParsingException {
 
-        Date date;
+        final Date date;
         try {
-            SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy", BitchuteConstants.BITCHUTE_LOCALE);
+            final SimpleDateFormat df =
+                    new SimpleDateFormat("MMM dd, yyyy", BitchuteConstants.BITCHUTE_LOCALE);
             date = df.parse(getTextualUploadDate());
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             throw new ParsingException("Couldn't parse date:" + getTextualUploadDate());
         }
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return new DateWrapper(calendar);
     }
@@ -84,26 +85,26 @@ public abstract class BitchuteChannelStreamInfoItemExtractor implements StreamIn
                 .absUrl("data-src");
     }
 
-    @Override
     /**
      * create a json object. Basically this is useful for compact unit testing or exporting the data
      */
+    @Override
     public String toString() {
         try {
-            return "{" +
-                    "\"streamType\": \"" + getStreamType().toString() +
-                    "\", \"isAd\": \"" + isAd() +
-                    "\", \"duration\": \"" + getDuration() +
-                    "\", \"viewCount\": \"" + getViewCount() +
-                    "\", \"uploadDate\": \"" + getUploadDate().offsetDateTime().toString() +
-                    "\", \"uploaderName\": \"" + getUploaderName() +
-                    "\", \"uploaderUrl\": \"" + getUploaderUrl() +
-                    "\", \"name\": \"" + getName() +
-                    "\", \"url\": \"" + getUrl() +
-                    "\", \"thumbnailUrl\": \"" + getThumbnailUrl() +
-                    "\", \"isUploaderVerified\": \"" + isUploaderVerified() +
-                    "\"}";
-        } catch (ParsingException e) {
+            return "{"
+                    + "\"streamType\": \"" + getStreamType().toString()
+                    + "\", \"isAd\": \"" + isAd()
+                    + "\", \"duration\": \"" + getDuration()
+                    + "\", \"viewCount\": \"" + getViewCount()
+                    + "\", \"uploadDate\": \"" + getUploadDate().offsetDateTime().toString()
+                    + "\", \"uploaderName\": \"" + getUploaderName()
+                    + "\", \"uploaderUrl\": \"" + getUploaderUrl()
+                    + "\", \"name\": \"" + getName()
+                    + "\", \"url\": \"" + getUrl()
+                    + "\", \"thumbnailUrl\": \"" + getThumbnailUrl()
+                    + "\", \"isUploaderVerified\": \"" + isUploaderVerified()
+                    + "\"}";
+        } catch (final ParsingException e) {
             e.printStackTrace();
         }
         return null;

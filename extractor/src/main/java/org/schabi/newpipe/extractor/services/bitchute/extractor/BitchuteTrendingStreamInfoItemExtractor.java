@@ -15,16 +15,17 @@ public class BitchuteTrendingStreamInfoItemExtractor implements StreamInfoItemEx
 
     private final Element element;
     private final TimeAgoParser parser;
-    private String cssQueryVideoName = ".video-result-title";
-    private String cssQueryUploaderName = ".video-result-channel";
-    private String cssQueryThumbnailUrl = ".video-result-image img";
-    private String cssQueryUploaderUrl = ".video-result-channel a";
-    private String cssQueryUploadDate = ".video-result-details";
-    private String cssQueryVideoViews = ".video-views";
-    private String cssQueryVideoDuration = ".video-duration";
-    private String cssQueryVideoUrl = ".video-result-title a";
+    private final String cssQueryVideoName = ".video-result-title";
+    private final String cssQueryUploaderName = ".video-result-channel";
+    private final String cssQueryThumbnailUrl = ".video-result-image img";
+    private final String cssQueryUploaderUrl = ".video-result-channel a";
+    private final String cssQueryUploadDate = ".video-result-details";
+    private final String cssQueryVideoViews = ".video-views";
+    private final String cssQueryVideoDuration = ".video-duration";
+    private final String cssQueryVideoUrl = ".video-result-title a";
 
-    public BitchuteTrendingStreamInfoItemExtractor(TimeAgoParser parser, Element element) {
+    public BitchuteTrendingStreamInfoItemExtractor(final TimeAgoParser parser,
+                                                   final Element element) {
         this.element = element;
         this.parser = parser;
     }
@@ -45,7 +46,7 @@ public class BitchuteTrendingStreamInfoItemExtractor implements StreamInfoItemEx
             return YoutubeParsingHelper
                     .parseDurationString(element.select(cssQueryVideoDuration)
                             .first().text());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing duration");
         }
     }
@@ -55,7 +56,7 @@ public class BitchuteTrendingStreamInfoItemExtractor implements StreamInfoItemEx
         try {
             return Utils.mixedNumberWordToLong(element
                     .select(cssQueryVideoViews).first().text());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
             throw new ParsingException("Error parsing view count");
         }
@@ -65,7 +66,7 @@ public class BitchuteTrendingStreamInfoItemExtractor implements StreamInfoItemEx
     public String getUploaderName() throws ParsingException {
         try {
             return element.select(cssQueryUploaderName).first().text();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing uploader name");
         }
     }
@@ -75,7 +76,7 @@ public class BitchuteTrendingStreamInfoItemExtractor implements StreamInfoItemEx
         try {
             return element.select(cssQueryUploaderUrl).first()
                     .absUrl("href");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing uploader url");
         }
     }
@@ -89,8 +90,8 @@ public class BitchuteTrendingStreamInfoItemExtractor implements StreamInfoItemEx
     @Override
     public String getTextualUploadDate() throws ParsingException {
         try {
-            return element.select(cssQueryUploadDate ).first().text();
-        } catch (Exception e) {
+            return element.select(cssQueryUploadDate).first().text();
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Textual Upload Date");
         }
     }
@@ -105,7 +106,7 @@ public class BitchuteTrendingStreamInfoItemExtractor implements StreamInfoItemEx
     public String getName() throws ParsingException {
         try {
             return element.select(cssQueryVideoName).first().text();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Stream title");
         }
     }
@@ -115,7 +116,7 @@ public class BitchuteTrendingStreamInfoItemExtractor implements StreamInfoItemEx
         try {
             return element.select(cssQueryVideoUrl)
                     .first().absUrl("href");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Stream url");
         }
     }
@@ -125,7 +126,7 @@ public class BitchuteTrendingStreamInfoItemExtractor implements StreamInfoItemEx
         try {
             return element.select(cssQueryThumbnailUrl)
                     .first().attr("data-src");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing thumbnail url");
         }
     }

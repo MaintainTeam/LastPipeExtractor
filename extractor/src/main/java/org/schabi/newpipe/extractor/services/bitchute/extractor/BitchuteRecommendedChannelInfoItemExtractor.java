@@ -8,7 +8,7 @@ public class BitchuteRecommendedChannelInfoItemExtractor implements ChannelInfoI
 
     private final Element element;
 
-    public BitchuteRecommendedChannelInfoItemExtractor(Element element) {
+    public BitchuteRecommendedChannelInfoItemExtractor(final Element element) {
         this.element = element;
     }
 
@@ -36,7 +36,7 @@ public class BitchuteRecommendedChannelInfoItemExtractor implements ChannelInfoI
     public String getName() throws ParsingException {
         try {
             return element.select(".channel-card-title").first().text();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Channel title");
         }
     }
@@ -46,7 +46,7 @@ public class BitchuteRecommendedChannelInfoItemExtractor implements ChannelInfoI
         try {
             return element.select("a")
                     .first().absUrl("href");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Stream url");
         }
     }
@@ -56,7 +56,7 @@ public class BitchuteRecommendedChannelInfoItemExtractor implements ChannelInfoI
         try {
             return element.select("a > img")
                     .first().attr("data-src");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing thumbnail url");
         }
     }

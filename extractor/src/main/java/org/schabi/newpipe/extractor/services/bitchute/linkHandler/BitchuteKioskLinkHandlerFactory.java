@@ -24,26 +24,29 @@ public class BitchuteKioskLinkHandlerFactory extends ListLinkHandlerFactory {
 
 
     @Override
-    public String getId(String url) throws ParsingException {
-        if (url.equals(BITCHUTE_LINK))
+    public String getId(final String url) throws ParsingException {
+        if (url.equals(BITCHUTE_LINK)) {
             return TRENDING_DAY;
+        }
         try {
-            String s = Utils.stringToURL(url).getRef();
+            final String s = Utils.stringToURL(url).getRef();
             return s.endsWith("/") ? s.substring(0, s.length() - 1) : s;
-        } catch (MalformedURLException e) {
+        } catch (final MalformedURLException e) {
             throw new ParsingException("Error parsing url id");
         }
     }
 
     @Override
-    public String getUrl(String id, List<String> contentFilter, String sortFilter) throws ParsingException {
-        if (id.equals(TRENDING_DAY))
+    public String getUrl(final String id, final List<String> contentFilter, final String sortFilter)
+            throws ParsingException {
+        if (id.equals(TRENDING_DAY)) {
             return BITCHUTE_LINK;
+        }
         return BITCHUTE_LINK + String.format("#%s/", id);
     }
 
     @Override
-    public boolean onAcceptUrl(String url) throws ParsingException {
+    public boolean onAcceptUrl(final String url) throws ParsingException {
         return url.startsWith(BITCHUTE_LINK);
     }
 }

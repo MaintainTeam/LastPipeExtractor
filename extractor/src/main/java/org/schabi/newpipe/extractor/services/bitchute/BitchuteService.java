@@ -38,7 +38,7 @@ public class BitchuteService extends StreamingService {
 
     public static final String BITCHUTE_LINK = "https://www.bitchute.com/";
 
-    public BitchuteService(int id) {
+    public BitchuteService(final int id) {
         super(id, "BitChute", asList(ServiceInfo.MediaCapability.VIDEO));
     }
 
@@ -73,7 +73,7 @@ public class BitchuteService extends StreamingService {
     }
 
     @Override
-    public SearchExtractor getSearchExtractor(SearchQueryHandler queryHandler) {
+    public SearchExtractor getSearchExtractor(final SearchQueryHandler queryHandler) {
         return new BitchuteSearchExtractor(this, queryHandler);
     }
 
@@ -90,29 +90,33 @@ public class BitchuteService extends StreamingService {
     @Override
     public KioskList getKioskList() throws ExtractionException {
 
-        KioskList.KioskExtractorFactory trendingKioskExtractorFactory = new KioskList.KioskExtractorFactory() {
-            @Override
-            public KioskExtractor createNewKiosk(StreamingService streamingService, String url
-                    , String kioskId) throws ExtractionException {
-                return new BitchuteTrendingKioskExtractor(
-                        BitchuteService.this,
-                        BitchuteKioskLinkHandlerFactory.getInstance().fromId(kioskId),
-                        kioskId);
-            }
-        };
+        final KioskList.KioskExtractorFactory trendingKioskExtractorFactory =
+                new KioskList.KioskExtractorFactory() {
+                    @Override
+                    public KioskExtractor createNewKiosk(final StreamingService streamingService,
+                                                         final String url, final String kioskId)
+                            throws ExtractionException {
+                        return new BitchuteTrendingKioskExtractor(
+                                BitchuteService.this,
+                                BitchuteKioskLinkHandlerFactory.getInstance().fromId(kioskId),
+                                kioskId);
+                    }
+                };
 
-        KioskList.KioskExtractorFactory recommendedChannelKioskExtractorFactory = new KioskList.KioskExtractorFactory() {
-            @Override
-            public KioskExtractor createNewKiosk(StreamingService streamingService, String url
-                    , String kioskId) throws ExtractionException {
-                return new BitchuteRecommendedChannelKioskExtractor(
-                        BitchuteService.this,
-                        BitchuteKioskLinkHandlerFactory.getInstance().fromId(kioskId),
-                        kioskId);
-            }
-        };
+        final KioskList.KioskExtractorFactory recommendedChannelKioskExtractorFactory =
+                new KioskList.KioskExtractorFactory() {
+                    @Override
+                    public KioskExtractor createNewKiosk(final StreamingService streamingService,
+                                                         final String url, final String kioskId)
+                            throws ExtractionException {
+                        return new BitchuteRecommendedChannelKioskExtractor(
+                                BitchuteService.this,
+                                BitchuteKioskLinkHandlerFactory.getInstance().fromId(kioskId),
+                                kioskId);
+                    }
+                };
 
-        KioskList list = new KioskList(this);
+        final KioskList list = new KioskList(this);
         try {
             list.addKioskEntry(trendingKioskExtractorFactory,
                     BitchuteKioskLinkHandlerFactory.getInstance(), TRENDING_DAY);
@@ -126,7 +130,7 @@ public class BitchuteService extends StreamingService {
             list.addKioskEntry(recommendedChannelKioskExtractorFactory,
                     BitchuteKioskLinkHandlerFactory.getInstance(), RECOMMENDED_CHANNEL);
             list.setDefaultKiosk(TRENDING_DAY);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ExtractionException(e);
         }
 
@@ -134,22 +138,26 @@ public class BitchuteService extends StreamingService {
     }
 
     @Override
-    public ChannelExtractor getChannelExtractor(ListLinkHandler linkHandler) throws ExtractionException {
+    public ChannelExtractor getChannelExtractor(final ListLinkHandler linkHandler)
+            throws ExtractionException {
         return new BitchuteChannelExtractor(this, linkHandler);
     }
 
     @Override
-    public PlaylistExtractor getPlaylistExtractor(ListLinkHandler linkHandler) throws ExtractionException {
+    public PlaylistExtractor getPlaylistExtractor(final ListLinkHandler linkHandler)
+            throws ExtractionException {
         return null;
     }
 
     @Override
-    public StreamExtractor getStreamExtractor(LinkHandler linkHandler) throws ExtractionException {
+    public StreamExtractor getStreamExtractor(final LinkHandler linkHandler)
+            throws ExtractionException {
         return new BitchuteStreamExtractor(this, linkHandler);
     }
 
     @Override
-    public CommentsExtractor getCommentsExtractor(ListLinkHandler linkHandler) throws ExtractionException {
+    public CommentsExtractor getCommentsExtractor(final ListLinkHandler linkHandler)
+            throws ExtractionException {
         return null;
     }
 }

@@ -36,13 +36,15 @@ public class BitchuteSearchExtractor extends SearchExtractor {
 
     BitchuteTimeAgoParser timeAgoParser;
 
-    public BitchuteSearchExtractor(StreamingService service, SearchQueryHandler linkHandler) {
+    public BitchuteSearchExtractor(final StreamingService service,
+                                   final SearchQueryHandler linkHandler) {
         super(service, linkHandler);
         timeAgoParser = new BitchuteTimeAgoParser();
     }
 
     @Override
-    public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
+    public void onFetchPage(@Nonnull final Downloader downloader)
+            throws IOException, ExtractionException {
 
     }
 
@@ -70,7 +72,8 @@ public class BitchuteSearchExtractor extends SearchExtractor {
     }
 
     @Override
-    public InfoItemsPage<InfoItem> getPage(Page page) throws IOException, ExtractionException {
+    public InfoItemsPage<InfoItem> getPage(final Page page)
+            throws IOException, ExtractionException {
 
         /*
         //TODO evermind: do we need document for something?
@@ -80,53 +83,55 @@ public class BitchuteSearchExtractor extends SearchExtractor {
 
 
         // retrieve the results via json result
-        String query = getLinkHandler().getId();
+        final String query = getLinkHandler().getId();
         /* TODO for now we restrict to only search for videos and not for channel as I don't know
            how to handle both. As they are separated query calls.
          */
         int currentPageNumber = Integer.parseInt(page.getId());
-        JsonObject jsonResponse = BitchuteParserHelper.getSearchResultForQuery(query, BitchuteConstants.KIND_VIDEO, currentPageNumber);
+        final JsonObject jsonResponse = BitchuteParserHelper
+                .getSearchResultForQuery(query, BitchuteConstants.KIND_VIDEO, currentPageNumber);
 
-        MultiInfoItemsCollector collector = new MultiInfoItemsCollector(getServiceId());
+        final MultiInfoItemsCollector collector = new MultiInfoItemsCollector(getServiceId());
         InfoItemExtractor infoItemExtractor;
 
-        String jsonResultArrayKey = "results";
+        final String jsonResultArrayKey = "results";
         /* below keys for the array with jsonResultArrayKey as key */
-        String jsonTitleKey = "name";
-        String jsonVideoPathKey = "path";
-        String jsonDescKey = "description";
-        String jsonPublishedKey = "published";
-        String jsonViewsKey = "views";
-        String jsonKindKey = "kind";
-        String jsonDurationKey = "duration";
-        String jsonUploaderKey = "channel_name";
-        String jsonUploaderUrlKey = "channel_path";
+        final String jsonTitleKey = "name";
+        final String jsonVideoPathKey = "path";
+        final String jsonDescKey = "description";
+        final String jsonPublishedKey = "published";
+        final String jsonViewsKey = "views";
+        final String jsonKindKey = "kind";
+        final String jsonDurationKey = "duration";
+        final String jsonUploaderKey = "channel_name";
+        final String jsonUploaderUrlKey = "channel_path";
 
-        JsonArray results = jsonResponse.getArray(jsonResultArrayKey);
+        final JsonArray results = jsonResponse.getArray(jsonResultArrayKey);
         if (results.size() == 0) {
             return new InfoItemsPage<>(collector, null);
         }
 
-        for ( Object elem : results) {
-            if ( elem instanceof JsonObject) {
-                JsonObject result = (JsonObject) elem;
-                String name = result.getString(jsonTitleKey);
-                String url = BitchuteConstants.BASE_URL + result.getString(jsonVideoPathKey);
+        for (final Object elem : results) {
+            if (elem instanceof JsonObject) {
+                final JsonObject result = (JsonObject) elem;
+                final String name = result.getString(jsonTitleKey);
+                final String url = BitchuteConstants.BASE_URL + result.getString(jsonVideoPathKey);
 
-                String thumbUrl = result.getObject("images").getString("thumbnail");
-                String desc = result.getString(jsonDescKey);
+                final String thumbUrl = result.getObject("images").getString("thumbnail");
+                final String desc = result.getString(jsonDescKey);
 
-                String textualDate = result.getString(jsonPublishedKey);
-                String views = BitchuteHelpers.getIntAlwaysAsString(result,jsonViewsKey);
-                String duration = result.getString(jsonDurationKey);
-                String kind = result.getString(jsonKindKey);
-                String uploader = result.getString(jsonUploaderKey);
-                String uploaderUrl = BitchuteConstants.BASE_URL + result.getString(jsonUploaderUrlKey);
+                final String textualDate = result.getString(jsonPublishedKey);
+                final String views = BitchuteHelpers.getIntAlwaysAsString(result, jsonViewsKey);
+                final String duration = result.getString(jsonDurationKey);
+                final String kind = result.getString(jsonKindKey);
+                final String uploader = result.getString(jsonUploaderKey);
+                final String uploaderUrl =
+                        BitchuteConstants.BASE_URL + result.getString(jsonUploaderUrlKey);
 
                 DateWrapper uploadDate = null;
                 try {
                     uploadDate = timeAgoParser.parse(textualDate);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     throw new ParsingException("Error Parsing Upload Date: " + e.getMessage());
                 }
 
@@ -160,20 +165,21 @@ public class BitchuteSearchExtractor extends SearchExtractor {
 
         try {
 
-            String jsonResultsCount = "count";
-            String jsonResultsTotal = "total";
+            final String jsonResultsCount = "count";
+            final String jsonResultsTotal = "total";
 
-            long count = jsonResponse.getLong(jsonResultsCount);
-            long total = jsonResponse.getLong(jsonResultsTotal);
+            final long count = jsonResponse.getLong(jsonResultsCount);
+            final long total = jsonResponse.getLong(jsonResultsTotal);
 
-            int maxPages = (count != 0) ? (int) (total / count) : 0;
+            final int maxPages = (count != 0) ? (int) (total / count) : 0;
             if (maxPages > currentPageNumber) {
                 currentPageNumber += 1;
-                return new InfoItemsPage<>(collector, new Page(getUrl(), String.valueOf(currentPageNumber)));
+                return new InfoItemsPage<>(collector,
+                        new Page(getUrl(), String.valueOf(currentPageNumber)));
             } else {
                 return new InfoItemsPage<>(collector, null);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return new InfoItemsPage<>(collector, null);
         }
     }
@@ -189,10 +195,12 @@ public class BitchuteSearchExtractor extends SearchExtractor {
         String uploaderUrl;
         DateWrapper uploadDate;
 
-        public BitchuteQuickStreamInfoItemExtractor(String name, String url, String thumbUrl,
-                                                    String viewCount, String textualDate,
-                                                    String duration, String uploader,
-                                                    String uploaderUrl, DateWrapper uploadDate) {
+        @SuppressWarnings("checkstyle:ParameterNumber")
+        BitchuteQuickStreamInfoItemExtractor(final String name, final String url,
+                                             final String thumbUrl, final String viewCount,
+                                             final String textualDate, final String duration,
+                                             final String uploader, final String uploaderUrl,
+                                             final DateWrapper uploadDate) {
             this.viewCount = viewCount;
             this.textualDate = textualDate;
             this.name = name;
@@ -280,8 +288,8 @@ public class BitchuteSearchExtractor extends SearchExtractor {
         String url;
         String thumbUrl;
 
-        public BitchuteQuickChannelInfoItemExtractor(String name, String url,
-                                                     String thumbUrl, String description) {
+        BitchuteQuickChannelInfoItemExtractor(final String name, final String url,
+                                              final String thumbUrl, final String description) {
             this.description = description;
             this.name = name;
             this.url = url;

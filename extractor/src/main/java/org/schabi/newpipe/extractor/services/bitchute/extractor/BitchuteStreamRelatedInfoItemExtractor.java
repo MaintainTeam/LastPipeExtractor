@@ -18,12 +18,15 @@ public class BitchuteStreamRelatedInfoItemExtractor implements StreamInfoItemExt
     private String channelName;
     private String channelUrl;
 
-    public BitchuteStreamRelatedInfoItemExtractor(TimeAgoParser parser, Element element) {
+    public BitchuteStreamRelatedInfoItemExtractor(final TimeAgoParser parser,
+                                                  final Element element) {
         this.element = element;
         this.parser = parser;
     }
 
-    public BitchuteStreamRelatedInfoItemExtractor(TimeAgoParser parser, Element element, String channelName, String channelUrl) {
+    public BitchuteStreamRelatedInfoItemExtractor(final TimeAgoParser parser, final Element element,
+                                                  final String channelName,
+                                                  final String channelUrl) {
         this.element = element;
         this.parser = parser;
         this.channelName = channelName;
@@ -46,7 +49,7 @@ public class BitchuteStreamRelatedInfoItemExtractor implements StreamInfoItemExt
             return YoutubeParsingHelper
                     .parseDurationString(element.select(".video-duration")
                             .first().text());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing duration");
         }
     }
@@ -56,7 +59,7 @@ public class BitchuteStreamRelatedInfoItemExtractor implements StreamInfoItemExt
         try {
             return Utils.mixedNumberWordToLong(element
                     .select(".video-views").first().text());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
             throw new ParsingException("Error parsing view count");
         }
@@ -82,7 +85,7 @@ public class BitchuteStreamRelatedInfoItemExtractor implements StreamInfoItemExt
     public String getTextualUploadDate() throws ParsingException {
         try {
             return element.select(".video-card-published").first().text();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Textual Upload Date");
         }
     }
@@ -97,7 +100,7 @@ public class BitchuteStreamRelatedInfoItemExtractor implements StreamInfoItemExt
     public String getName() throws ParsingException {
         try {
             return element.select(".video-card-title").first().text();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Stream title");
         }
     }
@@ -106,7 +109,7 @@ public class BitchuteStreamRelatedInfoItemExtractor implements StreamInfoItemExt
     public String getUrl() throws ParsingException {
         try {
             return element.select(".video-card-title a").first().absUrl("href");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing Stream url");
         }
     }
@@ -115,7 +118,7 @@ public class BitchuteStreamRelatedInfoItemExtractor implements StreamInfoItemExt
     public String getThumbnailUrl() throws ParsingException {
         try {
             return element.select(".video-card-image img").first().attr("data-src");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new ParsingException("Error parsing thumbnail url");
         }
     }

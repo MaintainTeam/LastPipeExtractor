@@ -21,8 +21,9 @@ import java.util.Map;
 import static org.schabi.newpipe.extractor.NewPipe.getDownloader;
 import static org.schabi.newpipe.extractor.services.bitchute.BitchuteService.BITCHUTE_LINK;
 
-public class BitchuteParserHelper {
+public final class BitchuteParserHelper {
 
+    private BitchuteParserHelper() { }
 
     private static String cookies;
     private static String csrfToken;
@@ -35,16 +36,17 @@ public class BitchuteParserHelper {
     }
 
     public static void init() throws ReCaptchaException, IOException {
-        Response response = getDownloader().get(BITCHUTE_LINK);
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry entry : response.responseHeaders().entrySet()) {
+        final Response response = getDownloader().get(BITCHUTE_LINK);
+        final StringBuilder sb = new StringBuilder();
+        for (final Map.Entry entry : response.responseHeaders().entrySet()) {
             if (entry.getKey().equals("set-cookie")) {
-                List<String> values = (List<String>) entry.getValue();
-                for (String v : values) {
-                    String val = v.split(";", 2)[0];
+                final List<String> values = (List<String>) entry.getValue();
+                for (final String v : values) {
+                    final String val = v.split(";", 2)[0];
                     sb.append(val).append(";");
-                    if (val.contains("csrf"))
+                    if (val.contains("csrf")) {
                         csrfToken = val.split("=", 2)[1];
+                    }
                 }
                 break;
             }
@@ -52,121 +54,129 @@ public class BitchuteParserHelper {
         cookies = sb.toString();
     }
 
-    public static Map<String, List<String>> getPostHeader(int contentLength) throws IOException, ReCaptchaException {
-        Map<String, List<String>> headers = getBasicHeader();
+    public static Map<String, List<String>> getPostHeader(final int contentLength)
+            throws IOException, ReCaptchaException {
+        final Map<String, List<String>> headers = getBasicHeader();
         headers.put("Content-Type", Collections.singletonList("application/x-www-form-urlencoded"));
         headers.put("Content-Length", Collections.singletonList(String.valueOf(contentLength)));
         System.out.println("Headers: ");
-        for (Map.Entry m : headers.entrySet())
+        for (final Map.Entry m : headers.entrySet()) {
             System.out.println(m.getKey() + ": " + m.getValue());
+        }
         return headers;
     }
 
-    public static Map<String, List<String>> getBasicHeader() throws IOException, ReCaptchaException {
+    public static Map<String, List<String>> getBasicHeader()
+            throws IOException, ReCaptchaException {
         if (!isInitDone()) {
             init();
         }
-        Map<String, List<String>> headers = new HashMap<>();
+        final Map<String, List<String>> headers = new HashMap<>();
         headers.put("Cookie", Collections.singletonList(cookies));
         headers.put("Referer", Collections.singletonList(BITCHUTE_LINK));
         return headers;
     }
 
-    public static String getSubscriberCountForChannelID(String channelID)
+    public static String getSubscriberCountForChannelID(final String channelID)
             throws IOException, ExtractionException {
         if (!isInitDone()) {
             init();
         }
 
-        byte[] data = String.format("csrfmiddlewaretoken=%s", csrfToken).getBytes(StandardCharsets.UTF_8);
-        Response response = getDownloader().post(
+        final byte[] data =
+                String.format("csrfmiddlewaretoken=%s", csrfToken).getBytes(StandardCharsets.UTF_8);
+        final Response response = getDownloader().post(
                 String.format(BitchuteConstants.BASE_URL_CHANNEL + "/%s/counts/", channelID),
                 getPostHeader(data.length),
                 data
         );
 
         try {
-            JsonObject jsonObject = JsonParser.object().from(response.responseBody());
+            final JsonObject jsonObject = JsonParser.object().from(response.responseBody());
             return String.valueOf(jsonObject.getLong("subscriber_count"));
-        } catch (JsonParserException e) {
+        } catch (final JsonParserException e) {
             throw new ParsingException("Could not parse bitchute sub count json");
         }
     }
 
-    public static VideoCount getVideoCountObjectForStreamID(String streamID)
+    public static VideoCount getVideoCountObjectForStreamID(final String streamID)
             throws IOException, ExtractionException {
         if (!isInitDone()) {
             init();
         }
 
-        byte[] data = String.format("csrfmiddlewaretoken=%s", csrfToken).getBytes(StandardCharsets.UTF_8);
-        Response response = getDownloader().post(
+        final byte[] data =
+                String.format("csrfmiddlewaretoken=%s", csrfToken).getBytes(StandardCharsets.UTF_8);
+        final Response response = getDownloader().post(
                 String.format(BitchuteConstants.BASE_URL_VIDEO + "/%s/counts/", streamID),
                 getPostHeader(data.length),
                 data
         );
 
         try {
-            JsonObject jsonObject = JsonParser.object().from(response.responseBody());
+            final JsonObject jsonObject = JsonParser.object().from(response.responseBody());
             return (new VideoCount(jsonObject.getInt("like_count"),
                     jsonObject.getInt("dislike_count"), jsonObject.getInt("view_count")));
-        } catch (JsonParserException e) {
+        } catch (final JsonParserException e) {
             throw new ParsingException("Could not parse bitchute sub count json");
         }
 
     }
 
-    public static Document getExtendDocumentForUrl(String pageUrl, String offset)
+    public static Document getExtendDocumentForUrl(final String pageUrl, final String offset)
             throws IOException, ExtractionException {
         if (!isInitDone()) {
             init();
         }
 
-        byte[] data = String.format("csrfmiddlewaretoken=%s&offset=%s", csrfToken, offset)
+        final byte[] data = String.format("csrfmiddlewaretoken=%s&offset=%s", csrfToken, offset)
                 .getBytes(StandardCharsets.UTF_8);
-        Response response = getDownloader().post(
+        final Response response = getDownloader().post(
                 String.format("%s/extend/", pageUrl),
                 getPostHeader(data.length),
                 data
         );
 
         try {
-            JsonObject jsonObject = JsonParser.object().from(response.responseBody());
+            final JsonObject jsonObject = JsonParser.object().from(response.responseBody());
             return Jsoup.parse(jsonObject.getString("html")
                     .replace("\n", ""), pageUrl);
-        } catch (JsonParserException e) {
+        } catch (final JsonParserException e) {
             throw new ParsingException("Could not parse bitchute sub count json");
         }
     }
 
-    public static JsonObject getSearchResultForQuery(String query, String kind, int pageNumber)
+    public static JsonObject getSearchResultForQuery(final String query, final String kind,
+                                                     final int pageNumber)
             throws IOException, ExtractionException {
         if (!isInitDone()) {
             init();
         }
 
-        String dataWithPlaceholders = "csrfmiddlewaretoken=%s&query=%s&kind=%s&duration=&sort=&page=%d";
+        final String dataWithPlaceholders =
+                "csrfmiddlewaretoken=%s&query=%s&kind=%s&duration=&sort=&page=%d";
 
-        byte[] data = String.format(dataWithPlaceholders, csrfToken, query, kind, pageNumber)
+        final byte[] data = String.format(dataWithPlaceholders, csrfToken, query, kind, pageNumber)
                 .getBytes(StandardCharsets.UTF_8);
-        Response response = getDownloader().post(
+        final Response response = getDownloader().post(
                 String.format("%s/api/search/list/", BitchuteConstants.BASE_URL),
                 getPostHeader(data.length),
                 data
         );
 
         try {
-            JsonObject jsonObject = JsonParser.object().from(response.responseBody());
-            String keySuccess = "success";
-            String keyResults = "results";
-            if (jsonObject.has(keySuccess) && (jsonObject.getBoolean(keySuccess) == true) &&
-                jsonObject.has(keyResults)) {
+            final JsonObject jsonObject = JsonParser.object().from(response.responseBody());
+            final String keySuccess = "success";
+            final String keyResults = "results";
+            if (jsonObject.has(keySuccess) && jsonObject.getBoolean(keySuccess)
+                    && jsonObject.has(keyResults)) {
                 return jsonObject;
             }
-        } catch (JsonParserException e) {
+        } catch (final JsonParserException e) {
             throw new ParsingException("Could not parse bitchute search results JsonObject");
         }
-        throw new ExtractionException("Server response for bitchute search results was not successful");
+        throw new ExtractionException(
+                "Server response for bitchute search results was not successful");
     }
 
     public static class VideoCount {
@@ -174,7 +184,7 @@ public class BitchuteParserHelper {
         private long dislikeCount;
         private long viewCount;
 
-        public VideoCount(long likeCount, long dislikeCount, long viewCount) {
+        public VideoCount(final long likeCount, final long dislikeCount, final long viewCount) {
             this.likeCount = likeCount;
             this.dislikeCount = dislikeCount;
             this.viewCount = viewCount;
