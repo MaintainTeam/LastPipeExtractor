@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 
 public abstract class BitchuteChannelStreamInfoItemExtractor implements StreamInfoItemExtractor {
 
-    private Element element;
+    private final Element element;
 
     public BitchuteChannelStreamInfoItemExtractor(final Element element) {
         this.element = element;

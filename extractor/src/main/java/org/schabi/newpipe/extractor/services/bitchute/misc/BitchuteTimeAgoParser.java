@@ -30,7 +30,7 @@ public class BitchuteTimeAgoParser {
 
     public DateWrapper parse(final String textualDate) throws ExtractionException {
         OffsetDateTime offsetDateTime = now;
-        Boolean isApproximation = false;
+        boolean isApproximation = false;
 
         // bitchute have the weired behavior to call name
         final String weiredPattern = "an hour ago";

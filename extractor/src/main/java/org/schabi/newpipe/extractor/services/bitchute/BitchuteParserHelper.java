@@ -180,9 +180,9 @@ public final class BitchuteParserHelper {
     }
 
     public static class VideoCount {
-        private long likeCount;
-        private long dislikeCount;
-        private long viewCount;
+        private final long likeCount;
+        private final long dislikeCount;
+        private final long viewCount;
 
         public VideoCount(final long likeCount, final long dislikeCount, final long viewCount) {
             this.likeCount = likeCount;

@@ -10,11 +10,11 @@ import java.util.List;
 
 public class BitchuteSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
 
-    private static BitchuteSearchQueryHandlerFactory instance =
+    private static final BitchuteSearchQueryHandlerFactory INSTANCE =
             new BitchuteSearchQueryHandlerFactory();
 
     public static BitchuteSearchQueryHandlerFactory getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     private static final String CHARSET_UTF_8 = "UTF-8";
