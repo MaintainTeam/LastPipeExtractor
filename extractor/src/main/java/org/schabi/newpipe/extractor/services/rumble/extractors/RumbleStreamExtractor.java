@@ -39,10 +39,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import static org.schabi.newpipe.extractor.utils.Utils.isNullOrEmpty;
@@ -236,31 +234,8 @@ public class RumbleStreamExtractor extends StreamExtractor {
     }
 
     @Override
-    public List<AudioStream> getAudioStreams() throws ExtractionException {
-        if (videoStreams == null) {
-            videoStreams = extractVideoStreams();
-        }
-
-        final Map<String, Integer> mapResolutionToAudioBitrate = new HashMap() {{
-            put("240p", 96);
-            put("360p", 128);
-            put("480p", 160);
-            put("720p", 192);
-            put("1080p", 200);
-
-        }};
-        final List<AudioStream> audioStreams = new ArrayList<>();
-
-        for (final VideoStream stream : videoStreams) {
-            Integer res = mapResolutionToAudioBitrate.get(stream.getResolution());
-            if (null == res) {
-                res = new Integer(-1);
-            }
-            final AudioStream audioStream = new AudioStream(stream.getUrl(),
-                    stream.getFormat(), res);
-            audioStreams.add(audioStream);
-        }
-        return audioStreams;
+    public List<AudioStream> getAudioStreams() {
+        return Collections.emptyList();
     }
 
     @Override
