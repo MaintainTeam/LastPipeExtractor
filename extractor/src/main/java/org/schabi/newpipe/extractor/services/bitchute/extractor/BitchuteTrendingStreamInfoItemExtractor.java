@@ -4,6 +4,7 @@ import org.jsoup.nodes.Element;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
 import org.schabi.newpipe.extractor.localization.TimeAgoParser;
+import org.schabi.newpipe.extractor.services.bitchute.misc.BitchuteHelpers;
 import org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
 import org.schabi.newpipe.extractor.stream.StreamType;
@@ -28,6 +29,10 @@ public class BitchuteTrendingStreamInfoItemExtractor implements StreamInfoItemEx
                                                    final Element element) {
         this.element = element;
         this.parser = parser;
+
+        BitchuteHelpers.VideoDurationCache.extractVideoIdAndAddItToDurationCache(element,
+                this,
+                ".video-result-image-container a");
     }
 
     @Override

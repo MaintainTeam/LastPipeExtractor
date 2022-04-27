@@ -48,7 +48,7 @@ public class BitchuteSearchExtractor extends SearchExtractor {
 
     }
 
-
+    @Nonnull
     @Override
     public String getSearchSuggestion() {
         return "";
@@ -123,6 +123,7 @@ public class BitchuteSearchExtractor extends SearchExtractor {
                 final String textualDate = result.getString(jsonPublishedKey);
                 final String views = BitchuteHelpers.getIntAlwaysAsString(result, jsonViewsKey);
                 final String duration = result.getString(jsonDurationKey);
+                final String videoId = result.getString("id");
                 final String kind = result.getString(jsonKindKey);
                 final String uploader = result.getString(jsonUploaderKey);
                 final String uploaderUrl =
@@ -157,6 +158,9 @@ public class BitchuteSearchExtractor extends SearchExtractor {
                                 uploaderUrl,
                                 uploadDate
                         );
+                        BitchuteHelpers.VideoDurationCache.addDurationToMap(videoId,
+                                ((BitchuteQuickStreamInfoItemExtractor) infoItemExtractor)
+                                        .getDuration());
                 }
 
                 collector.commit(infoItemExtractor);

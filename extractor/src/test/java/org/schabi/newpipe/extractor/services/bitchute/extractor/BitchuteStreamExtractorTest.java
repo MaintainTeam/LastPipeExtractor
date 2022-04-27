@@ -7,13 +7,17 @@ import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.services.DefaultStreamExtractorTest;
+import org.schabi.newpipe.extractor.services.bitchute.misc.BitchuteHelpers;
 import org.schabi.newpipe.extractor.stream.StreamExtractor;
 import org.schabi.newpipe.extractor.stream.StreamType;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.schabi.newpipe.extractor.ServiceList.Bitchute;
 
@@ -31,7 +35,8 @@ public class BitchuteStreamExtractorTest extends DefaultStreamExtractorTest {
     private static long expectedViewCountAtLeast = 230;
     private static String expectedUploaderName = "London Real";
     private static String expectedUploadDate = "2021-04-05 22:00:00.000";
-    private static String expectedTextualUploadDate = "First published at 19:26 UTC on April 6th, 2021.";
+    private static String expectedTextualUploadDate =
+            "First published at 19:26 UTC on April 6th, 2021.";
     private static StreamExtractor.Privacy expectedPrivacy = StreamExtractor.Privacy.OTHER;
     private static String expectedUploaderUrl = "https://www.bitchute.com/channel/londonrealtv/";
     private static String expectedSupportInfo = "https://www.bitchute.com/help-us-grow/";
@@ -100,7 +105,23 @@ public class BitchuteStreamExtractorTest extends DefaultStreamExtractorTest {
 
     @Override
     public long expectedLength() {
-        return 0;
+        return 107;
+    }
+
+    @Test
+    @Override
+    public void testLength() throws Exception {
+        // 1. test if the empty cache throws
+        assertThrows(NoSuchElementException.class,
+                () -> BitchuteHelpers
+                        .VideoDurationCache.getDurationForVideoId(extractor().getId()));
+
+        // 2. execute normal test
+        super.testLength();
+        // 3. test if the cache has expected duration
+        assertEquals(BitchuteHelpers
+                        .VideoDurationCache.getDurationForVideoId(extractor().getId()),
+                expectedLength());
     }
 
     @Override
@@ -155,8 +176,9 @@ public class BitchuteStreamExtractorTest extends DefaultStreamExtractorTest {
 
     @Test
     public void testArtistProfilePicture() throws Exception {
-        final String url = extractor().getUploaderAvatarUrl();
-        assertTrue(url.contains(expectedArtistProfilePictureInfix) && url.endsWith(".jpg"));
+        final String uploaderAvatarUrl = extractor().getUploaderAvatarUrl();
+        assertTrue(uploaderAvatarUrl.contains(expectedArtistProfilePictureInfix)
+                && uploaderAvatarUrl.endsWith(".jpg"));
     }
 
     @Override

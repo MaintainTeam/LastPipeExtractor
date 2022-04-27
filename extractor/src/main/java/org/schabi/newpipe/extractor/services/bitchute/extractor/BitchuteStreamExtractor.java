@@ -3,6 +3,7 @@ package org.schabi.newpipe.extractor.services.bitchute.extractor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.MediaFormat;
 import org.schabi.newpipe.extractor.MetaInfo;
 import org.schabi.newpipe.extractor.StreamingService;
@@ -12,11 +13,14 @@ import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
+import org.schabi.newpipe.extractor.search.SearchInfo;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteParserHelper;
+import org.schabi.newpipe.extractor.services.bitchute.misc.BitchuteHelpers;
 import org.schabi.newpipe.extractor.stream.AudioStream;
 import org.schabi.newpipe.extractor.stream.Description;
 import org.schabi.newpipe.extractor.stream.StreamExtractor;
+import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemsCollector;
 import org.schabi.newpipe.extractor.stream.StreamSegment;
 import org.schabi.newpipe.extractor.stream.StreamType;
@@ -33,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -140,7 +145,54 @@ public class BitchuteStreamExtractor extends StreamExtractor {
     }
 
     @Override
-    public long getLength() {
+    public long getLength() throws ParsingException {
+        try {
+            // The duration is not easily extractable without using JavaScript
+            // at leas AFAIK. If you know a better way to extract the duration
+            // let me know.
+            //
+            // 1. workaround -- get duration from that was populated by
+            // BitchuteSearchExtractor, BitchuteTrendingStreamInfoItemExtractor,
+            // BitchuteChannelStreamInfoItemExtractor and store it into a cache.
+            return BitchuteHelpers.VideoDurationCache.getDurationForVideoId(getId());
+        } catch (final NoSuchElementException e) {
+            // 2. workaround -- search for the title on Bitchute and extract
+            // duration from search result and store it into the cache
+            return workAroundToGetDurationFromSearchResults();
+            // 3. TODO workaround -- could be a fix in Player in NewPipe
+            // that will extract the duration if possible from the video file
+        }
+    }
+
+    private long workAroundToGetDurationFromSearchResults() {
+        try {
+            final SearchInfo searchInfo = SearchInfo.getInfo(getService(),
+                    getService().getSearchQHFactory()
+                            .fromQuery(getName(), Collections.emptyList(), ""));
+
+            final List<InfoItem> items = searchInfo.getRelatedItems();
+            if (items.size() > 0 && items.get(0) instanceof StreamInfoItem) {
+                for (final InfoItem item : items) {
+                    final StreamInfoItem infoItem = (StreamInfoItem) item;
+
+                    final String thatUrl  = infoItem.getUrl();
+                    final String extractedId = BitchuteHelpers.VideoDurationCache
+                            .extractVideoId(thatUrl);
+
+                    if (extractedId != null && getId().equals(extractedId)) {
+                        final long duration = infoItem.getDuration();
+                        BitchuteHelpers.VideoDurationCache.addDurationToMap(extractedId, duration);
+
+                        return duration;
+                    }
+                }
+
+                return -1; // evermind TODO is this valid?
+            }
+        } catch (final ExtractionException | IOException e) {
+            e.printStackTrace();
+        }
+
         return 0;
     }
 
