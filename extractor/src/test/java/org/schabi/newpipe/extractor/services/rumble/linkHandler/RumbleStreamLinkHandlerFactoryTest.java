@@ -26,7 +26,6 @@ public class RumbleStreamLinkHandlerFactoryTest {
     public void getId() throws Exception {
         String correctIdExpectSuccess = "vdofb67";
         String tooShortIdExpectError = "vdof";
-        String tooLongIdExpectError = "vdofb6789";
         String noIdExpectError = "";
 
 
@@ -48,14 +47,6 @@ public class RumbleStreamLinkHandlerFactoryTest {
             assertTrue(what instanceof ParsingException);
         }
 
-        /** {@value tooLongIdExpectError} */
-        for (String baseUrl : baseUrls) {
-            String testUrl = baseUrl + tooLongIdExpectError;
-
-            ParsingException what = assertThrows(ParsingException.class, () -> linkHandler.fromUrl(testUrl).getId());
-            assertTrue(what instanceof ParsingException);
-        }
-
         /** {@value noIdExpectError} */
         for (String baseUrl : baseUrls) {
             String testUrl = baseUrl + noIdExpectError;
@@ -67,6 +58,7 @@ public class RumbleStreamLinkHandlerFactoryTest {
         String[] invalidVideoUrls = {
                 "https://pumble.com",
                 "https://sumble.com/vdofb7",
+                "https://sumble.com/vd_ofb7",
                 "https://rumble.com",
                 "https://rumble.com/",
                 "https://rumble.com/category/v23",
