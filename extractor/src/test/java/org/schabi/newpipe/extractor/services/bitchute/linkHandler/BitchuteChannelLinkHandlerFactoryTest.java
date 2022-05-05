@@ -27,22 +27,25 @@ public class BitchuteChannelLinkHandlerFactoryTest {
 
     @Test
     public void acceptUrlTest() throws ParsingException {
-        String acceptedChannelUrls[] = {
+        final String[] acceptedChannelUrls = {
                 "https://www.bitchute.com/channel/u3QMwGD7bSW6",
                 "https://www.bitchute.com/channel/missoncommander/"
         };
 
-        for (String acceptedChannelUrl : acceptedChannelUrls) {
+        for (final String acceptedChannelUrl : acceptedChannelUrls) {
             assertTrue(linkHandler.acceptUrl(acceptedChannelUrl));
         }
 
-        String baseVideoUrls[] = { "https://www.bitchute.com/video/", "https://www.bitchute.com/embed/" };
-        String videoIds[] = {"m4iEhq4L1qU", "8gwdyYJ8BUk" };
+        final String[] baseVideoUrls = {
+                "https://www.bitchute.com/video/",
+                "https://www.bitchute.com/embed/"
+        };
+        final String[] videoIds = {"m4iEhq4L1qU", "8gwdyYJ8BUk"};
 
         // do not accept URLs which are not channels
-        for (String baseUrl : baseVideoUrls) {
-            for (String videoId : videoIds) {
-                String thisIsNoChannelUrl = baseUrl + videoId;
+        for (final String baseUrl : baseVideoUrls) {
+            for (final String videoId : videoIds) {
+                final String thisIsNoChannelUrl = baseUrl + videoId;
                 assertFalse(linkHandler.acceptUrl(thisIsNoChannelUrl));
             }
         }
@@ -50,18 +53,18 @@ public class BitchuteChannelLinkHandlerFactoryTest {
 
     @Test
     public void getId() throws ParsingException {
-        String acceptedChannelUrls[] = {
+        final String[] acceptedChannelUrls = {
                 "https://www.bitchute.com/channel/u3QMwGD7bSW6",
                 "https://www.bitchute.com/channel/missoncommander"
         };
-        String expectedChannelIds[] = {
+        final String[] expectedChannelIds = {
                 "u3QMwGD7bSW6",
                 "missoncommander"
         };
 
         for (int i = 0; i < acceptedChannelUrls.length; i++) {
-            String acceptedChannelUrl = acceptedChannelUrls[i];
-            String expectedChannelId = expectedChannelIds[i];
+            final String acceptedChannelUrl = acceptedChannelUrls[i];
+            final String expectedChannelId = expectedChannelIds[i];
 
             assertEquals(expectedChannelId,
                     linkHandler.fromUrl(acceptedChannelUrl).getId());
@@ -70,21 +73,22 @@ public class BitchuteChannelLinkHandlerFactoryTest {
 
     @Test
     public void getUrl() throws ParsingException {
-        String expectedChannelUrls[] = {
+        final String[] expectedChannelUrls = {
                 "https://www.bitchute.com/channel/u3QMwGD7bSW6",
                 "https://www.bitchute.com/channel/missoncommander"
         };
-        String acceptedChannelIds[] = {
+        final String[] acceptedChannelIds = {
                 "u3QMwGD7bSW6",
                 "missoncommander"
         };
 
         for (int i = 0; i < expectedChannelUrls.length; i++) {
-            String expectedChannelUrl = expectedChannelUrls[i];
-            String acceptedChannelId = acceptedChannelIds[i];
-            String badChannelId = "channel/"+ acceptedChannelId;
+            final String expectedChannelUrl = expectedChannelUrls[i];
+            final String acceptedChannelId = acceptedChannelIds[i];
+            final String badChannelId = "channel/" + acceptedChannelId;
 
-            ParsingException what = assertThrows(ParsingException.class, () -> linkHandler.fromId(badChannelId).getUrl());
+            final ParsingException what = assertThrows(ParsingException.class,
+                    () -> linkHandler.fromId(badChannelId).getUrl());
             assertTrue(what instanceof ParsingException);
 
             assertEquals(expectedChannelUrl,

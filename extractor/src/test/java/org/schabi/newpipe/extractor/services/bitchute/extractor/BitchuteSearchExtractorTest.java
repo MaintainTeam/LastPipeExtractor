@@ -41,8 +41,8 @@ public class BitchuteSearchExtractorTest {
      */
     @Test
     public void testStreamSearch() throws ExtractionException, IOException {
-        String streamSearchQuery = "battle bus live | the way forward for london - trailer";
-        String expectedUploader = "London Real";
+        final String streamSearchQuery = "battle bus live | the way forward for london - trailer";
+        final String expectedUploader = "London Real";
 
         final SearchExtractor extractor = Bitchute.getSearchExtractor(streamSearchQuery);
 
@@ -65,11 +65,11 @@ public class BitchuteSearchExtractorTest {
         // A query practically guaranteed to have the maximum amount of pages
         final SearchExtractor extractor = Bitchute.getSearchExtractor("battle");
 
-        String expectedUrl = "https://www.bitchute.com/search/?kind=video&query=battle";
+        final String expectedUrl = "https://www.bitchute.com/search/?kind=video&query=battle";
 
-        ListExtractor.InfoItemsPage<InfoItem> infoItemsPage1 = extractor.getInitialPage();
+        final ListExtractor.InfoItemsPage<InfoItem> infoItemsPage1 = extractor.getInitialPage();
         final Page page2 = infoItemsPage1.getNextPage();
-        ListExtractor.InfoItemsPage<InfoItem> infoItemsPage2 = extractor.getPage(page2);
+        final ListExtractor.InfoItemsPage<InfoItem> infoItemsPage2 = extractor.getPage(page2);
         final Page page3 = infoItemsPage2.getNextPage();
 
         assertEquals(expectedUrl, page2.getUrl());
@@ -89,7 +89,9 @@ public class BitchuteSearchExtractorTest {
             extractor.fetchPage();
         }
 
+        @SuppressWarnings("checkstyle:LeftCurly")
         @Override public SearchExtractor extractor() { return extractor; }
+        @SuppressWarnings("checkstyle:LeftCurly")
         @Override public StreamingService expectedService() { return Bitchute; }
 
         @Override public String expectedName() {

@@ -42,9 +42,12 @@ public class BitchuteChannelStreamInfoItemExtractorTest {
     private static final String CHANNEL_MOCK_PATH =
             RESOURCE_PATH + "/services/bitchute/extractor/channel/";
 
-    private static String testInputJsonMockFile = CHANNEL_MOCK_PATH + "BitchuteChannelStreamInfoItemExtractor_mock_0.input.json";
-    private static String testInputHtmlMockFile = CHANNEL_MOCK_PATH + "BitchuteChannelStreamInfoItemExtractor_mock_0.input.html";
-    private static String testExpectedResultsJsonMockFile = CHANNEL_MOCK_PATH + "BitchuteChannelStreamInfoItemExtractor_mock_0.expected_result.json";
+    private static String testInputJsonMockFile = CHANNEL_MOCK_PATH
+            + "BitchuteChannelStreamInfoItemExtractor_mock_0.input.json";
+    private static String testInputHtmlMockFile = CHANNEL_MOCK_PATH
+            + "BitchuteChannelStreamInfoItemExtractor_mock_0.input.html";
+    private static String testExpectedResultsJsonMockFile = CHANNEL_MOCK_PATH
+            + "BitchuteChannelStreamInfoItemExtractor_mock_0.expected_result.json";
 
     private static List<BitchuteChannelStreamInfoItemExtractor> channelStreamInfoExtractors;
     private static JsonObject testInputHelperJsonMock;
@@ -55,13 +58,15 @@ public class BitchuteChannelStreamInfoItemExtractorTest {
 
         channelStreamInfoExtractors = new LinkedList<>();
 
-        testInputHelperJsonMock = (JsonObject) JsonParser.any().from(new FileInputStream(new File(testInputJsonMockFile)));
-        Document testInputHtmlMock = Jsoup.parse(new File(testInputHtmlMockFile), null);
+        testInputHelperJsonMock = (JsonObject) JsonParser.any()
+                .from(new FileInputStream(new File(testInputJsonMockFile)));
+        final Document testInputHtmlMock = Jsoup.parse(new File(testInputHtmlMockFile), null);
         testInputHtmlMock.setBaseUri(BitchuteConstants.BASE_URL);
 
-        testExpectedResultsJsonMock = (JsonArray) JsonParser.any().from(new FileInputStream(new File(testExpectedResultsJsonMockFile)));
+        testExpectedResultsJsonMock = (JsonArray) JsonParser.any()
+                .from(new FileInputStream(new File(testExpectedResultsJsonMockFile)));
 
-        Elements videos = testInputHtmlMock.select(".channel-videos-container");
+        final Elements videos = testInputHtmlMock.select(".channel-videos-container");
         for (final Element e : videos) {
             channelStreamInfoExtractors.add(new BitchuteChannelStreamInfoItemExtractor(e) {
                 @Override
@@ -84,11 +89,11 @@ public class BitchuteChannelStreamInfoItemExtractorTest {
 
     @Test
     public void quickTestAllValues() throws JsonParserException {
-        int index = 0;
-        for (BitchuteChannelStreamInfoItemExtractor elem : channelStreamInfoExtractors ) {
-            String compactResultValues = elem.toString();
-            JsonObject jsonResult = (JsonObject) JsonParser.any().from(compactResultValues);
-            JsonObject jsonExpectedResult = (JsonObject) testExpectedResultsJsonMock.get(index++);
+        int i = 0;
+        for (final BitchuteChannelStreamInfoItemExtractor elem : channelStreamInfoExtractors) {
+            final String compactResultValues = elem.toString();
+            final JsonObject jsonResult = (JsonObject) JsonParser.any().from(compactResultValues);
+            final JsonObject jsonExpectedResult = (JsonObject) testExpectedResultsJsonMock.get(i++);
 
             assertTrue(jsonExpectedResult.equals(jsonResult));
         }

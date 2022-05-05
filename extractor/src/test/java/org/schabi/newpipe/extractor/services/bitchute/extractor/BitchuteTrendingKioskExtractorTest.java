@@ -41,10 +41,10 @@ public class BitchuteTrendingKioskExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.name, BitchuteKioskLinkHandlerFactory.TRENDING_WEEK);
-                put(keysForTestDataMap.id, BitchuteKioskLinkHandlerFactory.TRENDING_WEEK);
-                put(keysForTestDataMap.url, BitchuteConstants.BASE_URL + "/#trending-week");
-                put(keysForTestDataMap.originalUrl, BitchuteConstants.BASE_URL + "/#trending-week");
+                put(KeysForTestDataMap.name, BitchuteKioskLinkHandlerFactory.TRENDING_WEEK);
+                put(KeysForTestDataMap.id, BitchuteKioskLinkHandlerFactory.TRENDING_WEEK);
+                put(KeysForTestDataMap.url, BitchuteConstants.BASE_URL + "/#trending-week");
+                put(KeysForTestDataMap.originalUrl, BitchuteConstants.BASE_URL + "/#trending-week");
             }};
             Trending.setUp();
         }
@@ -54,23 +54,24 @@ public class BitchuteTrendingKioskExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.name, BitchuteKioskLinkHandlerFactory.TRENDING_DAY);
-                put(keysForTestDataMap.id, BitchuteKioskLinkHandlerFactory.TRENDING_DAY);
-                put(keysForTestDataMap.url, BitchuteConstants.BASE_URL + "/#trending-day");
-                put(keysForTestDataMap.originalUrl, BitchuteConstants.BASE_URL + "/#trending-day");
+                put(KeysForTestDataMap.name, BitchuteKioskLinkHandlerFactory.TRENDING_DAY);
+                put(KeysForTestDataMap.id, BitchuteKioskLinkHandlerFactory.TRENDING_DAY);
+                put(KeysForTestDataMap.url, BitchuteConstants.BASE_URL + "/#trending-day");
+                put(KeysForTestDataMap.originalUrl, BitchuteConstants.BASE_URL + "/#trending-day");
             }};
             Trending.setUp();
         }
     }
 
     public static class TrendingMonth extends Trending {
+        @SuppressWarnings("checkstyle:LineLength")
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.name, BitchuteKioskLinkHandlerFactory.TRENDING_MONTH);
-                put(keysForTestDataMap.id, BitchuteKioskLinkHandlerFactory.TRENDING_MONTH);
-                put(keysForTestDataMap.url, BitchuteConstants.BASE_URL + "/#trending-month");
-                put(keysForTestDataMap.originalUrl, BitchuteConstants.BASE_URL + "/#trending-month");
+                put(KeysForTestDataMap.name, BitchuteKioskLinkHandlerFactory.TRENDING_MONTH);
+                put(KeysForTestDataMap.id, BitchuteKioskLinkHandlerFactory.TRENDING_MONTH);
+                put(KeysForTestDataMap.url, BitchuteConstants.BASE_URL + "/#trending-month");
+                put(KeysForTestDataMap.originalUrl, BitchuteConstants.BASE_URL + "/#trending-month");
             }};
             Trending.setUp();
         }
@@ -78,35 +79,37 @@ public class BitchuteTrendingKioskExtractorTest {
 
     public static class RecommendedChannel extends Trending {
         @BeforeAll
+        @SuppressWarnings("checkstyle:LineLength")
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.name, BitchuteKioskLinkHandlerFactory.RECOMMENDED_CHANNEL);
-                put(keysForTestDataMap.id, BitchuteKioskLinkHandlerFactory.RECOMMENDED_CHANNEL);
-                put(keysForTestDataMap.url, BitchuteConstants.BASE_URL + "/#Recommended Channels/");
-                put(keysForTestDataMap.originalUrl, BitchuteConstants.BASE_URL + "/#Recommended Channels/");
+                put(KeysForTestDataMap.name, BitchuteKioskLinkHandlerFactory.RECOMMENDED_CHANNEL);
+                put(KeysForTestDataMap.id, BitchuteKioskLinkHandlerFactory.RECOMMENDED_CHANNEL);
+                put(KeysForTestDataMap.url, BitchuteConstants.BASE_URL + "/#Recommended Channels/");
+                put(KeysForTestDataMap.originalUrl, BitchuteConstants.BASE_URL + "/#Recommended Channels/");
             }};
             Trending.setUp();
         }
     }
 
-    public static abstract class Trending implements BaseListExtractorTest {
+    public abstract static class Trending implements BaseListExtractorTest {
 
-        public enum keysForTestDataMap {
+        public enum KeysForTestDataMap {
             name, id, url, originalUrl
         }
         private static ListExtractor extractor;
-        protected static Map<keysForTestDataMap,String> testDataMap;
+        protected static Map<KeysForTestDataMap, String> testDataMap;
 
         public static void setUp() throws Exception {
             NewPipe.init(DownloaderTestImpl.getInstance());
 
-            extractor = Bitchute.getKioskList().getExtractorById(testDataMap.get(keysForTestDataMap.id), null);
+            extractor = Bitchute.getKioskList()
+                    .getExtractorById(testDataMap.get(KeysForTestDataMap.id), null);
             extractor.fetchPage();
         }
 
         @AfterAll
         public static void tearDown() throws IOException, ExtractionException {
-            List<Throwable> errors = extractor.getInitialPage().getErrors();
+            final List<Throwable> errors = extractor.getInitialPage().getErrors();
             System.out.println(errors.toString());
 
         }
@@ -122,12 +125,12 @@ public class BitchuteTrendingKioskExtractorTest {
 
         @Test
         public void testName() throws Exception {
-            assertEquals(testDataMap.get(keysForTestDataMap.name), extractor.getName());
+            assertEquals(testDataMap.get(KeysForTestDataMap.name), extractor.getName());
         }
 
         @Test
         public void testId() throws Exception {
-            assertEquals(testDataMap.get(keysForTestDataMap.id), extractor.getId());
+            assertEquals(testDataMap.get(KeysForTestDataMap.id), extractor.getId());
         }
 
         @Test
@@ -139,7 +142,8 @@ public class BitchuteTrendingKioskExtractorTest {
         @Test
         public void testOriginalUrl() throws ParsingException {
             // TODO evermind figure out for what this URL really are
-            //assertEquals(testDataMap.get(keysForTestDataMap.originalUrl), extractor.getOriginalUrl());
+            // assertEquals(testDataMap.get(keysForTestDataMap.originalUrl),
+            //         extractor.getOriginalUrl());
         }
 
         /*//////////////////////////////////////////////////////////////////////////

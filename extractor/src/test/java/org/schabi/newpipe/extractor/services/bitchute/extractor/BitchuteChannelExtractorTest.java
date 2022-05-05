@@ -17,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.schabi.newpipe.extractor.ExtractorAsserts.assertIsSecureUrl;
 import static org.schabi.newpipe.extractor.ServiceList.Bitchute;
-import static org.schabi.newpipe.extractor.services.DefaultTests.*;
+import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestMoreItems;
+import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestRelatedItems;
 
 /**
  * Test for {@link BitchuteChannelExtractor}
@@ -25,19 +26,20 @@ import static org.schabi.newpipe.extractor.services.DefaultTests.*;
 public class BitchuteChannelExtractorTest {
 
     public static class TestMarkDiceChannel extends TestChannel {
+        @SuppressWarnings("checkstyle:LineLength")
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.channelUrl, "https://www.bitchute.com/channel/u3QMwGD7bSW6");
-                put(keysForTestDataMap.expectedOriginalUrl, "https://www.bitchute.com/channel/u3QMwGD7bSW6");
-                put(keysForTestDataMap.expectedUrl, "https://www.bitchute.com/channel/u3QMwGD7bSW6");
-                put(keysForTestDataMap.expectedChannelName, "Mark Dice");
-                put(keysForTestDataMap.expectedId, "u3QMwGD7bSW6");
-                put(keysForTestDataMap.expectedMinSubscriberCount, "70000");
-                put(keysForTestDataMap.expectedDescription, "Mark Dice - Exposing liberal lunatics, celebrity scum, mainstream media manipulation, and social justice warrior psychos. BEST CONSERVATIVE CHANNEL ON BITCHUTE.");
-                put(keysForTestDataMap.expectedAvatarUrl, "ePTmphLaTzTvJgILYVieZtEv_small.jpg");
-                put(keysForTestDataMap.expectedBannerlUrl, "ePTmphLaTzTvJgILYVieZtEv_small.jpg");
-                put(keysForTestDataMap.doTestMoreRelatedItems, "true");
+                put(KeysForTestDataMap.channelUrl, "https://www.bitchute.com/channel/u3QMwGD7bSW6");
+                put(KeysForTestDataMap.expectedOriginalUrl, "https://www.bitchute.com/channel/u3QMwGD7bSW6");
+                put(KeysForTestDataMap.expectedUrl, "https://www.bitchute.com/channel/u3QMwGD7bSW6");
+                put(KeysForTestDataMap.expectedChannelName, "Mark Dice");
+                put(KeysForTestDataMap.expectedId, "u3QMwGD7bSW6");
+                put(KeysForTestDataMap.expectedMinSubscriberCount, "70000");
+                put(KeysForTestDataMap.expectedDescription, "Mark Dice - Exposing liberal lunatics, celebrity scum, mainstream media manipulation, and social justice warrior psychos. BEST CONSERVATIVE CHANNEL ON BITCHUTE.");
+                put(KeysForTestDataMap.expectedAvatarUrl, "ePTmphLaTzTvJgILYVieZtEv_small.jpg");
+                put(KeysForTestDataMap.expectedBannerlUrl, "ePTmphLaTzTvJgILYVieZtEv_small.jpg");
+                put(KeysForTestDataMap.doTestMoreRelatedItems, "true");
             }};
             TestChannel.setUp();
         }
@@ -45,27 +47,28 @@ public class BitchuteChannelExtractorTest {
 
     public static class TestMissionCommanderChannel extends TestChannel {
         @BeforeAll
+        @SuppressWarnings("checkstyle:LineLength")
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.channelUrl, "https://www.bitchute.com/channel/missoncommander/");
-                put(keysForTestDataMap.expectedOriginalUrl, "https://www.bitchute.com/channel/missoncommander/");
-                put(keysForTestDataMap.expectedUrl, "https://www.bitchute.com/channel/missoncommander");
-                put(keysForTestDataMap.expectedChannelName, "Dr. Jeffrey Horelick");
-                put(keysForTestDataMap.expectedId, "missoncommander");
-                put(keysForTestDataMap.expectedMinSubscriberCount, "400");
+                put(KeysForTestDataMap.channelUrl, "https://www.bitchute.com/channel/missoncommander/");
+                put(KeysForTestDataMap.expectedOriginalUrl, "https://www.bitchute.com/channel/missoncommander/");
+                put(KeysForTestDataMap.expectedUrl, "https://www.bitchute.com/channel/missoncommander");
+                put(KeysForTestDataMap.expectedChannelName, "Dr. Jeffrey Horelick");
+                put(KeysForTestDataMap.expectedId, "missoncommander");
+                put(KeysForTestDataMap.expectedMinSubscriberCount, "400");
                 // 20210414 at the writing of this test the channel has no description added
-                put(keysForTestDataMap.expectedDescription, "");
-                put(keysForTestDataMap.expectedAvatarUrl, "https://www.bitchute.com/static/v130/images/blank_small.png");
-                put(keysForTestDataMap.expectedBannerlUrl, "https://www.bitchute.com/static/v130/images/blank_small.png");
+                put(KeysForTestDataMap.expectedDescription, "");
+                put(KeysForTestDataMap.expectedAvatarUrl, "https://www.bitchute.com/static/v130/images/blank_small.png");
+                put(KeysForTestDataMap.expectedBannerlUrl, "https://www.bitchute.com/static/v130/images/blank_small.png");
                 // 20210414 at the writing of this test the channel has not more than one page videos are added
-                put(keysForTestDataMap.doTestMoreRelatedItems, "false");
+                put(KeysForTestDataMap.doTestMoreRelatedItems, "false");
             }};
             TestChannel.setUp();
         }
     }
 
-    public static abstract class TestChannel implements BaseChannelExtractorTest {
-        public enum keysForTestDataMap {
+    public abstract static class TestChannel implements BaseChannelExtractorTest {
+        public enum KeysForTestDataMap {
             channelUrl,
             expectedOriginalUrl,
             expectedUrl,
@@ -79,12 +82,12 @@ public class BitchuteChannelExtractorTest {
         }
 
         private static BitchuteChannelExtractor extractor;
-        protected static Map<keysForTestDataMap,String> testDataMap;
+        protected static Map<KeysForTestDataMap, String> testDataMap;
 
-        public static void setUp () throws Exception {
+        public static void setUp() throws Exception {
             NewPipe.init(DownloaderTestImpl.getInstance());
             extractor = (BitchuteChannelExtractor) Bitchute
-                    .getChannelExtractor(testDataMap.get(keysForTestDataMap.channelUrl));
+                    .getChannelExtractor(testDataMap.get(KeysForTestDataMap.channelUrl));
             extractor.fetchPage();
         }
 
@@ -93,28 +96,30 @@ public class BitchuteChannelExtractorTest {
         //////////////////////////////////////////////////////////////////////////*/
 
         @Test
-        public void testServiceId () {
+        public void testServiceId() {
             assertEquals(Bitchute.getServiceId(), extractor.getServiceId());
         }
 
         @Test
-        public void testName () throws Exception {
-            assertEquals(testDataMap.get(keysForTestDataMap.expectedChannelName), extractor.getName());
+        public void testName() throws Exception {
+            assertEquals(testDataMap.get(KeysForTestDataMap.expectedChannelName),
+                    extractor.getName());
         }
 
         @Test
-        public void testId () throws Exception {
-            assertEquals(testDataMap.get(keysForTestDataMap.expectedId), extractor.getId());
+        public void testId() throws Exception {
+            assertEquals(testDataMap.get(KeysForTestDataMap.expectedId), extractor.getId());
         }
 
         @Test
-        public void testUrl () throws ParsingException {
-            assertEquals(testDataMap.get(keysForTestDataMap.expectedUrl), extractor.getUrl());
+        public void testUrl() throws ParsingException {
+            assertEquals(testDataMap.get(KeysForTestDataMap.expectedUrl), extractor.getUrl());
         }
 
         @Test
-        public void testOriginalUrl () throws ParsingException {
-            assertEquals(testDataMap.get(keysForTestDataMap.expectedOriginalUrl), extractor.getOriginalUrl());
+        public void testOriginalUrl() throws ParsingException {
+            assertEquals(testDataMap.get(KeysForTestDataMap.expectedOriginalUrl),
+                    extractor.getOriginalUrl());
         }
 
         /*//////////////////////////////////////////////////////////////////////////
@@ -122,16 +127,17 @@ public class BitchuteChannelExtractorTest {
         //////////////////////////////////////////////////////////////////////////*/
 
         @Test
-        public void testRelatedItems () throws Exception {
+        public void testRelatedItems() throws Exception {
             defaultTestRelatedItems(extractor);
         }
 
         @Test
-        public void testMoreRelatedItems () throws Exception {
-            if (Boolean.parseBoolean(testDataMap.get(keysForTestDataMap.doTestMoreRelatedItems)))
+        public void testMoreRelatedItems() throws Exception {
+            if (Boolean.parseBoolean(testDataMap.get(KeysForTestDataMap.doTestMoreRelatedItems))) {
                 defaultTestMoreItems(extractor);
-            else
+            } else {
                 assertTrue(true);
+            }
         }
 
         /*//////////////////////////////////////////////////////////////////////////
@@ -139,37 +145,41 @@ public class BitchuteChannelExtractorTest {
         //////////////////////////////////////////////////////////////////////////*/
 
         @Test
-        public void testDescription () throws Exception {
-            ExtractorAsserts.assertContains(testDataMap.get(keysForTestDataMap.expectedDescription), extractor.getDescription());
+        public void testDescription() throws Exception {
+            ExtractorAsserts.assertContains(testDataMap.get(KeysForTestDataMap.expectedDescription),
+                    extractor.getDescription());
         }
 
         @Test
-        public void testAvatarUrl () throws Exception {
-            String avatarUrl = extractor.getAvatarUrl();
+        public void testAvatarUrl() throws Exception {
+            final String avatarUrl = extractor.getAvatarUrl();
             assertIsSecureUrl(avatarUrl);
-            assertTrue(avatarUrl.contains(testDataMap.get(keysForTestDataMap.expectedAvatarUrl)), avatarUrl);
+            assertTrue(avatarUrl.contains(testDataMap.get(KeysForTestDataMap.expectedAvatarUrl)),
+                    avatarUrl);
         }
 
         @Test
-        public void testBannerUrl () throws Exception {
-            String bannerUrl = extractor.getBannerUrl();
+        public void testBannerUrl() throws Exception {
+            final String bannerUrl = extractor.getBannerUrl();
             assertIsSecureUrl(bannerUrl);
-            assertTrue(bannerUrl.contains(testDataMap.get(keysForTestDataMap.expectedBannerlUrl)), bannerUrl);
+            assertTrue(bannerUrl.contains(testDataMap.get(KeysForTestDataMap.expectedBannerlUrl)),
+                    bannerUrl);
         }
 
         @Test
-        public void testFeedUrl () throws Exception {
+        public void testFeedUrl() throws Exception {
             assertNull(extractor.getFeedUrl());
         }
 
         @Test
-        public void testSubscriberCount () throws Exception {
-            long subscriberCount = Long.parseLong(testDataMap.get(keysForTestDataMap.expectedMinSubscriberCount));
+        public void testSubscriberCount() throws Exception {
+            final long subscriberCount =
+                    Long.parseLong(testDataMap.get(KeysForTestDataMap.expectedMinSubscriberCount));
             assertTrue(extractor.getSubscriberCount() >= subscriberCount, "Wrong subscriber count");
         }
 
         @Override
-        public void testVerified () throws Exception {
+        public void testVerified() throws Exception {
             assertFalse(extractor.isVerified());
         }
     }
