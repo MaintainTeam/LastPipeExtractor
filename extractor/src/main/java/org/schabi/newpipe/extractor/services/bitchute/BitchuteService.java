@@ -30,7 +30,6 @@ import org.schabi.newpipe.extractor.suggestion.SuggestionExtractor;
 
 import java.util.Collections;
 
-import static java.util.Arrays.asList;
 import static org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteKioskLinkHandlerFactory.RECOMMENDED_CHANNEL;
 import static org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteKioskLinkHandlerFactory.TRENDING_DAY;
 import static org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteKioskLinkHandlerFactory.TRENDING_MONTH;
