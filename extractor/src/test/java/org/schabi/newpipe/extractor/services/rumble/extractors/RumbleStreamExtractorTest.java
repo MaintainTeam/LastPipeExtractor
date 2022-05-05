@@ -23,6 +23,7 @@ import static org.schabi.newpipe.downloader.DownloaderFactory.RESOURCE_PATH;
 import static org.schabi.newpipe.extractor.ExtractorAsserts.assertIsSecureUrl;
 import static org.schabi.newpipe.extractor.ServiceList.Rumble;
 
+@SuppressWarnings({"checkstyle:LineLength", "checkstyle:InvalidJavadocPosition"})
 public class RumbleStreamExtractorTest {
 
     public static class NormalStreamExtractorTest extends DefaultStreamExtractorTest {
@@ -53,7 +54,7 @@ public class RumbleStreamExtractorTest {
         protected static long expectedLength = 1937;
 
         @BeforeAll
-        public static void setUp () throws ExtractionException, IOException {
+        public static void setUp() throws ExtractionException, IOException {
             System.setProperty("downloader", "MOCK");
             //System.setProperty("downloader", "RECORDING");
             NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH + "/streamExtractor"));
@@ -64,133 +65,133 @@ public class RumbleStreamExtractorTest {
         }
 
         @Test
-        public void testAvatarThumbnailPicture () throws Exception {
-            final String url = extractor().getUploaderAvatarUrl();
-            assertTrue(!url.isEmpty() || url == null);
+        public void testAvatarThumbnailPicture() throws Exception {
+            final String avatarUrl = extractor().getUploaderAvatarUrl();
+            assertTrue(!avatarUrl.isEmpty() || avatarUrl == null);
         }
 
         @Override
-        public StreamExtractor extractor () {
+        public StreamExtractor extractor() {
             return extractor;
         }
 
         @Override
-        public StreamingService expectedService () {
+        public StreamingService expectedService() {
             return expectedService;
         }
 
         @Override
-        public String expectedName () {
+        public String expectedName() {
             return expectedName;
         }
 
         @Override
-        public String expectedId () {
+        public String expectedId() {
             return expectedId;
         }
 
         @Override
-        public String expectedUrlContains () {
+        public String expectedUrlContains() {
             return expectedUrl;
         }
 
         @Override
-        public String expectedOriginalUrlContains () {
+        public String expectedOriginalUrlContains() {
             return expectedUrl;
         }
 
         @Override
-        public StreamType expectedStreamType () {
+        public StreamType expectedStreamType() {
             return StreamType.VIDEO_STREAM;
         }
 
         @Override
-        public String expectedUploaderName () {
+        public String expectedUploaderName() {
             return expectedUploaderName;
         }
 
         @Override
-        public String expectedUploaderUrl () {
+        public String expectedUploaderUrl() {
             return expectedUploaderUrl;
         }
 
         @Override
-        public List<String> expectedDescriptionContains () {
+        public List<String> expectedDescriptionContains() {
             return Collections.singletonList(expectedDesc);
         }
 
         @Override
-        public long expectedLength () {
+        public long expectedLength() {
             return expectedLength;
         }
 
         @Override
-        public long expectedViewCountAtLeast () {
+        public long expectedViewCountAtLeast() {
             return expectedViewCountAtLeast;
         }
 
         @Override
-        public String expectedUploadDate () {
+        public String expectedUploadDate() {
             return expectedUploadDate;
         }
 
         @Override
-        public String expectedTextualUploadDate () {
+        public String expectedTextualUploadDate() {
             return expectedTextualUploadDate;
         }
 
         @Override
-        public long expectedLikeCountAtLeast () {
+        public long expectedLikeCountAtLeast() {
             return Long.MIN_VALUE;
         }
 
         @Override
-        public long expectedDislikeCountAtLeast () {
+        public long expectedDislikeCountAtLeast() {
             return Long.MIN_VALUE;
         }
 
         @Override
-        public boolean expectedHasVideoStreams () {
+        public boolean expectedHasVideoStreams() {
             return expectedHasVideoStreams;
         }
 
         @Override
-        public boolean expectedHasRelatedItems () {
+        public boolean expectedHasRelatedItems() {
             return true;
         }
 
         @Override
-        public boolean expectedHasSubtitles () {
+        public boolean expectedHasSubtitles() {
             return false;
         }
 
         @Override
-        public boolean expectedHasFrames () {
+        public boolean expectedHasFrames() {
             return false;
         }
 
         @Override
-        public String expectedCategory () {
+        public String expectedCategory() {
             return expectedCategory;
         }
 
         @Override
-        public int expectedAgeLimit () {
+        public int expectedAgeLimit() {
             return expectedAgeLimit;
         }
 
         @Override
-        public StreamExtractor.Privacy expectedPrivacy () {
+        public StreamExtractor.Privacy expectedPrivacy() {
             return expectedPrivacy;
         }
 
         @Override
-        public String expectedSupportInfo () {
+        public String expectedSupportInfo() {
             return expectedSupportInfo;
         }
 
         @Override
-        public boolean expectedHasAudioStreams () {
+        public boolean expectedHasAudioStreams() {
             return expectedHasAudioStreams;
         }
 
@@ -198,11 +199,12 @@ public class RumbleStreamExtractorTest {
          *  Test for {@link RumbleStreamRelatedInfoItemExtractor}
          */
         @Test
-        public void RumbleStreamRelatedInfoItemsExtractorTest () throws ExtractionException, IOException {
-            StreamInfoItemsCollector page = extractor.getRelatedItems();
+        public void rumbleStreamRelatedInfoItemsExtractorTest()
+                throws ExtractionException, IOException {
+            final StreamInfoItemsCollector page = extractor.getRelatedItems();
 
             /** more info see: {@link RumbleSharedTests#infoItemsResultsTest} */
-            String[] someExpectedResults = {
+            final String[] someExpectedResults = {
                     "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Ron DeSantis', textualUploadDate='null', viewCount=-1, duration=262, uploaderUrl='https://rumble.com/user/GovRonDeSantis', infoType=STREAM, serviceId=6, url='https://rumble.com/vfvdep-florida-gov.-desantis-rips-bidens-reckless-ice-policies.html', name='Florida Gov. DeSantis rips Biden's 'reckless' ICE policies', thumbnailUrl='https://i.rmbl.ws/s8/6/H/s/S/L/HsSLb.0kob.1.jpg', uploaderVerified='false'}",
                     "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Vlemx', textualUploadDate='null', viewCount=-1, duration=48, uploaderUrl='https://rumble.com/user/Vlemx', infoType=STREAM, serviceId=6, url='https://rumble.com/vbxxz3-florida-governor-ron-desantis-declined-a-reporters-request-..html', name='Florida Governor Ron DeSantis declined a reporter’s request .', thumbnailUrl='https://i.rmbl.ws/s8/6/_/u/H/m/_uHmb.0kob.1.jpg', uploaderVerified='false'}",
                     "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='WFTX', textualUploadDate='null', viewCount=-1, duration=47, uploaderUrl='https://rumble.com/user/WFTX', infoType=STREAM, serviceId=6, url='https://rumble.com/vf6b53-governor-desantis-signs-covid-liability-bill-today.html', name='Governor DeSantis signs COVID liability bill today', thumbnailUrl='https://i.rmbl.ws/s8/1/N/Z/o/H/NZoHb.0kob-small-Governor-DeSantis-signs-COV.jpg', uploaderVerified='false'}"
@@ -239,7 +241,7 @@ public class RumbleStreamExtractorTest {
 
 
         @BeforeAll
-        public static void setUp () throws ExtractionException, IOException {
+        public static void setUp() throws ExtractionException, IOException {
             url = "https://rumble.com/vg7h6j";
             expectedUrl = "https://rumble.com/vg7h6j";
             expectedName = "EP 2422-9AM UKRAINIANS USED BY FBI TO SPY ON AMERICANS?  FISA Warrants Issued MONTHS Before Jan 6th";
@@ -260,7 +262,8 @@ public class RumbleStreamExtractorTest {
             expectedLength = 59;
             System.setProperty("downloader", "MOCK");
             //System.setProperty("downloader", "RECORDING");
-            NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH + "/streamExtractorLiveStream"));
+            NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH
+                    + "/streamExtractorLiveStream"));
 
             extractor = (RumbleStreamExtractor) Rumble
                     .getStreamExtractor(url);
@@ -271,7 +274,7 @@ public class RumbleStreamExtractorTest {
          *  Test for {@link RumbleStreamRelatedInfoItemExtractor}
          */
         @Test
-        public void RumbleStreamRelatedInfoItemsExtractorTest () throws ExtractionException {
+        public void rumbleStreamRelatedInfoItemsExtractorTest() throws ExtractionException {
 
         }
     }

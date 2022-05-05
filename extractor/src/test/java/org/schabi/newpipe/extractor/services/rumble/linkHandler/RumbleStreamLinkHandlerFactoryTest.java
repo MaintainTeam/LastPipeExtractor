@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Test for {@link RumbleStreamLinkHandlerFactory}
  */
+@SuppressWarnings({"checkstyle:LineLength", "checkstyle:InvalidJavadocPosition"})
 public class RumbleStreamLinkHandlerFactoryTest {
     private static RumbleStreamLinkHandlerFactory linkHandler;
 
@@ -24,38 +25,39 @@ public class RumbleStreamLinkHandlerFactoryTest {
 
     @Test
     public void getId() throws Exception {
-        String correctIdExpectSuccess = "vdofb67";
-        String tooShortIdExpectError = "vdof";
-        String noIdExpectError = "";
+        final String correctIdExpectSuccess = "vdofb67";
+        final String tooShortIdExpectError = "vdof";
+        final String noIdExpectError = "";
 
 
-        String baseUrls[] = { "https://rumble.com/" };
+        final String[] baseUrls = {"https://rumble.com/"};
 
         /** {@value correctIdExpectSuccess} */
-        for (String baseUrl : baseUrls) {
-            String testUrl = baseUrl + correctIdExpectSuccess;
-            assertEquals(correctIdExpectSuccess, 
-                linkHandler.fromUrl(testUrl).getId());
+        for (final String baseUrl : baseUrls) {
+            final String testUrl = baseUrl + correctIdExpectSuccess;
+            assertEquals(correctIdExpectSuccess, linkHandler.fromUrl(testUrl).getId());
 
         }
 
         /** {@value tooShortIdExpectError} */
-        for (String baseUrl : baseUrls) {
-            String testUrl = baseUrl + tooShortIdExpectError;
+        for (final String baseUrl : baseUrls) {
+            final String testUrl = baseUrl + tooShortIdExpectError;
 
-            ParsingException what = assertThrows(ParsingException.class, () -> linkHandler.fromUrl(testUrl).getId());
+            final ParsingException what = assertThrows(ParsingException.class,
+                    () -> linkHandler.fromUrl(testUrl).getId());
             assertTrue(what instanceof ParsingException);
         }
 
         /** {@value noIdExpectError} */
-        for (String baseUrl : baseUrls) {
-            String testUrl = baseUrl + noIdExpectError;
+        for (final String baseUrl : baseUrls) {
+            final String testUrl = baseUrl + noIdExpectError;
 
-            ParsingException what = assertThrows(ParsingException.class, () -> linkHandler.fromUrl(testUrl).getId());
+            final ParsingException what = assertThrows(ParsingException.class,
+                    () -> linkHandler.fromUrl(testUrl).getId());
             assertTrue(what instanceof ParsingException);
         }
 
-        String[] invalidVideoUrls = {
+        final String[] invalidVideoUrls = {
                 "https://pumble.com",
                 "https://sumble.com/vdofb7",
                 "https://sumble.com/vd_ofb7",
@@ -65,7 +67,7 @@ public class RumbleStreamLinkHandlerFactoryTest {
                 "https://rumble.com/category/v23/"
         };
 
-        for (String invalidVideoUrl : invalidVideoUrls) {
+        for (final String invalidVideoUrl : invalidVideoUrls) {
             assertThrows(ParsingException.class, () -> linkHandler.getId(invalidVideoUrl),
                     "This URL is invalid: " + invalidVideoUrl);
         }
@@ -73,11 +75,11 @@ public class RumbleStreamLinkHandlerFactoryTest {
 
     @Test
     public void getUrl() throws Exception {
-        String inputVideoUrl = "https://rumble.com/vdofb7";
-        //String inputEmbedUrl = "https://www.rumble.com/embed/8gwdyYJ8BUk/";
-        String inputId = "vdofb7";
+        final String inputVideoUrl = "https://rumble.com/vdofb7";
+        //final String inputEmbedUrl = "https://www.rumble.com/embed/8gwdyYJ8BUk/";
+        final String inputId = "vdofb7";
 
-        String expectedUrl = "https://rumble.com/vdofb7";
+        final String expectedUrl = "https://rumble.com/vdofb7";
 
         assertEquals(expectedUrl,
                 linkHandler.fromId(inputId).getUrl());
@@ -89,9 +91,9 @@ public class RumbleStreamLinkHandlerFactoryTest {
 
     @Test
     public void testAcceptUrl() throws ParsingException {
-        String validShortVideoUrl = "https://rumble.com/vdofb7";
-        String validLongVideoUrl = "https://rumble.com/vg1hkl-youtube-ceo-wins-major-award-and-you-wont-believe-for-what.html";
-        String validWithCategoryVideoUrl = "https://rumble.com/sports/v1850-teeterboard-training-for-cirque-du-soleil.html";
+        final String validShortVideoUrl = "https://rumble.com/vdofb7";
+        final String validLongVideoUrl = "https://rumble.com/vg1hkl-youtube-ceo-wins-major-award-and-you-wont-believe-for-what.html";
+        final String validWithCategoryVideoUrl = "https://rumble.com/sports/v1850-teeterboard-training-for-cirque-du-soleil.html";
 
         assertTrue(linkHandler.acceptUrl(validShortVideoUrl));
         assertTrue(linkHandler.acceptUrl(validLongVideoUrl));

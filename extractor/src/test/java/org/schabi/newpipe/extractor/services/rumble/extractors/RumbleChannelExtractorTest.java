@@ -21,9 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.schabi.newpipe.downloader.DownloaderFactory.RESOURCE_PATH;
 import static org.schabi.newpipe.extractor.ExtractorAsserts.assertIsSecureUrl;
 import static org.schabi.newpipe.extractor.ServiceList.Rumble;
-import static org.schabi.newpipe.extractor.services.DefaultTests.*;
+import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestMoreItems;
+import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestRelatedItems;
 import static org.schabi.newpipe.extractor.services.rumble.extractors.RumbleSharedTests.infoItemsResultsTest;
 
+@SuppressWarnings({"checkstyle:LineLength", "checkstyle:MethodName", "checkstyle:InvalidJavadocPosition"})
 /**
  * Test for {@link RumbleChannelExtractor}
  */
@@ -33,23 +35,23 @@ public class RumbleChannelExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.channelUrl, "https://rumble.com/c/GovRonDeSantis");
-                put(keysForTestDataMap.expectedOriginalUrl, "https://rumble.com/c/GovRonDeSantis");
-                put(keysForTestDataMap.expectedUrl, "https://rumble.com/c/GovRonDeSantis");
-                put(keysForTestDataMap.expectedChannelName, "Ron DeSantis");
-                put(keysForTestDataMap.expectedId, "c/GovRonDeSantis");
-                put(keysForTestDataMap.expectedMinSubscriberCount, "52000");
-                put(keysForTestDataMap.expectedDescription, "");
-                put(keysForTestDataMap.expectedAvatarUrl, "https://i.rmbl.ws/z8/7/o/2/c/7o2ca.baa-GovRonDeSantis-qrikr6.jpeg");
-                put(keysForTestDataMap.expectedBannerlUrl, "{\"hasBanner\":\"" +
-                        /* ===expected to have banner? ===*/
+                put(KeysForTestDataMap.channelUrl, "https://rumble.com/c/GovRonDeSantis");
+                put(KeysForTestDataMap.expectedOriginalUrl, "https://rumble.com/c/GovRonDeSantis");
+                put(KeysForTestDataMap.expectedUrl, "https://rumble.com/c/GovRonDeSantis");
+                put(KeysForTestDataMap.expectedChannelName, "Ron DeSantis");
+                put(KeysForTestDataMap.expectedId, "c/GovRonDeSantis");
+                put(KeysForTestDataMap.expectedMinSubscriberCount, "52000");
+                put(KeysForTestDataMap.expectedDescription, "");
+                put(KeysForTestDataMap.expectedAvatarUrl, "https://i.rmbl.ws/z8/7/o/2/c/7o2ca.baa-GovRonDeSantis-qrikr6.jpeg");
+                put(KeysForTestDataMap.expectedBannerlUrl, "{\"hasBanner\":\""
+                        + /* ===expected to have banner? ===*/
                         "true"
-                        + "\",\"url\":\"" +
-                        /* ===set the expected url=== */
+                        + "\",\"url\":\""
+                        + /* ===set the expected url=== */
                         "https://i.rmbl.ws/z8/7/o/2/c/7o2ca.caa-GovRonDeSantis-qrikr9.jpeg"
                         + "\"}");
-                put(keysForTestDataMap.doTestMoreRelatedItems, "false");
-                put(keysForTestDataMap.mockPath, "channelTest");
+                put(KeysForTestDataMap.doTestMoreRelatedItems, "false");
+                put(KeysForTestDataMap.mockPath, "channelTest");
             }};
             TestChannel.setUp();
             /** more info see: {@link RumbleSharedTests#infoItemsResultsTest} */
@@ -65,23 +67,23 @@ public class RumbleChannelExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.channelUrl, "https://rumble.com/c/Bongino");
-                put(keysForTestDataMap.expectedOriginalUrl, "https://rumble.com/c/Bongino");
-                put(keysForTestDataMap.expectedUrl, "https://rumble.com/c/Bongino");
-                put(keysForTestDataMap.expectedChannelName, "The Dan Bongino Show");
-                put(keysForTestDataMap.expectedId, "c/Bongino");
-                put(keysForTestDataMap.expectedMinSubscriberCount, "1500000");
-                put(keysForTestDataMap.expectedDescription, "");
-                put(keysForTestDataMap.expectedAvatarUrl, "https://i.rmbl.ws/z8/U/K/d/b/UKdba.baa-Bongino-qgs0w4.jpg");
-                put(keysForTestDataMap.expectedBannerlUrl, "{\"hasBanner\":\"" +
-                        /* ===expected to have banner? ===*/
+                put(KeysForTestDataMap.channelUrl, "https://rumble.com/c/Bongino");
+                put(KeysForTestDataMap.expectedOriginalUrl, "https://rumble.com/c/Bongino");
+                put(KeysForTestDataMap.expectedUrl, "https://rumble.com/c/Bongino");
+                put(KeysForTestDataMap.expectedChannelName, "The Dan Bongino Show");
+                put(KeysForTestDataMap.expectedId, "c/Bongino");
+                put(KeysForTestDataMap.expectedMinSubscriberCount, "1500000");
+                put(KeysForTestDataMap.expectedDescription, "");
+                put(KeysForTestDataMap.expectedAvatarUrl, "https://i.rmbl.ws/z8/U/K/d/b/UKdba.baa-Bongino-qgs0w4.jpg");
+                put(KeysForTestDataMap.expectedBannerlUrl, "{\"hasBanner\":\""
+                        + /* ===expected to have banner? ===*/
                         "true"
-                        + "\",\"url\":\"" +
-                        /* ===set the expected url=== */
+                        + "\",\"url\":\""
+                        + /* ===set the expected url=== */
                         "https://i.rmbl.ws/z8/U/K/d/b/UKdba.caa-Bongino-qgs0w8.jpg"
                         + "\"}");
-                put(keysForTestDataMap.doTestMoreRelatedItems, "true");
-                put(keysForTestDataMap.mockPath, "channelTestMulitplePages");
+                put(KeysForTestDataMap.doTestMoreRelatedItems, "true");
+                put(KeysForTestDataMap.mockPath, "channelTestMulitplePages");
             }};
             TestChannel.setUp();
             /** more info see: {@link RumbleSharedTests#infoItemsResultsTest} */
@@ -96,17 +98,17 @@ public class RumbleChannelExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.channelUrl, "https://rumble.com/user/Vlemx");
-                put(keysForTestDataMap.expectedOriginalUrl, "https://rumble.com/user/Vlemx");
-                put(keysForTestDataMap.expectedUrl, "https://rumble.com/user/Vlemx");
-                put(keysForTestDataMap.expectedChannelName, "Vlemx");
-                put(keysForTestDataMap.expectedId, "user/Vlemx");
-                put(keysForTestDataMap.expectedMinSubscriberCount, "915");
-                put(keysForTestDataMap.expectedDescription, "");
-                put(keysForTestDataMap.expectedAvatarUrl, "https://graph.facebook.com/10153436058551636/picture?type=large");
-                put(keysForTestDataMap.expectedBannerlUrl, "{\"hasBanner\":\"false\",\"url\":\"\"}");
-                put(keysForTestDataMap.doTestMoreRelatedItems, "true");
-                put(keysForTestDataMap.mockPath, "userTestMulitplePages");
+                put(KeysForTestDataMap.channelUrl, "https://rumble.com/user/Vlemx");
+                put(KeysForTestDataMap.expectedOriginalUrl, "https://rumble.com/user/Vlemx");
+                put(KeysForTestDataMap.expectedUrl, "https://rumble.com/user/Vlemx");
+                put(KeysForTestDataMap.expectedChannelName, "Vlemx");
+                put(KeysForTestDataMap.expectedId, "user/Vlemx");
+                put(KeysForTestDataMap.expectedMinSubscriberCount, "915");
+                put(KeysForTestDataMap.expectedDescription, "");
+                put(KeysForTestDataMap.expectedAvatarUrl, "https://graph.facebook.com/10153436058551636/picture?type=large");
+                put(KeysForTestDataMap.expectedBannerlUrl, "{\"hasBanner\":\"false\",\"url\":\"\"}");
+                put(KeysForTestDataMap.doTestMoreRelatedItems, "true");
+                put(KeysForTestDataMap.mockPath, "userTestMulitplePages");
             }};
             TestChannel.setUp();
             /** more info see: {@link RumbleSharedTests#infoItemsResultsTest} */
@@ -118,11 +120,11 @@ public class RumbleChannelExtractorTest {
         }
     }
 
-    public static abstract class TestChannel implements BaseChannelExtractorTest {
+    public abstract static class TestChannel implements BaseChannelExtractorTest {
 
         protected static final String MOCK_PATH =
                 RESOURCE_PATH + "/services/rumble/extractor/channel/";
-        public enum keysForTestDataMap {
+        public enum KeysForTestDataMap {
             channelUrl,
             expectedOriginalUrl,
             expectedUrl,
@@ -137,16 +139,17 @@ public class RumbleChannelExtractorTest {
         }
 
         protected static RumbleChannelExtractor extractor;
-        protected static Map<keysForTestDataMap,String> testDataMap;
+        protected static Map<KeysForTestDataMap, String> testDataMap;
         /** more info see: {@link RumbleSharedTests#infoItemsResultsTest} */
         protected static String[] someExpectedResults = null;
 
-        public static void setUp () throws Exception {
+        public static void setUp() throws Exception {
             System.setProperty("downloader", "MOCK");
     //        System.setProperty("downloader", "RECORDING");
-            NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH + "/" + testDataMap.get(keysForTestDataMap.mockPath)));
+            NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH + "/"
+                    + testDataMap.get(KeysForTestDataMap.mockPath)));
             extractor = (RumbleChannelExtractor) Rumble
-                    .getChannelExtractor(testDataMap.get(keysForTestDataMap.channelUrl));
+                    .getChannelExtractor(testDataMap.get(KeysForTestDataMap.channelUrl));
             extractor.fetchPage();
         }
 
@@ -155,28 +158,28 @@ public class RumbleChannelExtractorTest {
         //////////////////////////////////////////////////////////////////////////*/
 
         @Test
-        public void testServiceId () {
+        public void testServiceId() {
             assertEquals(Rumble.getServiceId(), extractor.getServiceId());
         }
 
         @Test
-        public void testName () throws Exception {
-            assertEquals(testDataMap.get(keysForTestDataMap.expectedChannelName), extractor.getName());
+        public void testName() throws Exception {
+            assertEquals(testDataMap.get(KeysForTestDataMap.expectedChannelName), extractor.getName());
         }
 
         @Test
-        public void testId () throws Exception {
-            assertEquals(testDataMap.get(keysForTestDataMap.expectedId), extractor.getId());
+        public void testId() throws Exception {
+            assertEquals(testDataMap.get(KeysForTestDataMap.expectedId), extractor.getId());
         }
 
         @Test
-        public void testUrl () throws ParsingException {
-            assertEquals(testDataMap.get(keysForTestDataMap.expectedUrl), extractor.getUrl());
+        public void testUrl() throws ParsingException {
+            assertEquals(testDataMap.get(KeysForTestDataMap.expectedUrl), extractor.getUrl());
         }
 
         @Test
-        public void testOriginalUrl () throws ParsingException {
-            assertEquals(testDataMap.get(keysForTestDataMap.expectedOriginalUrl), extractor.getOriginalUrl());
+        public void testOriginalUrl() throws ParsingException {
+            assertEquals(testDataMap.get(KeysForTestDataMap.expectedOriginalUrl), extractor.getOriginalUrl());
         }
 
         /*//////////////////////////////////////////////////////////////////////////
@@ -184,7 +187,7 @@ public class RumbleChannelExtractorTest {
         //////////////////////////////////////////////////////////////////////////*/
 
         @Test
-        public void testRelatedItems () throws Exception {
+        public void testRelatedItems() throws Exception {
             defaultTestRelatedItems(extractor);
 
             infoItemsResultsTest(extractor.getService(),
@@ -195,11 +198,12 @@ public class RumbleChannelExtractorTest {
         }
 
         @Test
-        public void testMoreRelatedItems () throws Exception {
-            if (Boolean.parseBoolean(testDataMap.get(keysForTestDataMap.doTestMoreRelatedItems)))
+        public void testMoreRelatedItems() throws Exception {
+            if (Boolean.parseBoolean(testDataMap.get(KeysForTestDataMap.doTestMoreRelatedItems))) {
                 defaultTestMoreItems(extractor);
-            else
+            } else {
                 assertTrue(true);
+            }
         }
 
         /*//////////////////////////////////////////////////////////////////////////
@@ -207,44 +211,45 @@ public class RumbleChannelExtractorTest {
         //////////////////////////////////////////////////////////////////////////*/
 
         @Test
-        public void testDescription () throws Exception {
-            ExtractorAsserts.assertContains(testDataMap.get(keysForTestDataMap.expectedDescription), extractor.getDescription());
+        public void testDescription() throws Exception {
+            ExtractorAsserts.assertContains(testDataMap.get(KeysForTestDataMap.expectedDescription), extractor.getDescription());
         }
 
         @Test
-        public void testAvatarUrl () throws Exception {
-            String avatarUrl = extractor.getAvatarUrl();
+        public void testAvatarUrl() throws Exception {
+            final String avatarUrl = extractor.getAvatarUrl();
             assertIsSecureUrl(avatarUrl);
-            assertTrue(avatarUrl.contains(testDataMap.get(keysForTestDataMap.expectedAvatarUrl)), avatarUrl);
+            assertTrue(avatarUrl.contains(testDataMap.get(KeysForTestDataMap.expectedAvatarUrl)), avatarUrl);
         }
 
         @Test
-        public void testBannerUrl () throws Exception {
+        public void testBannerUrl() throws Exception {
 
-            String bannerUrl = extractor.getBannerUrl();
-            JsonObject testData = (JsonObject) JsonParser.any().from(testDataMap.get(keysForTestDataMap.expectedBannerlUrl));
+            final String bannerUrl = extractor.getBannerUrl();
+            final JsonObject testData = (JsonObject) JsonParser.any().from(testDataMap.get(KeysForTestDataMap.expectedBannerlUrl));
 
-            Boolean hasBanner = testData.getBoolean("hasBanner");
-            String expectedBannerUrl = testData.getString("url");
-            if (hasBanner)
+            final Boolean hasBanner = testData.getBoolean("hasBanner");
+            final String expectedBannerUrl = testData.getString("url");
+            if (hasBanner) {
                 assertIsSecureUrl(bannerUrl);
+            }
 
             assertTrue(bannerUrl.contains(expectedBannerUrl), bannerUrl);
         }
 
         @Test
-        public void testFeedUrl () throws Exception {
+        public void testFeedUrl() throws Exception {
             assertNull(extractor.getFeedUrl());
         }
 
         @Test
-        public void testSubscriberCount () throws Exception {
-            long subscriberCount = Long.parseLong(testDataMap.get(keysForTestDataMap.expectedMinSubscriberCount));
+        public void testSubscriberCount() throws Exception {
+            final long subscriberCount = Long.parseLong(testDataMap.get(KeysForTestDataMap.expectedMinSubscriberCount));
             assertTrue(extractor.getSubscriberCount() >= subscriberCount, "Wrong subscriber count");
         }
 
         @Override
-        public void testVerified () throws Exception {
+        public void testVerified() throws Exception {
             assertFalse(extractor.isVerified());
         }
     }

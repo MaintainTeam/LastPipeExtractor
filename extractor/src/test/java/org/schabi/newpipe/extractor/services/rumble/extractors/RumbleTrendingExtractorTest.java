@@ -43,10 +43,10 @@ public class RumbleTrendingExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.name, "Live");
-                put(keysForTestDataMap.id, "Live");
-                put(keysForTestDataMap.url, Rumble.getBaseUrl()+ "/live-videos");
-                put(keysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/live-videos");
+                put(KeysForTestDataMap.name, "Live");
+                put(KeysForTestDataMap.id, "Live");
+                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/live-videos");
+                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/live-videos");
             }};
             Trending.setUp();
         }
@@ -56,10 +56,10 @@ public class RumbleTrendingExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.name, "Editor Picks");
-                put(keysForTestDataMap.id, "Editor Picks");
-                put(keysForTestDataMap.url, Rumble.getBaseUrl()+ "/editor-picks");
-                put(keysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/editor-picks");
+                put(KeysForTestDataMap.name, "Editor Picks");
+                put(KeysForTestDataMap.id, "Editor Picks");
+                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/editor-picks");
+                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/editor-picks");
             }};
             Trending.setUp();
         }
@@ -69,10 +69,10 @@ public class RumbleTrendingExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.name, "News");
-                put(keysForTestDataMap.id, "News");
-                put(keysForTestDataMap.url, Rumble.getBaseUrl()+ "/category/news");
-                put(keysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/category/news");
+                put(KeysForTestDataMap.name, "News");
+                put(KeysForTestDataMap.id, "News");
+                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/category/news");
+                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/category/news");
             }};
             Trending.setUp();
         }
@@ -82,10 +82,10 @@ public class RumbleTrendingExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.name, "Viral");
-                put(keysForTestDataMap.id, "Viral");
-                put(keysForTestDataMap.url, Rumble.getBaseUrl()+ "/category/viral");
-                put(keysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/category/viral");
+                put(KeysForTestDataMap.name, "Viral");
+                put(KeysForTestDataMap.id, "Viral");
+                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/category/viral");
+                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/category/viral");
             }};
             Trending.setUp();
         }
@@ -95,10 +95,10 @@ public class RumbleTrendingExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.name, "Podcasts");
-                put(keysForTestDataMap.id, "Podcasts");
-                put(keysForTestDataMap.url, Rumble.getBaseUrl()+ "/category/podcasts");
-                put(keysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/category/podcasts");
+                put(KeysForTestDataMap.name, "Podcasts");
+                put(KeysForTestDataMap.id, "Podcasts");
+                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/category/podcasts");
+                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/category/podcasts");
             }};
             Trending.setUp();
         }
@@ -108,10 +108,10 @@ public class RumbleTrendingExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.name, "Today's Battle Leaderboard Top 50");
-                put(keysForTestDataMap.id, "Today's Battle Leaderboard Top 50");
-                put(keysForTestDataMap.url, Rumble.getBaseUrl()+ "/battle-leaderboard");
-                put(keysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/battle-leaderboard");
+                put(KeysForTestDataMap.name, "Today's Battle Leaderboard Top 50");
+                put(KeysForTestDataMap.id, "Today's Battle Leaderboard Top 50");
+                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/battle-leaderboard");
+                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/battle-leaderboard");
             }};
             Trending.setUp();
         }
@@ -127,36 +127,36 @@ public class RumbleTrendingExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(keysForTestDataMap.name, "Sports");
-                put(keysForTestDataMap.id, "Sports");
-                put(keysForTestDataMap.url, Rumble.getBaseUrl()+ "/category/sports");
-                put(keysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/category/sports");
+                put(KeysForTestDataMap.name, "Sports");
+                put(KeysForTestDataMap.id, "Sports");
+                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/category/sports");
+                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/category/sports");
             }};
             Trending.setUp();
         }
     }
 
 
-    public static abstract class Trending implements BaseListExtractorTest {
+    public abstract static class Trending implements BaseListExtractorTest {
 
-        public enum keysForTestDataMap {
+        public enum KeysForTestDataMap {
             name, id, url, originalUrl
         }
         protected static ListExtractor extractor;
-        protected static Map<keysForTestDataMap,String> testDataMap;
+        protected static Map<KeysForTestDataMap, String> testDataMap;
 
         public static void setUp() throws Exception {
             NewPipe.init(DownloaderTestImpl.getInstance());
 
-            extractor = Rumble.getKioskList().getExtractorById(testDataMap.get(keysForTestDataMap.id), null);
+            extractor = Rumble.getKioskList().getExtractorById(
+                    testDataMap.get(KeysForTestDataMap.id), null);
             extractor.fetchPage();
         }
 
         @AfterAll
         public static void tearDown() throws IOException, ExtractionException {
-            List<Throwable> errors = extractor.getInitialPage().getErrors();
+            final List<Throwable> errors = extractor.getInitialPage().getErrors();
             System.out.println(errors.toString());
-
         }
 
         /*//////////////////////////////////////////////////////////////////////////
@@ -170,12 +170,12 @@ public class RumbleTrendingExtractorTest {
 
         @Test
         public void testName() throws Exception {
-            assertEquals(testDataMap.get(keysForTestDataMap.name), extractor.getName());
+            assertEquals(testDataMap.get(KeysForTestDataMap.name), extractor.getName());
         }
 
         @Test
         public void testId() throws Exception {
-            assertEquals(testDataMap.get(keysForTestDataMap.id), extractor.getId());
+            assertEquals(testDataMap.get(KeysForTestDataMap.id), extractor.getId());
         }
 
         @Test
@@ -187,7 +187,8 @@ public class RumbleTrendingExtractorTest {
         @Test
         public void testOriginalUrl() throws ParsingException {
             // TODO evermind figure out for what this URL really are
-            //assertEquals(testDataMap.get(keysForTestDataMap.originalUrl), extractor.getOriginalUrl());
+            // assertEquals(testDataMap.get(keysForTestDataMap.originalUrl),
+            //         extractor.getOriginalUrl());
         }
 
         /*//////////////////////////////////////////////////////////////////////////

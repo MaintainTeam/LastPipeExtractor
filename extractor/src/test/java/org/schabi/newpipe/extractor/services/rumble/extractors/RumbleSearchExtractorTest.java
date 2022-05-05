@@ -33,6 +33,7 @@ import static org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleSea
 import static org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleSearchQueryHandlerFactory.VIDEOS;
 import static org.schabi.newpipe.extractor.utils.Utils.UTF_8;
 
+@SuppressWarnings({"checkstyle:LineLength", "checkstyle:InvalidJavadocPosition", "checkstyle:LeftCurly"})
 public class RumbleSearchExtractorTest {
 
     private static final String MOCK_PATH =
@@ -42,19 +43,22 @@ public class RumbleSearchExtractorTest {
 
         @BeforeAll
         public static void setUp() throws Exception {
-            QUERY = "paul";
+            query = "paul";
             expectedSearchBaseUrl = "rumble.com/search/video?q=";
             expectedSearchOriginalBaseUrl = "rumble.com/search/video?q=";
 
             System.setProperty("downloader", "MOCK");
 //            System.setProperty("downloader", "RECORDING");
-            NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH + "/MultiplePagesResults"));
-            extractor = (RumbleSearchExtractor)Rumble.getSearchExtractor(QUERY);
+            NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH
+                    + "/MultiplePagesResults"));
+            extractor = (RumbleSearchExtractor) Rumble.getSearchExtractor(query);
             extractor.fetchPage();
         }
 
         // override tests
-        @Override public InfoItem.InfoType expectedInfoItemType() { return InfoItem.InfoType.STREAM; }
+        @Override public InfoItem.InfoType expectedInfoItemType() {
+            return InfoItem.InfoType.STREAM;
+        }
 
         @Override
         public void testMoreRelatedItems() throws Exception {
@@ -66,10 +70,11 @@ public class RumbleSearchExtractorTest {
          *  Test for {@link RumbleSearchVideoStreamInfoItemExtractor}
          */
         @Test
-        public void RumbleSearchVideoStreamInfoItemExtractorTest() throws ExtractionException, IOException {
+        public void rumbleSearchVideoStreamInfoItemExtractorTest()
+                throws ExtractionException, IOException {
 
             /** more info see: {@link RumbleSharedTests#infoItemsResultsTest} */
-            String[] someExpectedResults = {
+            final String[] someExpectedResults = {
                     "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Dinesh D'Souza', textualUploadDate='2021-04-21T19:28:06-04:00', viewCount=33779, duration=125, uploaderUrl='https://rumble.com/c/DineshDsouza', infoType=STREAM, serviceId=6, url='https://rumble.com/vfx78t-rand-paul-eviscerates-fauci-with-facts.html', name='Rand Paul EVISCERATES Fauci with Facts', thumbnailUrl='https://sp.rmbl.ws/s8/6/T/h/b/M/ThbMb.oq1b.1.jpg', uploaderVerified='false'}",
                     "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='BonginoReport', textualUploadDate='2021-02-25T11:50:36-04:00', viewCount=660701, duration=334, uploaderUrl='https://rumble.com/user/BonginoReport', infoType=STREAM, serviceId=6, url='https://rumble.com/ve5yg1-rand-paul-grills-bidens-transgender-hhs-nominee-gets-arrogant-answer.html', name='Rand Paul GRILLS Biden's Transgender HHS Nominee, Gets Arrogant Answer', thumbnailUrl='https://sp.rmbl.ws/s8/6/H/U/W/A/HUWAb.oq1b.1.jpg', uploaderVerified='false'}",
                     "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Dailycaller', textualUploadDate='2021-04-13T16:44:01-04:00', viewCount=97480, duration=432, uploaderUrl='https://rumble.com/user/Dailycaller', infoType=STREAM, serviceId=6, url='https://rumble.com/vfn27x-sen.-rand-paul-rips-anthony-fauci-over-conflicting-pandemic-advice.html', name='Sen. Rand Paul Rips Anthony Fauci Over Conflicting Pandemic Advice', thumbnailUrl='https://i.rmbl.ws/s8/6/9/N/n/K/9NnKb.oq1b.1.jpg', uploaderVerified='false'}"
@@ -83,18 +88,18 @@ public class RumbleSearchExtractorTest {
         }
     }
 
-    public static class onlyOnePageResults extends AbstractSearchBaseTest {
+    public static class OnlyOnePageResults extends AbstractSearchBaseTest {
 
         @BeforeAll
         public static void setUp() throws Exception {
-            QUERY = "desantis bomb";
+            query = "desantis bomb";
             expectedSearchBaseUrl = "rumble.com/search/video?q=";
             expectedSearchOriginalBaseUrl = "rumble.com/search/video?q=";
 
             System.setProperty("downloader", "MOCK");
 //            System.setProperty("downloader", "RECORDING");
             NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH + "/OnlyOnePageResults"));
-            extractor = (RumbleSearchExtractor)Rumble.getSearchExtractor(QUERY);
+            extractor = (RumbleSearchExtractor) Rumble.getSearchExtractor(query);
             extractor.fetchPage();
         }
 
@@ -110,14 +115,14 @@ public class RumbleSearchExtractorTest {
 
         @BeforeAll
         public static void setUp() throws Exception {
-            QUERY = "p3423n dkje ";
+            query = "p3423n dkje ";
             expectedSearchBaseUrl = "rumble.com/search/video?q=";
             expectedSearchOriginalBaseUrl = "rumble.com/search/video?q=";
 
             System.setProperty("downloader", "MOCK");
 //            System.setProperty("downloader", "RECORDING");
             NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH + "/NoResultsAtAll"));
-            extractor = (RumbleSearchExtractor)Rumble.getSearchExtractor(QUERY);
+            extractor = (RumbleSearchExtractor) Rumble.getSearchExtractor(query);
             extractor.fetchPage();
         }
 
@@ -142,17 +147,19 @@ public class RumbleSearchExtractorTest {
 
         @BeforeAll
         public static void setUp() throws Exception {
-            QUERY = "test";
+            query = "test";
             expectedSearchBaseUrl = "rumble.com/search/channel?q=";
             expectedSearchOriginalBaseUrl = "rumble.com/search/channel?q=";
 
             NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH + "/channel"));
-            extractor = Rumble.getSearchExtractor(QUERY, singletonList(CHANNELS), "");
+            extractor = Rumble.getSearchExtractor(query, singletonList(CHANNELS), "");
             extractor.fetchPage();
         }
 
         // override tests
-        @Override public InfoItem.InfoType expectedInfoItemType() { return InfoItem.InfoType.CHANNEL; }
+        @Override public InfoItem.InfoType expectedInfoItemType() {
+            return InfoItem.InfoType.CHANNEL;
+        }
     }
 
     public static class PagingTest {
@@ -175,12 +182,12 @@ public class RumbleSearchExtractorTest {
 
         @BeforeAll
         public static void setUp() throws Exception {
-            QUERY = "Mark Dice";
+            query = "Mark Dice";
             expectedSearchBaseUrl = "rumble.com/search/channel?q=";
             expectedSearchOriginalBaseUrl = "rumble.com/search/channel?q=";
 
             NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH + "verified"));
-            extractor = Rumble.getSearchExtractor(QUERY, singletonList(CHANNELS), "");
+            extractor = Rumble.getSearchExtractor(query, singletonList(CHANNELS), "");
             extractor.fetchPage();
         }
 
@@ -188,7 +195,7 @@ public class RumbleSearchExtractorTest {
         public void testAtLeastOneVerified() throws IOException, ExtractionException {
             final List<InfoItem> items = extractor.getInitialPage().getItems();
             boolean verified = false;
-            for (InfoItem item : items) {
+            for (final InfoItem item : items) {
                 if (((ChannelInfoItem) item).isVerified()) {
                     verified = true;
                     break;
@@ -199,28 +206,30 @@ public class RumbleSearchExtractorTest {
         }
 
         // override tests
-        @Override public InfoItem.InfoType expectedInfoItemType() { return InfoItem.InfoType.CHANNEL; }
+        @Override public InfoItem.InfoType expectedInfoItemType() {
+            return InfoItem.InfoType.CHANNEL;
+        }
 
     }
 
-    private static abstract class AbstractSearchBaseTest extends DefaultSearchExtractorTest {
+    private abstract static class AbstractSearchBaseTest extends DefaultSearchExtractorTest {
 
         protected static SearchExtractor extractor;
-        protected static String QUERY;
+        protected static String query;
         protected static String expectedSearchBaseUrl;
         protected static String expectedSearchOriginalBaseUrl;
 
         @Override public SearchExtractor extractor() { return extractor; }
         @Override public StreamingService expectedService() { return Rumble; }
-        @Override public String expectedName() { return QUERY; }
-        @Override public String expectedId() { return QUERY; }
+        @Override public String expectedName() { return query; }
+        @Override public String expectedId() { return query; }
         @Override public String expectedUrlContains() throws UnsupportedEncodingException {
-            return  expectedSearchBaseUrl + URLEncoder.encode(QUERY, UTF_8);
+            return  expectedSearchBaseUrl + URLEncoder.encode(query, UTF_8);
         }
         @Override public String expectedOriginalUrlContains() throws UnsupportedEncodingException {
-            return expectedSearchOriginalBaseUrl  + URLEncoder.encode(QUERY, UTF_8);
+            return expectedSearchOriginalBaseUrl  + URLEncoder.encode(query, UTF_8);
         }
-        @Override public String expectedSearchString() { return QUERY; }
+        @Override public String expectedSearchString() { return query; }
         @Nullable @Override public String expectedSearchSuggestion() { return null; }
     }
 }
