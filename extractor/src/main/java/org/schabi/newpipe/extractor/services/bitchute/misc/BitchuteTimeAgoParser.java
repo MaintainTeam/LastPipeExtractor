@@ -116,7 +116,7 @@ public class BitchuteTimeAgoParser {
         }
 
         if (isApproximation) {
-            newOffsetDateTime = offsetDateTime.truncatedTo(ChronoUnit.HOURS);
+            newOffsetDateTime = newOffsetDateTime.truncatedTo(ChronoUnit.HOURS);
         }
 
         return newOffsetDateTime;
