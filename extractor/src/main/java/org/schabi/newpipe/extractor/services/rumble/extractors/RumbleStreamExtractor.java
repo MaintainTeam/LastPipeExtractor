@@ -8,6 +8,7 @@ import com.grack.nanojson.JsonParserException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.schabi.newpipe.extractor.MediaFormat;
@@ -110,13 +111,18 @@ public class RumbleStreamExtractor extends StreamExtractor {
     public Description getDescription() throws ParsingException {
         assertPageFetched();
         final List<Node> nodes = doc.select("p.media-description").first().childNodes();
-        final String description = "";
+        String description = "";
 
-        // the 3rd item has the description. Some videos do not have a description
-        // therefore check if there are enough nodes.
-        if (nodes.size() >= 3) {
-            doc.select("p.media-description").first().childNodes().get(2).toString();
+        // the node that contains the the description may vary.
+        // Some videos do not have a description at all
+        for (final Node node : nodes) {
+            if (node instanceof TextNode) {
+                if (!((TextNode) node).isBlank()) {
+                    description += node.toString();
+                }
+            }
         }
+
         return new Description(Parser.unescapeEntities(description, false), Description.PLAIN_TEXT);
     }
 

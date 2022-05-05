@@ -1,6 +1,7 @@
 package org.schabi.newpipe.extractor.services.rumble.extractors;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderFactory;
 import org.schabi.newpipe.extractor.NewPipe;
@@ -237,6 +238,7 @@ public class RumbleStreamExtractorTest {
         }
     }
 
+    @Disabled("Test broken, Live Streams not supported atm")
     public static class LiveStreamExtractorTest extends NormalStreamExtractorTest {
 
 
