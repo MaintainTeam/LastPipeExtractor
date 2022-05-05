@@ -23,6 +23,7 @@ public class BitchuteTimeAgoParserTest {
         final String pattern4 = "2 hour ago";
         final String pattern5 = "1 year, 3 months ago";
         final String pattern6 = "2 years ago";
+        final String weiredPattern = "an hour ago";
 
         final OffsetDateTime pattern1OffsetDateTimeExpected = OffsetDateTime.parse("2018-03-30T22:00:00+00:00");
         final OffsetDateTime pattern2OffsetDateTimeExpected = OffsetDateTime.parse("2020-02-08T22:00:00+00:00");
@@ -30,6 +31,7 @@ public class BitchuteTimeAgoParserTest {
         final OffsetDateTime pattern4OffsetDateTimeExpected = OffsetDateTime.parse("2020-12-31T20:30:00+00:00");
         final OffsetDateTime pattern5OffsetDateTimeExpected = OffsetDateTime.parse("2019-09-30T22:00:00+00:00");
         final OffsetDateTime pattern6OffsetDateTimeExpected = OffsetDateTime.parse("2018-12-30T22:00:00+00:00");
+        final OffsetDateTime weiredPatternOffsetDateTimeExpected = OffsetDateTime.parse("2020-12-31T21:30:00+00:00");
 
         final OffsetDateTime pattern1OffsetDateTime = timeAgo.parse(pattern1).offsetDateTime();
         final OffsetDateTime pattern2OffsetDateTime = timeAgo.parse(pattern2).offsetDateTime();
@@ -37,6 +39,7 @@ public class BitchuteTimeAgoParserTest {
         final OffsetDateTime pattern4OffsetDateTime = timeAgo.parse(pattern4).offsetDateTime();
         final OffsetDateTime pattern5OffsetDateTime = timeAgo.parse(pattern5).offsetDateTime();
         final OffsetDateTime pattern6OffsetDateTime = timeAgo.parse(pattern6).offsetDateTime();
+        final OffsetDateTime weiredPatternOffsetDateTime = timeAgo.parse(weiredPattern).offsetDateTime();
 
         assertEquals(pattern1OffsetDateTimeExpected, pattern1OffsetDateTime);
         assertEquals(pattern2OffsetDateTimeExpected, pattern2OffsetDateTime);
@@ -44,5 +47,6 @@ public class BitchuteTimeAgoParserTest {
         assertEquals(pattern4OffsetDateTimeExpected, pattern4OffsetDateTime);
         assertEquals(pattern5OffsetDateTimeExpected, pattern5OffsetDateTime);
         assertEquals(pattern6OffsetDateTimeExpected, pattern6OffsetDateTime);
+        assertEquals(weiredPatternOffsetDateTimeExpected, weiredPatternOffsetDateTime);
     }
 }

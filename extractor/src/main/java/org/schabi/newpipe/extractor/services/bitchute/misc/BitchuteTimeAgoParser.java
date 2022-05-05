@@ -32,11 +32,12 @@ public class BitchuteTimeAgoParser {
         OffsetDateTime offsetDateTime = now;
         boolean isApproximation = false;
 
-        // bitchute have the weired behavior to call name
+        // bitchute has the weired behavior to call it "an hour ago"
+        // instead "1 hour ago" as they do for longer ago dates.
         final String weiredPattern = "an hour ago";
         if (weiredPattern.equals(textualDate)) {
             // ready to go back
-            getResultFor(offsetDateTime, 1, ChronoUnit.HOURS);
+            offsetDateTime = getResultFor(offsetDateTime, 1, ChronoUnit.HOURS);
             return new DateWrapper(offsetDateTime, false);
         } else { // pattern matching
 
