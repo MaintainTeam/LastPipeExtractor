@@ -111,11 +111,12 @@ public class BitchuteStreamExtractorTest extends DefaultStreamExtractorTest {
     @Test
     @Override
     public void testLength() throws Exception {
+        // 0. start with a cleared cache
+        BitchuteHelpers.VideoDurationCache.resetCache();
         // 1. test if the empty cache throws
         assertThrows(NoSuchElementException.class,
                 () -> BitchuteHelpers
                         .VideoDurationCache.getDurationForVideoId(extractor().getId()));
-
         // 2. execute normal test
         super.testLength();
         // 3. test if the cache has expected duration

@@ -41,6 +41,14 @@ public final class BitchuteHelpers {
         private VideoDurationCache() { }
 
         private static Map<String, Long> idToDurationMap = new HashMap<>();
+
+        /**
+         * for testing purposes (we need to have a fresh start before unit tests).
+         */
+        public static void resetCache() {
+            idToDurationMap.clear();
+        }
+
         public static long getDurationForVideoId(final String videoId)
                 throws NoSuchElementException {
             if (idToDurationMap.containsKey(videoId)) {
