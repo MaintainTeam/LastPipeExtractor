@@ -4,6 +4,7 @@ import org.jsoup.nodes.Document;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.utils.Utils;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -85,16 +86,33 @@ public final class RumbleParsingHelper {
         String run();
     }
 
+    public static String totalMessMethodToGetUploaderThumbnailUrl(final String classStr,
+                                                                  final Document doc)
+            throws ParsingException {
+        return extractThumbnail(doc, classStr,
+                () -> {
+                    // extract checksum to use as identifier
+                    final Pattern matchChecksum = Pattern.compile("([a-fA-F0-9]{32})");
+                    final Matcher match2 = matchChecksum.matcher(classStr);
+                    if (match2.find()) {
+                        final String chkSum = match2.group(1);
+                        return chkSum;
+                    } else {
+                        return null;
+                    }
+                });
+    }
+
     /**
      * TODO implement a faster/easier way to achive same goals
      *
      * @param classStr
      * @return null if there was a letter and not a image, xor url with the uploader thumbnail
-     * @throws Exception
+     * @throws ParsingException
      */
-    public static String totalMessMethodToGetUploaderThumbnailUrl(final String classStr,
-                                                                  final Document doc)
-            throws Exception {
+    public static String extractThumbnail(final Document document,
+                                          final String classStr,
+                                          final ExtractFunction function) throws ParsingException {
 
         // special case there is only a letter and no image as user thumbnail
         if (classStr.contains("user-image--letter")) {
@@ -102,33 +120,29 @@ public final class RumbleParsingHelper {
             return null;
         }
 
-        // extract checksum
-        final Pattern matchChecksum = Pattern.compile("([a-fA-F0-9]{32})");
-        final Matcher match2 = matchChecksum.matcher(classStr);
-        if (match2.find()) {
-            final String chkSum = match2.group(1);
-
-            // extract uploader thumbnail url
-            final String matchThat = doc.toString();
-            final int pos = matchThat.indexOf(chkSum);
-            final String preciselyMatchHere = matchThat.substring(pos);
-
-            final Pattern channelUrl =
-                    Pattern.compile("\\W+background-image:\\W+url(?:\\()([^)]*)(?:\\));");
-            final Matcher match = channelUrl.matcher(preciselyMatchHere);
-            if (match.find()) {
-                final String thumbnailUrl = match.group(1);
-                return thumbnailUrl;
-            }
+        final String thumbIdentifier = function.run();
+        if (thumbIdentifier == null) {
+            return null;
         }
 
-        throw new Exception(classStr);
+        // extract thumbnail url
+        final String matchThat = document.toString();
+        final int pos = matchThat.indexOf(thumbIdentifier);
+        final String preciselyMatchHere = matchThat.substring(pos);
+
+        final Pattern channelThumbUrl =
+                Pattern.compile("\\W+background-image:\\W+url(?:\\()([^)]*)(?:\\));");
+        final Matcher match = channelThumbUrl.matcher(preciselyMatchHere);
+        if (match.find()) {
+            return match.group(1);
+        }
+        throw new ParsingException("Could not extract thumbUrl: " + thumbIdentifier);
     }
 
     public static String moreTotalMessMethodToGenerateUploaderUrl(final String classStr,
                                                                   final Document doc,
                                                                   final String uploaderName)
-            throws Exception {
+            throws ParsingException, MalformedURLException {
 
         final String thumbnailUrl = totalMessMethodToGetUploaderThumbnailUrl(classStr, doc);
         if (thumbnailUrl == null) {
