@@ -8,6 +8,7 @@ import static org.schabi.newpipe.downloader.DownloaderFactory.RESOURCE_PATH;
 import static org.schabi.newpipe.extractor.ServiceList.Rumble;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderFactory;
 import org.schabi.newpipe.extractor.InfoItem;
@@ -51,7 +52,8 @@ public class RumbleSearchExtractorTest {
 //            System.setProperty("downloader", "RECORDING");
             NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH
                     + "/MultiplePagesResults"));
-            extractor = (RumbleSearchExtractor) Rumble.getSearchExtractor(query);
+            extractor = (RumbleSearchExtractor)
+                    Rumble.getSearchExtractor(query, singletonList(VIDEOS), "");
             extractor.fetchPage();
         }
 
@@ -99,7 +101,8 @@ public class RumbleSearchExtractorTest {
             System.setProperty("downloader", "MOCK");
 //            System.setProperty("downloader", "RECORDING");
             NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH + "/OnlyOnePageResults"));
-            extractor = (RumbleSearchExtractor) Rumble.getSearchExtractor(query);
+            extractor = (RumbleSearchExtractor)
+                Rumble.getSearchExtractor(query, singletonList(VIDEOS), "");
             extractor.fetchPage();
         }
 
@@ -122,7 +125,8 @@ public class RumbleSearchExtractorTest {
             System.setProperty("downloader", "MOCK");
 //            System.setProperty("downloader", "RECORDING");
             NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH + "/NoResultsAtAll"));
-            extractor = (RumbleSearchExtractor) Rumble.getSearchExtractor(query);
+            extractor = (RumbleSearchExtractor)
+                    Rumble.getSearchExtractor(query, singletonList(VIDEOS), "");
             extractor.fetchPage();
         }
 
@@ -143,14 +147,16 @@ public class RumbleSearchExtractorTest {
     }
 
     public static class Channel extends AbstractSearchBaseTest {
-        private static SearchExtractor extractor;
+
 
         @BeforeAll
         public static void setUp() throws Exception {
-            query = "test";
+            query = "mark";
             expectedSearchBaseUrl = "rumble.com/search/channel?q=";
             expectedSearchOriginalBaseUrl = "rumble.com/search/channel?q=";
 
+            System.setProperty("downloader", "MOCK");
+            // System.setProperty("downloader", "RECORDING");
             NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH + "/channel"));
             extractor = Rumble.getSearchExtractor(query, singletonList(CHANNELS), "");
             extractor.fetchPage();
@@ -160,6 +166,10 @@ public class RumbleSearchExtractorTest {
         @Override public InfoItem.InfoType expectedInfoItemType() {
             return InfoItem.InfoType.CHANNEL;
         }
+
+        @Disabled("Test not relevant here")
+        @Override
+        public void testMoreRelatedItems() throws Exception { }
     }
 
     public static class PagingTest {
@@ -168,7 +178,7 @@ public class RumbleSearchExtractorTest {
             System.setProperty("downloader", "MOCK");
 //            System.setProperty("downloader", "RECORDING");
             NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH + "/paging"));
-            final SearchExtractor extractor = Rumble.getSearchExtractor("cirque du soleil", singletonList(VIDEOS), "");
+            final SearchExtractor extractor = Rumble.getSearchExtractor("facts", singletonList(VIDEOS), "");
             extractor.fetchPage();
 
             final ListExtractor.InfoItemsPage<InfoItem> page1 = extractor.getInitialPage();
@@ -210,6 +220,9 @@ public class RumbleSearchExtractorTest {
             return InfoItem.InfoType.CHANNEL;
         }
 
+        @Disabled("Test not relevant here")
+        @Override
+        public void testMoreRelatedItems() throws Exception { }
     }
 
     private abstract static class AbstractSearchBaseTest extends DefaultSearchExtractorTest {
