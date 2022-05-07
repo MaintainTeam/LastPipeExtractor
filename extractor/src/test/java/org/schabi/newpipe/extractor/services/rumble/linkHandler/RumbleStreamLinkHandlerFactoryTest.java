@@ -64,7 +64,10 @@ public class RumbleStreamLinkHandlerFactoryTest {
                 "https://rumble.com",
                 "https://rumble.com/",
                 "https://rumble.com/category/v23",
-                "https://rumble.com/category/v23/"
+                "https://rumble.com/category/v23/",
+                "https://rumble.com/user/Vlemx",
+                "https://rumble.com/c/Vlemx",
+                "https://rumble.com/user/vmpradio",
         };
 
         for (final String invalidVideoUrl : invalidVideoUrls) {
@@ -93,10 +96,8 @@ public class RumbleStreamLinkHandlerFactoryTest {
     public void testAcceptUrl() throws ParsingException {
         final String validShortVideoUrl = "https://rumble.com/vdofb7";
         final String validLongVideoUrl = "https://rumble.com/vg1hkl-youtube-ceo-wins-major-award-and-you-wont-believe-for-what.html";
-        final String validWithCategoryVideoUrl = "https://rumble.com/sports/v1850-teeterboard-training-for-cirque-du-soleil.html";
 
         assertTrue(linkHandler.acceptUrl(validShortVideoUrl));
         assertTrue(linkHandler.acceptUrl(validLongVideoUrl));
-        assertTrue(linkHandler.acceptUrl(validWithCategoryVideoUrl));
     }
 }

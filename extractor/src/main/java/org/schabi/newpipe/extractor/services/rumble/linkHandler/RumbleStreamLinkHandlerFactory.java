@@ -47,18 +47,24 @@ public final class RumbleStreamLinkHandlerFactory extends LinkHandlerFactory {
             throw new ParsingException("The given URL is not valid: " + urlString);
         }
 
-        String path = url.getPath();
+        String videoId = null;
+        final String[] pathParts = url.getPath().split("/");
+        // url.getPath() returns a path starting with '/'
+        // -> therefore we expect 2 elements
+        if (pathParts.length < 2) {
+            throw new ParsingException("Error getting ID: " + url.getPath());
+        }
 
         try {
-            path = path.substring(path.lastIndexOf("/") + 1);
-
-            final String[] splitPath = path.split("-", 0);
-            path = splitPath[0];
+            // 1. the pathParts[1] has to be the videoId
+            // 2. split after first '-' as this is the separator between id and remaining url
+            final String[] splitPath = pathParts[1].split("-", 0);
+            videoId = splitPath[0];
         } catch (final ArrayIndexOutOfBoundsException e) {
             throw new ParsingException("Error getting ID");
         }
 
-        return assertsID(path);
+        return assertsID(videoId);
     }
 
     @Override
