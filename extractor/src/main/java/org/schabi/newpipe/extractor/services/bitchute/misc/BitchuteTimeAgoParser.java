@@ -17,6 +17,8 @@ public class BitchuteTimeAgoParser {
     private final Pattern patternWeek = Pattern.compile("(\\d+)\\Wweek(?:s?)");
     private final Pattern patternDay = Pattern.compile("(\\d+)\\Wday(?:s?)");
     private final Pattern patternHour = Pattern.compile("(\\d+)\\Whour(?:s?)");
+    private final Pattern patternMinutes = Pattern.compile("(\\d+)\\Wminute(?:s?)");
+    private final Pattern patternSeconds = Pattern.compile("(\\d+)\\Wsecond(?:s?)");
 
     public BitchuteTimeAgoParser() {
         now = OffsetDateTime.now(ZoneOffset.UTC);
@@ -73,6 +75,18 @@ public class BitchuteTimeAgoParser {
             if (match.find()) {
                 final int hours = Integer.parseInt(match.group(1));
                 offsetDateTime = getResultFor(offsetDateTime, hours, ChronoUnit.HOURS);
+            }
+
+            match = patternMinutes.matcher(textualDate);
+            if (match.find()) {
+                final int minutes = Integer.parseInt(match.group(1));
+                offsetDateTime = getResultFor(offsetDateTime, minutes, ChronoUnit.MINUTES);
+            }
+
+            match = patternSeconds.matcher(textualDate);
+            if (match.find()) {
+                final int seconds = Integer.parseInt(match.group(1));
+                offsetDateTime = getResultFor(offsetDateTime, seconds, ChronoUnit.SECONDS);
             }
         }
 
