@@ -45,10 +45,9 @@ public class RumbleSearchQueryHandlerFactoryTest {
     @Test
     public void testGetAvailableContentFilter() {
         final String[] contentFilter = Rumble.getSearchQHFactory().getAvailableContentFilter();
-        assertEquals(3, contentFilter.length);
-        assertEquals("all", contentFilter[0]);
-        assertEquals("videos", contentFilter[1]);
-        assertEquals("channels", contentFilter[2]);
+        assertEquals(2, contentFilter.length);
+        assertEquals("videos", contentFilter[0]);
+        assertEquals("channels", contentFilter[1]);
     }
 
     @Test

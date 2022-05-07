@@ -11,7 +11,6 @@ import static org.schabi.newpipe.extractor.utils.Utils.UTF_8;
 
 public class RumbleSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
 
-    public static final String ALL = "all";
     public static final String VIDEOS = "videos";
     public static final String CHANNELS = "channels";
 
@@ -29,16 +28,12 @@ public class RumbleSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
         try {
             if (!contentFilters.isEmpty()) {
 
-                // TODO -> Rumble allows also to search for user and for channels
                 switch (contentFilters.get(0)) {
-                    case ALL:
-                    default:
-                        break;
                     case VIDEOS:
+                    default:
                         return SEARCH_VIDEOS_URL + URLEncoder.encode(searchString, UTF_8);
                     case CHANNELS:
                         return SEARCH_CHANNEL_URL + URLEncoder.encode(searchString, UTF_8);
-                    //TODO case for user as we can search for search/user?=...
                 }
             }
 
@@ -52,7 +47,6 @@ public class RumbleSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
     @Override
     public String[] getAvailableContentFilter() {
         return new String[] {
-                ALL,
                 VIDEOS,
                 CHANNELS
         };
