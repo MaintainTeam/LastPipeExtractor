@@ -11,14 +11,30 @@ import java.util.regex.Pattern;
 
 public class BitchuteTimeAgoParser {
 
+    private final class Triple {
+        public final boolean isApproximation;
+        public final String pattern;
+        public final ChronoUnit chronoUnit;
+
+        Triple(final boolean isApproximation, final String pattern, final ChronoUnit chronoUnit) {
+            this.isApproximation = isApproximation;
+            this.pattern = pattern;
+            this.chronoUnit = chronoUnit;
+        }
+    }
+
     private OffsetDateTime now;
-    private final Pattern patternYear = Pattern.compile("(\\d+)\\Wyear(?:s?)");
-    private final Pattern patternMonth = Pattern.compile("(\\d+)\\Wmonth(?:s?)");
-    private final Pattern patternWeek = Pattern.compile("(\\d+)\\Wweek(?:s?)");
-    private final Pattern patternDay = Pattern.compile("(\\d+)\\Wday(?:s?)");
-    private final Pattern patternHour = Pattern.compile("(\\d+)\\Whour(?:s?)");
-    private final Pattern patternMinutes = Pattern.compile("(\\d+)\\Wminute(?:s?)");
-    private final Pattern patternSeconds = Pattern.compile("(\\d+)\\Wsecond(?:s?)");
+
+    final Triple[] timeDateMatchers = {
+            new Triple(true, "year", ChronoUnit.YEARS),
+            new Triple(true, "month", ChronoUnit.MONTHS),
+            new Triple(true, "week", ChronoUnit.WEEKS),
+            new Triple(true, "day", ChronoUnit.DAYS),
+            new Triple(false, "hour", ChronoUnit.HOURS),
+            new Triple(false, "minute", ChronoUnit.MINUTES),
+            new Triple(false, "second", ChronoUnit.SECONDS)
+    };
+
 
     public BitchuteTimeAgoParser() {
         now = OffsetDateTime.now(ZoneOffset.UTC);
@@ -43,50 +59,14 @@ public class BitchuteTimeAgoParser {
             return new DateWrapper(offsetDateTime, false);
         } else { // pattern matching
 
-            Matcher match = patternYear.matcher(textualDate);
-            if (match.find()) {
-                final int years = Integer.parseInt(match.group(1));
-                offsetDateTime = getResultFor(offsetDateTime, years, ChronoUnit.YEARS);
-                isApproximation = true;
-            }
-
-            match = patternMonth.matcher(textualDate);
-            if (match.find()) {
-                final int months = Integer.parseInt(match.group(1));
-                offsetDateTime = getResultFor(offsetDateTime, months, ChronoUnit.MONTHS);
-                isApproximation = true;
-            }
-
-            match = patternWeek.matcher(textualDate);
-            if (match.find()) {
-                final int weeks = Integer.parseInt(match.group(1));
-                offsetDateTime = getResultFor(offsetDateTime, weeks, ChronoUnit.WEEKS);
-                isApproximation = true;
-            }
-
-            match = patternDay.matcher(textualDate);
-            if (match.find()) {
-                final int days = Integer.parseInt(match.group(1));
-                offsetDateTime = getResultFor(offsetDateTime, days, ChronoUnit.DAYS);
-                isApproximation = true;
-            }
-
-            match = patternHour.matcher(textualDate);
-            if (match.find()) {
-                final int hours = Integer.parseInt(match.group(1));
-                offsetDateTime = getResultFor(offsetDateTime, hours, ChronoUnit.HOURS);
-            }
-
-            match = patternMinutes.matcher(textualDate);
-            if (match.find()) {
-                final int minutes = Integer.parseInt(match.group(1));
-                offsetDateTime = getResultFor(offsetDateTime, minutes, ChronoUnit.MINUTES);
-            }
-
-            match = patternSeconds.matcher(textualDate);
-            if (match.find()) {
-                final int seconds = Integer.parseInt(match.group(1));
-                offsetDateTime = getResultFor(offsetDateTime, seconds, ChronoUnit.SECONDS);
+            for (final Triple triple : timeDateMatchers) {
+                final Pattern regexp = Pattern.compile("(\\d+)\\W" + triple.pattern + "(?:s?)");
+                final Matcher match = regexp.matcher(textualDate);
+                if (match.find()) {
+                    final int timeValue = Integer.parseInt(match.group(1));
+                    offsetDateTime = getResultFor(offsetDateTime, timeValue, triple.chronoUnit);
+                    isApproximation = triple.isApproximation;
+                }
             }
         }
 
