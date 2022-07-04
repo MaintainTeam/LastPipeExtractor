@@ -27,6 +27,14 @@ import static org.schabi.newpipe.extractor.ServiceList.Rumble;
 @SuppressWarnings({"checkstyle:LineLength", "checkstyle:InvalidJavadocPosition"})
 public class RumbleStreamExtractorTest {
 
+    /*
+     * This stream test has one speciality:
+     * - onw related Stream is the RSBN Live-Stream. So here we also testing
+     *   if the detection of a live stream in the the related streams works
+     *
+     * -> Hopyfully RSBN has always a live strem in the related section
+     *    We will see when we have to update this test case.
+     */
     public static class NormalStreamExtractorTest extends DefaultStreamExtractorTest {
 
         protected static final String MOCK_PATH =
@@ -35,24 +43,24 @@ public class RumbleStreamExtractorTest {
         protected static RumbleStreamExtractor extractor;
         protected static StreamingService expectedService = Rumble;
 
-        protected static String url = "https://rumble.com/vftupt-governor-ron-desantis-signs-hallmark-anti-riot-legislation-in-florida-41920.html";
-        protected static String expectedUrl = "https://rumble.com/vftupt";
-        protected static String expectedName = "Governor Ron DeSantis Signs Hallmark Anti-Riot Legislation in Florida 4/19/2021";
-        protected static String expectedId = "vftupt";
-        protected static String expectedDesc = "Governor Ron DeSantis Signs Hallmark Anti-Riot Legislation in Florida 4/19/2021";
+        protected static String url = "https://rumble.com/v1a992g";
+        protected static String expectedUrl = "https://rumble.com/v1a992g";
+        protected static String expectedName = "The Truth Behind Arizona’s Paper Ballots; Jovan Pulitzer’s BOMBSHELL Paper Analysis Report 6/27/22";
+        protected static String expectedId = "v1a992g";
+        protected static String expectedDesc = "The evidence continues to reveal itself regarding the results of the 2020";
         protected static String expectedCategory = "";
         protected static int expectedAgeLimit = 0;
-        protected static long expectedViewCountAtLeast = 5700;
-        protected static String expectedUploaderName = "Ron DeSantis";
-        protected static String expectedUploadDate = "2021-04-19 19:11:31.000";
-        protected static String expectedTextualUploadDate = "2021-04-19T19:11:31+00:00";
+        protected static long expectedViewCountAtLeast = 46658;
+        protected static String expectedUploaderName = "Right Side Broadcasting Network";
+        protected static String expectedUploadDate = "2022-06-28 05:36:31.000";
+        protected static String expectedTextualUploadDate = "2022-06-28T05:36:31+00:00";
         protected static StreamExtractor.Privacy expectedPrivacy = StreamExtractor.Privacy.PUBLIC;
-        protected static String expectedUploaderUrl = "https://rumble.com/c/GovRonDeSantis";
+        protected static String expectedUploaderUrl = "https://rumble.com/c/RSBN";
         protected static String expectedSupportInfo = "";
         protected static boolean expectedHasAudioStreams = true;
         protected static boolean expectedHasVideoStreams = true;
         protected static String expectedArtistProfilePictureInfix = ".rumble.com/live/channel_images/"; // TODO
-        protected static long expectedLength = 1937;
+        protected static long expectedLength = 12948;
 
         @BeforeAll
         public static void setUp() throws ExtractionException, IOException {
@@ -206,9 +214,10 @@ public class RumbleStreamExtractorTest {
 
             /** more info see: {@link RumbleSharedTests#infoItemsResultsTest} */
             final String[] someExpectedResults = {
-                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Ron DeSantis', textualUploadDate='null', viewCount=-1, duration=262, uploaderUrl='https://rumble.com/user/GovRonDeSantis', infoType=STREAM, serviceId=6, url='https://rumble.com/vfvdep-florida-gov.-desantis-rips-bidens-reckless-ice-policies.html', name='Florida Gov. DeSantis rips Biden's 'reckless' ICE policies', thumbnailUrl='https://i.rmbl.ws/s8/6/H/s/S/L/HsSLb.0kob.1.jpg', uploaderVerified='false'}",
-                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Vlemx', textualUploadDate='null', viewCount=-1, duration=48, uploaderUrl='https://rumble.com/user/Vlemx', infoType=STREAM, serviceId=6, url='https://rumble.com/vbxxz3-florida-governor-ron-desantis-declined-a-reporters-request-..html', name='Florida Governor Ron DeSantis declined a reporter’s request .', thumbnailUrl='https://i.rmbl.ws/s8/6/_/u/H/m/_uHmb.0kob.1.jpg', uploaderVerified='false'}",
-                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='WFTX', textualUploadDate='null', viewCount=-1, duration=47, uploaderUrl='https://rumble.com/user/WFTX', infoType=STREAM, serviceId=6, url='https://rumble.com/vf6b53-governor-desantis-signs-covid-liability-bill-today.html', name='Governor DeSantis signs COVID liability bill today', thumbnailUrl='https://i.rmbl.ws/s8/1/N/Z/o/H/NZoHb.0kob-small-Governor-DeSantis-signs-COV.jpg', uploaderVerified='false'}"
+                    /* here is the speciality LIVE_STREAM detection on releated streams */
+                    "StreamInfoItem{streamType=LIVE_STREAM, uploaderName='Right Side Broadcasting Network', textualUploadDate='null', viewCount=-1, duration=-1, uploaderUrl='https://rumble.com/user/RSBN', infoType=STREAM, serviceId=6, url='https://rumble.com/vi1or5-rsbn-live.html', name='RSBN 24/7 Stream - Live & Previously Aired', thumbnailUrl='https://sp.rmbl.ws/s8/1/r/w/O/Z/rwOZb.0kob.1v-small-RSBN-247-Stream-Live-and-Pr.jpg', uploaderVerified='false'}",
+                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='TheSaltyCracker', textualUploadDate='null', viewCount=-1, duration=8283, uploaderUrl='https://rumble.com/user/SaltyCracker', infoType=STREAM, serviceId=6, url='https://rumble.com/v1b0ec3-happy-4th-eve-reeeeee-stream-07-03-22.html', name='Happy 4th Eve ReeEEeE Stream 07-03-22', thumbnailUrl='https://sp.rmbl.ws/s8/6/t/E/n/T/tEnTe.0kob.jpg', uploaderVerified='false'}",
+                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Russell Brand', textualUploadDate='null', viewCount=-1, duration=603, uploaderUrl='https://rumble.com/user/russellbrand', infoType=STREAM, serviceId=6, url='https://rumble.com/v1aqapl-the-truth-about-the-corporate-media.html', name='The TRUTH About The Corporate Media', thumbnailUrl='https://sp.rmbl.ws/s8/1/5/A/A/R/5AARe.0kob-small-The-TRUTH-About-The-Corpora.jpg', uploaderVerified='false'}"
             };
 
             RumbleSharedTests.infoItemsResultsTest(extractor.getService(),
