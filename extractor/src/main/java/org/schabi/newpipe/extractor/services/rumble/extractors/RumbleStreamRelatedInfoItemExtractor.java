@@ -3,6 +3,7 @@ package org.schabi.newpipe.extractor.services.rumble.extractors;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
+import org.jsoup.select.Elements;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
 import org.schabi.newpipe.extractor.localization.TimeAgoParser;
@@ -42,6 +43,9 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
 
     @Override
     public StreamType getStreamType() {
+        if (!element.select("small.medialist-live").isEmpty()) {
+            return StreamType.LIVE_STREAM;
+        }
         return StreamType.VIDEO_STREAM;
     }
 
@@ -53,12 +57,21 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
     @Override
     public long getDuration() throws ParsingException {
         try {
+            if (getStreamType() == StreamType.LIVE_STREAM) {
+                // this is a live stream, skip duration extraction
+                return -1;
+            }
 
-            final String data = element.select("small.medialist-duration").first().text();
-            final long duration = RumbleParsingHelper.parseDurationString(data);
+            final Elements durationData = element.select("small.medialist-duration");
+            if (durationData.isEmpty()) {
+                throw new Exception("Could not extract duration from the usual place");
+            }
+            final String durationString = durationData.first().text();
+            final long duration = RumbleParsingHelper.parseDurationString(durationString);
             return duration;
+
         } catch (final Exception e) {
-            throw new ParsingException("Error parsing duration");
+            throw new ParsingException("Error parsing duration: " + e);
         }
     }
 
