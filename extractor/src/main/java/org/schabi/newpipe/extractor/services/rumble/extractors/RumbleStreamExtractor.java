@@ -313,7 +313,8 @@ public class RumbleStreamExtractor extends StreamExtractor {
         assertPageFetched();
         final String videoLiveStreamKey = "live";
         final Number isLive = embedJsonStreamInfoObj.getNumber(videoLiveStreamKey);
-        final boolean isLiveStream = isLive.intValue() == 1; // is live stream or not
+        // '1' is also assumed live stream. TODO check if that is true
+        final boolean isLiveStream = (isLive.intValue() == 1 || isLive.intValue() == 2);
         return isLiveStream ? StreamType.LIVE_STREAM : StreamType.VIDEO_STREAM;
     }
 
