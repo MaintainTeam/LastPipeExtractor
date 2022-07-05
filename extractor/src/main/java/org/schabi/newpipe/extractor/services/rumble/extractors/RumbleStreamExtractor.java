@@ -299,6 +299,10 @@ public class RumbleStreamExtractor extends StreamExtractor {
                 final String videoUrl =
                         formatObj.getObject(res).getString(videoUrlKey); // where the mp4 sits
 
+                if (formatKey.equals("hls") && getStreamType() == StreamType.LIVE_STREAM) {
+                    return fakeVideoStreamForLiveStream(videoStreamsList, videoUrl);
+                }
+
                 final MediaFormat format = MediaFormat.getFromSuffix(formatKey);
                 final ItagItem itagItem =
                         new ItagItem(-1, ItagItem.ItagType.VIDEO, format, res + "p");
@@ -313,6 +317,27 @@ public class RumbleStreamExtractor extends StreamExtractor {
             }
         }
 
+        return videoStreamsList;
+    }
+
+    private List<VideoStream> fakeVideoStreamForLiveStream(
+            final List<VideoStream> videoStreamsList,
+            final String videoUrl) {
+        // 'mp4' is just chosen as it seems the most common
+        final MediaFormat format = MediaFormat.getFromSuffix("mp4");
+        final ItagItem itagItem =
+                new ItagItem(-1, ItagItem.ItagType.VIDEO, format, "720" + "p");
+        // this values are taken from it's 'playlist.m3u8'. But they do not
+        // really matter as they are only used to fake a videostream to make
+        // the client happy (NewPipe)
+        itagItem.setWidth(1280);
+        itagItem.setHeight(720);
+        itagItem.setBitrate(2713000);
+        // even though fps is available but NewPipeExtractor
+        // can only handle integer set so we set it to -1
+        itagItem.fps = -1;
+
+        videoStreamsList.add(new VideoStream(videoUrl, false, itagItem));
         return videoStreamsList;
     }
 
