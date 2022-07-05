@@ -64,6 +64,7 @@ public class RumbleStreamExtractor extends StreamExtractor {
 
     private int ageLimit = -1;
     private List<VideoStream> videoStreams;
+    private String hlsUrl = "";
 
     public RumbleStreamExtractor(final StreamingService service, final LinkHandler linkHandler) {
         super(service, linkHandler);
@@ -252,7 +253,14 @@ public class RumbleStreamExtractor extends StreamExtractor {
     @Nonnull
     @Override
     public String getHlsUrl() {
-        return "";
+        try {
+            this.hlsUrl = embedJsonStreamInfoObj.getObject("ua").getObject("hls")
+                    .getObject("auto").getString("url", "");
+
+        } catch (final Exception e) {
+
+        }
+        return this.hlsUrl;
     }
 
     @Override
