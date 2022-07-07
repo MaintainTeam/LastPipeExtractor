@@ -42,6 +42,8 @@ import java.util.NoSuchElementException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static org.schabi.newpipe.extractor.stream.Stream.ID_UNKNOWN;
+
 public class BitchuteStreamExtractor extends StreamExtractor {
 
     private Document doc;
@@ -307,7 +309,14 @@ public class BitchuteStreamExtractor extends StreamExtractor {
             final String extension = videoUrl.substring(videoUrl.lastIndexOf(".") + 1);
             final MediaFormat format = MediaFormat.getFromSuffix(extension);
 
-            return Collections.singletonList(new VideoStream(videoUrl, format, "480p"));
+            final VideoStream.Builder builder = new VideoStream.Builder()
+                    .setId(ID_UNKNOWN)
+                    .setIsVideoOnly(false)
+                    .setResolution("480p")
+                    .setContent(videoUrl, true)
+                    .setMediaFormat(format);
+
+            return Collections.singletonList(builder.build());
         } catch (final Exception e) {
             throw new ParsingException("Error parsing video stream");
         }
