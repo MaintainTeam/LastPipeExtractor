@@ -22,9 +22,9 @@ import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
 import org.schabi.newpipe.extractor.services.rumble.RumbleParsingHelper;
-import org.schabi.newpipe.extractor.services.youtube.ItagItem;
 import org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper;
 import org.schabi.newpipe.extractor.stream.AudioStream;
+import org.schabi.newpipe.extractor.stream.DeliveryMethod;
 import org.schabi.newpipe.extractor.stream.Description;
 import org.schabi.newpipe.extractor.stream.StreamExtractor;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemsCollector;
@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import static org.schabi.newpipe.extractor.stream.Stream.ID_UNKNOWN;
 import static org.schabi.newpipe.extractor.utils.Utils.isNullOrEmpty;
 
 public class RumbleStreamExtractor extends StreamExtractor {
@@ -304,16 +305,14 @@ public class RumbleStreamExtractor extends StreamExtractor {
                 }
 
                 final MediaFormat format = MediaFormat.getFromSuffix(formatKey);
-                final ItagItem itagItem =
-                        new ItagItem(-1, ItagItem.ItagType.VIDEO, format, res + "p");
-                itagItem.setWidth(metadata.getNumber("w").intValue());
-                itagItem.setHeight(metadata.getNumber("h").intValue());
-                itagItem.setBitrate(metadata.getNumber("bitrate").intValue());
-                // even though fps is available but NewPipeExtractor
-                // can only handle integer set so we set it to -1
-                itagItem.fps = -1;
+                final VideoStream.Builder builder = new VideoStream.Builder()
+                        .setId(ID_UNKNOWN)
+                        .setIsVideoOnly(false)
+                        .setResolution(res + "p")
+                        .setContent(videoUrl, true)
+                        .setMediaFormat(format);
 
-                videoStreamsList.add(new VideoStream(videoUrl, false, itagItem));
+                videoStreamsList.add(builder.build());
             }
         }
 
@@ -323,21 +322,16 @@ public class RumbleStreamExtractor extends StreamExtractor {
     private List<VideoStream> fakeVideoStreamForLiveStream(
             final List<VideoStream> videoStreamsList,
             final String videoUrl) {
-        // 'mp4' is just chosen as it seems the most common
-        final MediaFormat format = MediaFormat.getFromSuffix("mp4");
-        final ItagItem itagItem =
-                new ItagItem(-1, ItagItem.ItagType.VIDEO, format, "720" + "p");
-        // this values are taken from it's 'playlist.m3u8'. But they do not
-        // really matter as they are only used to fake a videostream to make
-        // the client happy (NewPipe)
-        itagItem.setWidth(1280);
-        itagItem.setHeight(720);
-        itagItem.setBitrate(2713000);
-        // even though fps is available but NewPipeExtractor
-        // can only handle integer set so we set it to -1
-        itagItem.fps = -1;
+        final VideoStream.Builder builder = new VideoStream.Builder()
+                .setId(ID_UNKNOWN)
+                .setIsVideoOnly(false)
+                .setResolution("")
+                .setContent(videoUrl, false) // is HLS manifest
+                .setDeliveryMethod(DeliveryMethod.HLS)
+                // 'mp4' is just chosen as it seems the most common
+                .setMediaFormat(MediaFormat.MPEG_4);
 
-        videoStreamsList.add(new VideoStream(videoUrl, false, itagItem));
+        videoStreamsList.add(builder.build());
         return videoStreamsList;
     }
 
