@@ -6,18 +6,33 @@ import static org.schabi.newpipe.extractor.services.bandcamp.extractors.Bandcamp
 
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandlerFactory;
+import org.schabi.newpipe.extractor.search.filter.FilterItem;
+import org.schabi.newpipe.extractor.services.bandcamp.search.filter.BandcampFilters;
 import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-public class BandcampSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
+public final class BandcampSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
+
+    public BandcampSearchQueryHandlerFactory() {
+        super(new BandcampFilters());
+    }
+
     @Override
     public String getUrl(final String query,
-                         final List<String> contentFilter,
-                         final String sortFilter) throws ParsingException {
+                         final List<FilterItem> selectedContentFilter,
+                         final List<FilterItem> selectedSortFilter) throws ParsingException {
+
+
+        searchFilters.setSelectedSortFilter(selectedSortFilter);
+        searchFilters.setSelectedContentFilter(selectedContentFilter);
+
+        final String filterQuery = searchFilters.evaluateSelectedContentFilters();
+
         try {
-            return BASE_URL + "/search?q=" + Utils.encodeUrlUtf8(query) + "&page=1";
+            return BASE_URL + "/search?q=" + Utils.encodeUrlUtf8(query)
+                    + filterQuery + "&page=1";
         } catch (final UnsupportedEncodingException e) {
             throw new ParsingException("query \"" + query + "\" could not be encoded", e);
         }
