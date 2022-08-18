@@ -24,6 +24,7 @@ import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.isYoutubeURL;
 
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandlerFactory;
+import org.schabi.newpipe.extractor.search.filter.FilterItem;
 import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.net.MalformedURLException;
@@ -33,8 +34,8 @@ import java.util.List;
 public class YoutubeTrendingLinkHandlerFactory extends ListLinkHandlerFactory {
 
     public String getUrl(final String id,
-                         final List<String> contentFilters,
-                         final String sortFilter) {
+                         final List<FilterItem> contentFilters,
+                         final List<FilterItem> sortFilter) {
         return "https://www.youtube.com/feed/trending";
     }
 
