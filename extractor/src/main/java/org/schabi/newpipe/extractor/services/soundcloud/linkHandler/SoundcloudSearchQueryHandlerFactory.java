@@ -18,9 +18,17 @@ import java.util.List;
 public final class SoundcloudSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
 
     public static final int ITEMS_PER_PAGE = 10;
+    private static SoundcloudSearchQueryHandlerFactory instance = null;
 
     private SoundcloudSearchQueryHandlerFactory() {
         super(new SoundcloudFilters());
+    }
+
+    public static synchronized SoundcloudSearchQueryHandlerFactory getInstance() {
+        if (instance == null) {
+            instance = new SoundcloudSearchQueryHandlerFactory();
+        }
+        return instance;
     }
 
     @Override
