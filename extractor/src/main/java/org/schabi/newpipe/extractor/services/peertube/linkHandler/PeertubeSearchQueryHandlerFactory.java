@@ -12,6 +12,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public final class PeertubeSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
 
     public static final String VIDEOS = "videos";
@@ -41,8 +44,9 @@ public final class PeertubeSearchQueryHandlerFactory extends SearchQueryHandlerF
 
     @Override
     public String getUrl(final String searchString,
-                         final List<FilterItem> selectedContentFilter,
-                         final List<FilterItem> selectedSortFilters) throws ParsingException {
+                         @Nonnull final List<FilterItem> selectedContentFilter,
+                         @Nullable final List<FilterItem> selectedSortFilters)
+            throws ParsingException {
 
         final String baseUrl;
         final Optional<FilterItem> sepiaFilter =

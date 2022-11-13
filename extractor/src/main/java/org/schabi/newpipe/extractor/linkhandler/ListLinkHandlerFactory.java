@@ -8,6 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public abstract class ListLinkHandlerFactory extends LinkHandlerFactory {
 
     ///////////////////////////////////
@@ -15,8 +18,8 @@ public abstract class ListLinkHandlerFactory extends LinkHandlerFactory {
     ///////////////////////////////////
 
     public abstract String getUrl(String id,
-                                  List<FilterItem> contentFilter,
-                                  List<FilterItem> sortFilter)
+                                  @Nonnull List<FilterItem> contentFilter,
+                                  @Nullable List<FilterItem> sortFilter)
             throws ParsingException;
 
     public String getUrl(final String id,
