@@ -7,21 +7,19 @@ import org.schabi.newpipe.extractor.search.filter.FilterItem;
 import org.schabi.newpipe.extractor.services.DefaultSearchExtractorTest;
 import org.schabi.newpipe.extractor.services.youtube.search.filter.YoutubeFilters;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.schabi.newpipe.extractor.ServiceList.YouTube;
 
 public class YoutubeSearchQHTest {
 
     public static int getNoOfFilterItems(final List<FilterContainer> filterContainers) {
         return filterContainers.stream()
-                .mapToInt(filterContainer -> Arrays.stream(filterContainer.getFilterGroups())
+                .mapToInt(filterContainer -> filterContainer.getFilterGroups().stream()
                         .map(FilterGroup::getFilterItems)
-                        .mapToInt(filterItems -> filterItems.length)
+                        .mapToInt(filterItems -> filterItems.size())
                         .sum()).sum();
     }
 
@@ -80,18 +78,17 @@ public class YoutubeSearchQHTest {
                 YouTube.getSearchQHFactory().getAvailableContentFilter();
 
         final int noOfContentFilters = DefaultSearchExtractorTest.getNoOfFilterItems(contentFilter);
-        final FilterItem[] filterItems = contentFilter.getFilterGroups()[0].getFilterItems();
-        assertEquals(10, noOfContentFilters);
-        assertEquals(YoutubeFilters.ID_CF_MAIN_ALL, filterItems[0].getIdentifier());
-        assertEquals(YoutubeFilters.ID_CF_MAIN_VIDEOS, filterItems[1].getIdentifier());
-        assertEquals(YoutubeFilters.ID_CF_MAIN_CHANNELS, filterItems[2].getIdentifier());
-        assertEquals(YoutubeFilters.ID_CF_MAIN_PLAYLISTS, filterItems[3].getIdentifier());
-        assertTrue(filterItems[4] instanceof FilterItem.DividerItem);
-        assertEquals(YoutubeFilters.ID_CF_MAIN_YOUTUBE_MUSIC_SONGS, filterItems[5].getIdentifier());
-        assertEquals(YoutubeFilters.ID_CF_MAIN_YOUTUBE_MUSIC_VIDEOS, filterItems[6].getIdentifier());
-        assertEquals(YoutubeFilters.ID_CF_MAIN_YOUTUBE_MUSIC_ALBUMS, filterItems[7].getIdentifier());
-        assertEquals(YoutubeFilters.ID_CF_MAIN_YOUTUBE_MUSIC_PLAYLISTS, filterItems[8].getIdentifier());
-        assertEquals(YoutubeFilters.ID_CF_MAIN_YOUTUBE_MUSIC_ARTISTS, filterItems[9].getIdentifier());
+        final List<FilterItem> filterItems = contentFilter.getFilterGroups().get(0).getFilterItems();
+        assertEquals(9, noOfContentFilters);
+        assertEquals(YoutubeFilters.ID_CF_MAIN_ALL, filterItems.get(0).getIdentifier());
+        assertEquals(YoutubeFilters.ID_CF_MAIN_VIDEOS, filterItems.get(1).getIdentifier());
+        assertEquals(YoutubeFilters.ID_CF_MAIN_CHANNELS, filterItems.get(2).getIdentifier());
+        assertEquals(YoutubeFilters.ID_CF_MAIN_PLAYLISTS, filterItems.get(3).getIdentifier());
+        assertEquals(YoutubeFilters.ID_CF_MAIN_YOUTUBE_MUSIC_SONGS, filterItems.get(4).getIdentifier());
+        assertEquals(YoutubeFilters.ID_CF_MAIN_YOUTUBE_MUSIC_VIDEOS, filterItems.get(5).getIdentifier());
+        assertEquals(YoutubeFilters.ID_CF_MAIN_YOUTUBE_MUSIC_ALBUMS, filterItems.get(6).getIdentifier());
+        assertEquals(YoutubeFilters.ID_CF_MAIN_YOUTUBE_MUSIC_PLAYLISTS, filterItems.get(7).getIdentifier());
+        assertEquals(YoutubeFilters.ID_CF_MAIN_YOUTUBE_MUSIC_ARTISTS, filterItems.get(8).getIdentifier());
     }
 
     @Test
