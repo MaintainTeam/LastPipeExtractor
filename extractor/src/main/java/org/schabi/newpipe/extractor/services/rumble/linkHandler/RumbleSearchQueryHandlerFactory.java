@@ -4,14 +4,13 @@ import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandlerFactory;
 import org.schabi.newpipe.extractor.search.filter.FilterItem;
 import org.schabi.newpipe.extractor.services.rumble.search.filter.RumbleFilters;
+import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
 public final class RumbleSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
 
-    public static final String UTF_8 = "UTF-8";
     private static RumbleSearchQueryHandlerFactory instance = null;
 
     private RumbleSearchQueryHandlerFactory() {
@@ -40,7 +39,7 @@ public final class RumbleSearchQueryHandlerFactory extends SearchQueryHandlerFac
 
         try {
             return urlEndpoint
-                    + URLEncoder.encode(searchString, UTF_8)
+                    + Utils.encodeUrlUtf8(searchString)
                     + sortQuery;
         } catch (final UnsupportedEncodingException e) {
             throw new RuntimeException(e);

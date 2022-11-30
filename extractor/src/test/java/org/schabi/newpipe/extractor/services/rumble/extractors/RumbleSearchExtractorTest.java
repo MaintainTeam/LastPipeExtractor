@@ -22,17 +22,16 @@ import org.schabi.newpipe.extractor.services.DefaultSearchExtractorTest;
 import org.schabi.newpipe.extractor.channel.ChannelInfoItem;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.services.rumble.search.filter.RumbleFilters;
+import org.schabi.newpipe.extractor.utils.Utils;
 
 import javax.annotation.Nullable;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.schabi.newpipe.extractor.ExtractorAsserts.assertEmptyErrors;
 import static org.schabi.newpipe.extractor.services.DefaultTests.assertNoDuplicatedItems;
-import static org.schabi.newpipe.extractor.utils.Utils.UTF_8;
 
 @SuppressWarnings({"checkstyle:LineLength", "checkstyle:InvalidJavadocPosition", "checkstyle:LeftCurly"})
 public class RumbleSearchExtractorTest {
@@ -254,10 +253,10 @@ public class RumbleSearchExtractorTest {
         @Override public String expectedName() { return query; }
         @Override public String expectedId() { return query; }
         @Override public String expectedUrlContains() throws UnsupportedEncodingException {
-            return  expectedSearchBaseUrl + URLEncoder.encode(query, UTF_8);
+            return  expectedSearchBaseUrl + Utils.encodeUrlUtf8(query);
         }
         @Override public String expectedOriginalUrlContains() throws UnsupportedEncodingException {
-            return expectedSearchOriginalBaseUrl  + URLEncoder.encode(query, UTF_8);
+            return expectedSearchOriginalBaseUrl  + Utils.encodeUrlUtf8(query);
         }
         @Override public String expectedSearchString() { return query; }
         @Nullable @Override public String expectedSearchSuggestion() { return null; }
