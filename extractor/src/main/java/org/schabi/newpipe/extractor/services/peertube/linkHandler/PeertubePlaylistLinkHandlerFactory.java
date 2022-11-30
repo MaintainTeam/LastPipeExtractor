@@ -1,12 +1,17 @@
 package org.schabi.newpipe.extractor.services.peertube.linkHandler;
 
 
+import org.schabi.newpipe.extractor.search.filter.FilterItem;
+
 import org.schabi.newpipe.extractor.ServiceList;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandlerFactory;
 import org.schabi.newpipe.extractor.utils.Parser;
 
 import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class PeertubePlaylistLinkHandlerFactory extends ListLinkHandlerFactory {
 
@@ -23,15 +28,15 @@ public final class PeertubePlaylistLinkHandlerFactory extends ListLinkHandlerFac
 
     @Override
     public String getUrl(final String id,
-                         final List<String> contentFilters,
-                         final String sortFilter) {
+                         @Nonnull final List<FilterItem> contentFilters,
+                         @Nullable final List<FilterItem> sortFilter) {
         return getUrl(id, contentFilters, sortFilter, ServiceList.PeerTube.getBaseUrl());
     }
 
     @Override
     public String getUrl(final String id,
-                         final List<String> contentFilters,
-                         final String sortFilter,
+                         final List<FilterItem> contentFilters,
+                         final List<FilterItem> sortFilter,
                          final String baseUrl) {
         return baseUrl + "/api/v1/video-playlists/" + id;
     }

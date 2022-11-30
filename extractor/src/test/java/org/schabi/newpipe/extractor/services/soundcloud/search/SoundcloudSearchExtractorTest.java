@@ -1,5 +1,10 @@
 package org.schabi.newpipe.extractor.services.soundcloud.search;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.schabi.newpipe.extractor.ServiceList.SoundCloud;
+import static org.schabi.newpipe.extractor.services.DefaultTests.assertNoDuplicatedItems;
+import static java.util.Collections.singletonList;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderTestImpl;
@@ -10,20 +15,16 @@ import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.channel.ChannelInfoItem;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
+import org.schabi.newpipe.extractor.search.filter.FilterItem;
 import org.schabi.newpipe.extractor.services.DefaultSearchExtractorTest;
+import org.schabi.newpipe.extractor.services.soundcloud.search.filter.SoundcloudFilters;
+import org.schabi.newpipe.extractor.utils.Utils;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.schabi.newpipe.extractor.ServiceList.SoundCloud;
-import static org.schabi.newpipe.extractor.services.DefaultTests.assertNoDuplicatedItems;
-import static org.schabi.newpipe.extractor.services.soundcloud.linkHandler.SoundcloudSearchQueryHandlerFactory.*;
-import static org.schabi.newpipe.extractor.utils.Utils.UTF_8;
+import javax.annotation.Nullable;
 
 public class SoundcloudSearchExtractorTest {
 
@@ -57,7 +58,9 @@ public class SoundcloudSearchExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             NewPipe.init(DownloaderTestImpl.getInstance());
-            extractor = SoundCloud.getSearchExtractor(QUERY, singletonList(TRACKS), "");
+            final FilterItem item = getFilterItem(
+                    SoundCloud, SoundcloudFilters.ID_CF_MAIN_TRACKS);
+            extractor = SoundCloud.getSearchExtractor(QUERY, singletonList(item), null);
             extractor.fetchPage();
         }
 
@@ -81,7 +84,9 @@ public class SoundcloudSearchExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             NewPipe.init(DownloaderTestImpl.getInstance());
-            extractor = SoundCloud.getSearchExtractor(QUERY, singletonList(USERS), "");
+            final FilterItem item = getFilterItem(
+                    SoundCloud, SoundcloudFilters.ID_CF_MAIN_USERS);
+            extractor = SoundCloud.getSearchExtractor(QUERY, singletonList(item), null);
             extractor.fetchPage();
         }
 
@@ -105,7 +110,9 @@ public class SoundcloudSearchExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             NewPipe.init(DownloaderTestImpl.getInstance());
-            extractor = SoundCloud.getSearchExtractor(QUERY, singletonList(PLAYLISTS), "");
+            final FilterItem item = getFilterItem(
+                    SoundCloud, SoundcloudFilters.ID_CF_MAIN_PLAYLISTS);
+            extractor = SoundCloud.getSearchExtractor(QUERY, singletonList(item), null);
             extractor.fetchPage();
         }
 
@@ -126,7 +133,9 @@ public class SoundcloudSearchExtractorTest {
         @Test
         public void duplicatedItemsCheck() throws Exception {
             NewPipe.init(DownloaderTestImpl.getInstance());
-            final SearchExtractor extractor = SoundCloud.getSearchExtractor("cirque du soleil", singletonList(TRACKS), "");
+            final FilterItem item = DefaultSearchExtractorTest.getFilterItem(
+                    SoundCloud, SoundcloudFilters.ID_CF_MAIN_TRACKS);
+            final SearchExtractor extractor = SoundCloud.getSearchExtractor("cirque du soleil", singletonList(item), null);
             extractor.fetchPage();
 
             final InfoItemsPage<InfoItem> page1 = extractor.getInitialPage();
@@ -138,7 +147,7 @@ public class SoundcloudSearchExtractorTest {
 
     private static String urlEncode(String value) {
         try {
-            return URLEncoder.encode(value, UTF_8);
+            return Utils.encodeUrlUtf8(value);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -151,7 +160,9 @@ public class SoundcloudSearchExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             NewPipe.init(DownloaderTestImpl.getInstance());
-            extractor = SoundCloud.getSearchExtractor(QUERY, singletonList(USERS), "");
+            final FilterItem item = getFilterItem(
+                    SoundCloud, SoundcloudFilters.ID_CF_MAIN_USERS);
+            extractor = SoundCloud.getSearchExtractor(QUERY, singletonList(item), null);
             extractor.fetchPage();
         }
 

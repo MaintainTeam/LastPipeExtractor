@@ -1,9 +1,14 @@
 package org.schabi.newpipe.extractor.services.soundcloud.linkHandler;
 
+import org.schabi.newpipe.extractor.search.filter.FilterItem;
+
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandlerFactory;
 import org.schabi.newpipe.extractor.utils.Parser;
 
 import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class SoundcloudChartsLinkHandlerFactory extends ListLinkHandlerFactory {
     private static final String TOP_URL_PATTERN =
@@ -22,8 +27,8 @@ public class SoundcloudChartsLinkHandlerFactory extends ListLinkHandlerFactory {
 
     @Override
     public String getUrl(final String id,
-                         final List<String> contentFilter,
-                         final String sortFilter) {
+                         @Nonnull final List<FilterItem> contentFilter,
+                         @Nullable final List<FilterItem> sortFilter) {
         if (id.equals("Top 50")) {
             return "https://soundcloud.com/charts/top";
         } else {

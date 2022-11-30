@@ -4,8 +4,6 @@ import static org.schabi.newpipe.extractor.services.soundcloud.SoundcloudParsing
 import static org.schabi.newpipe.extractor.services.soundcloud.SoundcloudParsingHelper.clientId;
 import static org.schabi.newpipe.extractor.stream.AudioStream.UNKNOWN_BITRATE;
 import static org.schabi.newpipe.extractor.stream.Stream.ID_UNKNOWN;
-import static org.schabi.newpipe.extractor.utils.Utils.EMPTY_STRING;
-import static org.schabi.newpipe.extractor.utils.Utils.UTF_8;
 import static org.schabi.newpipe.extractor.utils.Utils.isNullOrEmpty;
 
 import com.grack.nanojson.JsonArray;
@@ -33,10 +31,10 @@ import org.schabi.newpipe.extractor.stream.StreamExtractor;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemsCollector;
 import org.schabi.newpipe.extractor.stream.StreamType;
 import org.schabi.newpipe.extractor.stream.VideoStream;
+import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -58,7 +56,7 @@ public class SoundcloudStreamExtractor extends StreamExtractor {
             ExtractionException {
         track = SoundcloudParsingHelper.resolveFor(downloader, getUrl());
 
-        final String policy = track.getString("policy", EMPTY_STRING);
+        final String policy = track.getString("policy", "");
         if (!policy.equals("ALLOW") && !policy.equals("MONETIZE")) {
             isAvailable = false;
 
@@ -92,7 +90,7 @@ public class SoundcloudStreamExtractor extends StreamExtractor {
     public String getTextualUploadDate() {
         return track.getString("created_at")
                 .replace("T", " ")
-                .replace("Z", EMPTY_STRING);
+                .replace("Z", "");
     }
 
     @Nonnull
@@ -105,9 +103,9 @@ public class SoundcloudStreamExtractor extends StreamExtractor {
     @Nonnull
     @Override
     public String getThumbnailUrl() {
-        String artworkUrl = track.getString("artwork_url", EMPTY_STRING);
+        String artworkUrl = track.getString("artwork_url", "");
         if (artworkUrl.isEmpty()) {
-            artworkUrl = track.getObject("user").getString("avatar_url", EMPTY_STRING);
+            artworkUrl = track.getObject("user").getString("avatar_url", "");
         }
         return artworkUrl.replace("large.jpg", "crop.jpg");
     }
@@ -321,7 +319,7 @@ public class SoundcloudStreamExtractor extends StreamExtractor {
 
     private static String urlEncode(final String value) {
         try {
-            return URLEncoder.encode(value, UTF_8);
+            return Utils.encodeUrlUtf8(value);
         } catch (final UnsupportedEncodingException e) {
             throw new IllegalStateException(e);
         }

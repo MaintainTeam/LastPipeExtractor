@@ -1,6 +1,6 @@
 package org.schabi.newpipe.extractor.services.peertube.extractors;
 
-import static org.schabi.newpipe.extractor.utils.Utils.UTF_8;
+import static org.schabi.newpipe.extractor.stream.AudioStream.UNKNOWN_BITRATE;
 import static org.schabi.newpipe.extractor.utils.Utils.isNullOrEmpty;
 
 import com.grack.nanojson.JsonArray;
@@ -35,7 +35,6 @@ import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,9 +43,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import static org.schabi.newpipe.extractor.stream.AudioStream.UNKNOWN_BITRATE;
-import static org.schabi.newpipe.extractor.utils.Utils.EMPTY_STRING;
 
 public class PeertubeStreamExtractor extends StreamExtractor {
     private static final String ACCOUNT_HOST = "account.host";
@@ -219,11 +215,10 @@ public class PeertubeStreamExtractor extends StreamExtractor {
 
         if (getStreamType() == StreamType.VIDEO_STREAM
                 && !isNullOrEmpty(json.getObject(FILES))) {
-            return json.getObject(FILES).getString(PLAYLIST_URL, EMPTY_STRING);
+            return json.getObject(FILES).getString(PLAYLIST_URL, "");
         }
 
-        return json.getArray(STREAMING_PLAYLISTS).getObject(0).getString(PLAYLIST_URL,
-                EMPTY_STRING);
+        return json.getArray(STREAMING_PLAYLISTS).getObject(0).getString(PLAYLIST_URL, "");
     }
 
     @Override
@@ -319,7 +314,7 @@ public class PeertubeStreamExtractor extends StreamExtractor {
         try {
             return JsonUtils.getString(json, "support");
         } catch (final ParsingException e) {
-            return EMPTY_STRING;
+            return "";
         }
     }
 
@@ -330,8 +325,7 @@ public class PeertubeStreamExtractor extends StreamExtractor {
         final StringBuilder params = new StringBuilder();
         params.append("start=0&count=8&sort=-createdAt");
         for (final String tag : tags) {
-            params.append("&tagsOneOf=");
-            params.append(URLEncoder.encode(tag, UTF_8));
+            params.append("&tagsOneOf=").append(Utils.encodeUrlUtf8(tag));
         }
         return url + "?" + params;
     }
@@ -440,9 +434,9 @@ public class PeertubeStreamExtractor extends StreamExtractor {
                     .map(JsonObject.class::cast)
                     .map(stream -> new VideoStream.Builder()
                             .setId(String.valueOf(stream.getInt("id", -1)))
-                            .setContent(stream.getString(PLAYLIST_URL, EMPTY_STRING), true)
+                            .setContent(stream.getString(PLAYLIST_URL, ""), true)
                             .setIsVideoOnly(false)
-                            .setResolution(EMPTY_STRING)
+                            .setResolution("")
                             .setMediaFormat(MediaFormat.MPEG_4)
                             .setDeliveryMethod(DeliveryMethod.HLS)
                             .build())
@@ -457,7 +451,7 @@ public class PeertubeStreamExtractor extends StreamExtractor {
 
     private void getStreams() throws ParsingException {
         // Progressive streams
-        getStreamsFromArray(json.getArray(FILES), EMPTY_STRING);
+        getStreamsFromArray(json.getArray(FILES), "");
 
         // HLS streams
         try {
