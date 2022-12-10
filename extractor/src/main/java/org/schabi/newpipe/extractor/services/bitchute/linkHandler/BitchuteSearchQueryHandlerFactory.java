@@ -9,6 +9,7 @@ import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Objects;
 
 public final class BitchuteSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
 
@@ -35,7 +36,7 @@ public final class BitchuteSearchQueryHandlerFactory extends SearchQueryHandlerF
         try {
             return SEARCH_URL
                     + Utils.encodeUrlUtf8(query)
-                    + sortQuery;
+                    + Objects.requireNonNullElse(sortQuery, "");
         } catch (final UnsupportedEncodingException e) {
             throw new ParsingException("Could not encode query", e);
         }

@@ -100,8 +100,6 @@ public final class BitchuteFilters extends BaseSearchFilters {
         final BitchuteFilterItem contentItem = getFirstContentFilter();
         if (contentItem != null) {
             contentItem.setDataParams(queryResult);
-        } else {
-            throw new RuntimeException("we have no content filter set. that is a problem");
         }
 
         return queryResult;
@@ -134,7 +132,7 @@ public final class BitchuteFilters extends BaseSearchFilters {
         if (contentItem != null) {
             return "&" + contentItem.query;
         }
-        return super.evaluateSelectedContentFilters();
+        return "";
     }
 
     public static class BitchuteFilterItem extends FilterItem {

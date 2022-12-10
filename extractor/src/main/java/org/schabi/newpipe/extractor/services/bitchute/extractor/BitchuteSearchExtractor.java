@@ -83,19 +83,20 @@ public class BitchuteSearchExtractor extends SearchExtractor {
                 BitchuteParserHelper.getBasicHeader()).responseBody());
          */
 
-        final List<FilterItem> newQuery = getLinkHandler().getContentFilters();
-        if (newQuery == null || newQuery.isEmpty()) {
-            throw new RuntimeException("Somehow there is not content filter");
-        }
-        final FilterItem filter = newQuery.get(0); // assume only one content filter
-        if (!(filter instanceof BitchuteFilters.BitchuteFilterItem)) {
-            throw new RuntimeException("Somehow this is no valid Bitchute content filter");
+        final String sortQuery;
+        final FilterItem filter = Utils.getFirstContentFilterItem(getLinkHandler());
+        if (filter != null) {
+            if (!(filter instanceof BitchuteFilters.BitchuteFilterItem)) {
+                throw new RuntimeException("Somehow this is no valid BitChute content filter "
+                        + filter.getClass());
+            }
+            final BitchuteFilters.BitchuteFilterItem contentFilter =
+                    (BitchuteFilters.BitchuteFilterItem) filter;
+            sortQuery = contentFilter.getDataParams();
+        } else {
+            sortQuery = null;
         }
 
-        final BitchuteFilters.BitchuteFilterItem contentFilter =
-                (BitchuteFilters.BitchuteFilterItem) filter;
-
-        final String sortQuery = contentFilter.getDataParams();
         final String searchString = getLinkHandler().getId();
         int currentPageNumber = Integer.parseInt(page.getId());
 
