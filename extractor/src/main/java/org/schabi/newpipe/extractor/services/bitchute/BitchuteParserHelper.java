@@ -51,9 +51,9 @@ public final class BitchuteParserHelper {
     public static void init() throws ReCaptchaException, IOException {
         final Response response = getDownloader().get(BITCHUTE_LINK);
         final StringBuilder sb = new StringBuilder();
-        for (final Map.Entry entry : response.responseHeaders().entrySet()) {
+        for (final Map.Entry<String, List<String>> entry : response.responseHeaders().entrySet()) {
             if (entry.getKey().equals("set-cookie")) {
-                final List<String> values = (List<String>) entry.getValue();
+                final List<String> values = entry.getValue();
                 for (final String v : values) {
                     final String val = v.split(";", 2)[0];
                     sb.append(val).append(";");
@@ -72,10 +72,10 @@ public final class BitchuteParserHelper {
         final Map<String, List<String>> headers = getBasicHeader();
         headers.put("Content-Type", Collections.singletonList("application/x-www-form-urlencoded"));
         headers.put("Content-Length", Collections.singletonList(String.valueOf(contentLength)));
-        System.out.println("Headers: ");
-        for (final Map.Entry m : headers.entrySet()) {
-            System.out.println(m.getKey() + ": " + m.getValue());
-        }
+        // DBG System.out.println("Headers: ");
+        // DBG for (final Map.Entry m : headers.entrySet()) {
+        // DBG     System.out.println(m.getKey() + ": " + m.getValue());
+        // DBG }
         return headers;
     }
 
@@ -131,7 +131,7 @@ public final class BitchuteParserHelper {
             return (new VideoCount(jsonObject.getInt("like_count"),
                     jsonObject.getInt("dislike_count"), jsonObject.getInt("view_count")));
         } catch (final JsonParserException e) {
-            throw new ParsingException("Could not parse bitchute sub count json");
+            throw new ParsingException("Could not parse bitchute like/view count json");
         }
 
     }
@@ -155,7 +155,7 @@ public final class BitchuteParserHelper {
             return Jsoup.parse(jsonObject.getString("html")
                     .replace("\n", ""), pageUrl);
         } catch (final JsonParserException e) {
-            throw new ParsingException("Could not parse bitchute sub count json");
+            throw new ParsingException("Could not parse bitchute json key: 'html'");
         }
     }
 
