@@ -7,6 +7,8 @@ import org.schabi.newpipe.extractor.search.filter.FilterItem;
 import org.schabi.newpipe.extractor.services.DefaultSearchExtractorTest;
 import org.schabi.newpipe.extractor.services.rumble.search.filter.RumbleFilters;
 
+import java.util.List;
+
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.schabi.newpipe.extractor.ServiceList.Rumble;
@@ -56,10 +58,11 @@ public class RumbleSearchQueryHandlerFactoryTest {
                 Rumble.getSearchQHFactory().getAvailableContentFilter();
 
         final int noOfContentFilters = DefaultSearchExtractorTest.getNoOfFilterItems(contentFilter);
-        final FilterItem[] filterItems = contentFilter.getFilterGroups()[0].getFilterItems();
+        final List<FilterItem> filterItems =
+                contentFilter.getFilterGroups().get(0).getFilterItems();
         assertEquals(2, noOfContentFilters);
-        assertEquals(RumbleFilters.ID_CF_MAIN_VIDEOS, filterItems[0].getIdentifier());
-        assertEquals(RumbleFilters.ID_CF_MAIN_CHANNELS, filterItems[1].getIdentifier());
+        assertEquals(RumbleFilters.ID_CF_MAIN_VIDEOS, filterItems.get(0).getIdentifier());
+        assertEquals(RumbleFilters.ID_CF_MAIN_CHANNELS, filterItems.get(1).getIdentifier());
     }
 
     @Test
