@@ -1,12 +1,17 @@
 package org.schabi.newpipe.extractor.services.bitchute.extractor;
 
+import com.grack.nanojson.JsonObject;
+
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderTestImpl;
 import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.services.DefaultStreamExtractorTest;
+import org.schabi.newpipe.extractor.services.bitchute.BitchuteParserHelper;
+import org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteCommentsLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.bitchute.misc.BitchuteHelpers;
 import org.schabi.newpipe.extractor.stream.StreamExtractor;
 import org.schabi.newpipe.extractor.stream.StreamType;
@@ -200,5 +205,33 @@ public class BitchuteStreamExtractorTest extends DefaultStreamExtractorTest {
     @Override
     public boolean expectedHasAudioStreams() {
         return expectedHasAudioStreams;
+    }
+
+    @Test
+    @Disabled
+    // this is only some initial testing code that is no unit test at all.
+    public void testComments() throws ExtractionException, IOException {
+        final String localUrl = "https://www.bitchute.com/video/AVcFaBG8Fj3O/";
+        final var comments = BitchuteParserHelper.getComments("AVcFaBG8Fj3O", localUrl, 0);
+
+        for (final Object comment : comments) {
+            final var ce = new BitchuteCommentsInfoItemExtractor((JsonObject) comment, url);
+            System.out.println("id  " + ce.getCommentId());
+            System.out.println("txt " + ce.getCommentText());
+            System.out.println("sp  " + ce.getStreamPosition());
+            System.out.println("nam " + ce.getName());
+
+        }
+
+        final var lf = BitchuteCommentsLinkHandlerFactory.getInstance();
+        final var lh = lf.fromUrl(localUrl);
+
+        final var service = Bitchute;
+        service.getCommentsExtractor(lh);
+
+        final var snack = new BitchuteCommentsExtractor(NewPipe.getService("BitChute"), lh);
+        snack.getInitialPage();
+
+        System.out.println("done");
     }
 }

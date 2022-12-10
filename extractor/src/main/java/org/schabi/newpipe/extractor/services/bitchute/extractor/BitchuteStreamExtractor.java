@@ -64,6 +64,7 @@ public class BitchuteStreamExtractor extends StreamExtractor {
                 getUrl(),
                 BitchuteParserHelper.getBasicHeader(), getExtractorLocalization());
 
+        BitchuteParserHelper.extractAndStoreCfAuth(getId(), response.responseBody());
         doc = Jsoup.parse(response.responseBody(), getUrl());
         videoCount = BitchuteParserHelper.getVideoCountObjectForStreamID(getId());
         relatedStreamAsElements = doc.select(".video-card");

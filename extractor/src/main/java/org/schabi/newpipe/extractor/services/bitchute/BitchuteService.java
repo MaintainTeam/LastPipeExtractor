@@ -15,12 +15,14 @@ import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandlerFactory;
 import org.schabi.newpipe.extractor.playlist.PlaylistExtractor;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteChannelExtractor;
+import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteCommentsExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteRecommendedChannelKioskExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteSearchExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteStreamExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteSuggestionExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteTrendingKioskExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteChannelLinkHandlerFactory;
+import org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteCommentsLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteKioskLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteSearchQueryHandlerFactory;
 import org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteStreamLinkHandlerFactory;
@@ -28,8 +30,9 @@ import org.schabi.newpipe.extractor.stream.StreamExtractor;
 import org.schabi.newpipe.extractor.subscription.SubscriptionExtractor;
 import org.schabi.newpipe.extractor.suggestion.SuggestionExtractor;
 
-import java.util.Collections;
-
+import static java.util.Arrays.asList;
+import static org.schabi.newpipe.extractor.StreamingService.ServiceInfo.MediaCapability.COMMENTS;
+import static org.schabi.newpipe.extractor.StreamingService.ServiceInfo.MediaCapability.VIDEO;
 import static org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteKioskLinkHandlerFactory.RECOMMENDED_CHANNEL;
 import static org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteKioskLinkHandlerFactory.TRENDING_DAY;
 import static org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteKioskLinkHandlerFactory.TRENDING_MONTH;
@@ -40,7 +43,7 @@ public class BitchuteService extends StreamingService {
     public static final String BITCHUTE_LINK = "https://www.bitchute.com/";
 
     public BitchuteService(final int id) {
-        super(id, "BitChute", Collections.singletonList(ServiceInfo.MediaCapability.VIDEO));
+        super(id, "BitChute", asList(VIDEO, COMMENTS));
     }
 
     @Override
@@ -70,7 +73,7 @@ public class BitchuteService extends StreamingService {
 
     @Override
     public ListLinkHandlerFactory getCommentsLHFactory() {
-        return null;
+        return BitchuteCommentsLinkHandlerFactory.getInstance();
     }
 
     @Override
@@ -159,6 +162,6 @@ public class BitchuteService extends StreamingService {
     @Override
     public CommentsExtractor getCommentsExtractor(final ListLinkHandler linkHandler)
             throws ExtractionException {
-        return null;
+        return new BitchuteCommentsExtractor(this, linkHandler);
     }
 }

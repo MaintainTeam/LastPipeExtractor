@@ -4,8 +4,6 @@ import java.util.Locale;
 
 public final class BitchuteConstants {
 
-    private BitchuteConstants() { }
-
     public static final String KIND_CHANNEL = "channel";
     public static final String KIND_VIDEO = "video";
     public static final String BASE_URL = "https://www.bitchute.com";
@@ -16,4 +14,7 @@ public final class BitchuteConstants {
     // TODO get automation url if there is one
     public static final String SEARCH_URL_AUTOM = SEARCH_URL_PREFIX;
     public static final Locale BITCHUTE_LOCALE = Locale.ENGLISH;
+    public static final String COMMENTS_URL = "https://commentfreely.bitchute.com";
+    private BitchuteConstants() {
+    }
 }
