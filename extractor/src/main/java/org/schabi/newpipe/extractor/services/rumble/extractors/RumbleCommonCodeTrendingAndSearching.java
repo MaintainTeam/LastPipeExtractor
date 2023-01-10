@@ -68,7 +68,7 @@ public class RumbleCommonCodeTrendingAndSearching {
              * or obviously no duration at all. see {@link RumbleTrendingLinkHandlerFactory.LIVE} */
             final String views =
                     RumbleParsingHelper.extractSafely(false, "Could not extract the view count",
-                            () -> getClassValue(element, "video-item--views", "data-value"));
+                            () -> element.getElementsByClass("video-item--views").first().text());
             final String duration =
                     RumbleParsingHelper.extractSafely(false, "Could not extract the duration",
                             () -> getClassValue(element, "video-item--duration", "data-value"));

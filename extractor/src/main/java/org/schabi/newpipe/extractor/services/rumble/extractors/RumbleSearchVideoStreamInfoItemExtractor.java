@@ -66,7 +66,11 @@ public class RumbleSearchVideoStreamInfoItemExtractor implements StreamInfoItemE
         if (null == viewCount) {
             return -1;
         }
-        return Long.parseLong(Utils.removeNonDigitCharacters(viewCount));
+        try {
+            return Utils.mixedNumberWordToLong(viewCount);
+        } catch (final NumberFormatException e) {
+            throw new ParsingException(e.getMessage());
+        }
     }
 
     @Override
