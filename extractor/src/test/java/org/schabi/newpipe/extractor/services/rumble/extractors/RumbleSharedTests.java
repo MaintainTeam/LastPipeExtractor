@@ -42,7 +42,7 @@ public final class RumbleSharedTests {
         // test if someExpectedResults are matching actualResultsList entries
         final List<Integer> foundEntries = new LinkedList<>();
         for (final InfoItem actualResult : actualResultsList) {
-            listOfResultsInCaseOfError += actualResult + "\n";
+            listOfResultsInCaseOfError += "\"" + actualResult + "\",\n";
             for (int i = 0; i < someExpectedResults.length; i++) {
                 final String expectedResult = someExpectedResults[i];
                 if (expectedResult.equals(actualResult.toString())) {
