@@ -78,9 +78,9 @@ public class RumbleSearchExtractorTest {
 
             /** more info see: {@link RumbleSharedTests#infoItemsResultsTest} */
             final String[] someExpectedResults = {
-                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Dinesh D'Souza', textualUploadDate='2021-04-21T19:28:06-04:00', viewCount=33779, duration=125, uploaderUrl='https://rumble.com/c/DineshDsouza', infoType=STREAM, serviceId=6, url='https://rumble.com/vfx78t-rand-paul-eviscerates-fauci-with-facts.html', name='Rand Paul EVISCERATES Fauci with Facts', thumbnailUrl='https://sp.rmbl.ws/s8/6/T/h/b/M/ThbMb.oq1b.1.jpg', uploaderVerified='false'}",
-                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='BonginoReport', textualUploadDate='2021-02-25T11:50:36-04:00', viewCount=660701, duration=334, uploaderUrl='https://rumble.com/user/BonginoReport', infoType=STREAM, serviceId=6, url='https://rumble.com/ve5yg1-rand-paul-grills-bidens-transgender-hhs-nominee-gets-arrogant-answer.html', name='Rand Paul GRILLS Biden's Transgender HHS Nominee, Gets Arrogant Answer', thumbnailUrl='https://sp.rmbl.ws/s8/6/H/U/W/A/HUWAb.oq1b.1.jpg', uploaderVerified='false'}",
-                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Dailycaller', textualUploadDate='2021-04-13T16:44:01-04:00', viewCount=97480, duration=432, uploaderUrl='https://rumble.com/user/Dailycaller', infoType=STREAM, serviceId=6, url='https://rumble.com/vfn27x-sen.-rand-paul-rips-anthony-fauci-over-conflicting-pandemic-advice.html', name='Sen. Rand Paul Rips Anthony Fauci Over Conflicting Pandemic Advice', thumbnailUrl='https://i.rmbl.ws/s8/6/9/N/n/K/9NnKb.oq1b.1.jpg', uploaderVerified='false'}"
+                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Rand Paul', textualUploadDate='2023-01-08T17:45:00-04:00', viewCount=5990, duration=97, uploaderUrl='https://rumble.com/c/RandPaul', infoType=STREAM, serviceId=6, url='https://rumble.com/v242kwk-dr.-paul-breaks-ground-for-cumberland-family-medical-center-october-18-2022.html', name='Dr. Paul Breaks Ground For Cumberland Family Medical Center - October 18, 2022', thumbnailUrl='https://sp.rmbl.ws/s8/6/u/j/A/N/ujANh.oq1b.1.jpg', uploaderVerified='false'}",
+                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Rand Paul', textualUploadDate='2023-01-03T16:28:50-04:00', viewCount=5500, duration=145, uploaderUrl='https://rumble.com/c/RandPaul', infoType=STREAM, serviceId=6, url='https://rumble.com/v23r4ye-senator-rand-paul-officially-sworn-in-as-member-of-the-118th-congress.html', name='Senator Rand Paul Officially Sworn in as Member of the 118th Congress', thumbnailUrl='https://sp.rmbl.ws/s8/6/w/Z/x/L/wZxLh.oq1b.jpg', uploaderVerified='false'}",
+                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='The Ron Paul Liberty Report', textualUploadDate='2022-12-28T12:41:53-04:00', viewCount=5070, duration=1152, uploaderUrl='https://rumble.com/c/RonPaulLibertyReport', infoType=STREAM, serviceId=6, url='https://rumble.com/v22sow6-flashback-2017-julian-assange-speaks-out-at-ron-paul-institute-conference.html', name='Flashback 2017: Julian Assange Speaks Out At Ron Paul Institute Conference', thumbnailUrl='https://sp.rmbl.ws/s8/1/g/C/p/F/gCpFh.gq1b.2-small-Flashback-2017-Julian-Assan.jpg', uploaderVerified='false'}"
             };
 
             RumbleSharedTests.infoItemsResultsTest(extractor.getService(),
@@ -95,7 +95,7 @@ public class RumbleSearchExtractorTest {
 
         @BeforeAll
         public static void setUp() throws Exception {
-            query = "desantis bomb";
+            query = "tigertest";
             expectedSearchBaseUrl = "rumble.com/search/video?q=";
             expectedSearchOriginalBaseUrl = "rumble.com/search/video?q=";
 
@@ -209,6 +209,8 @@ public class RumbleSearchExtractorTest {
             expectedSearchBaseUrl = "rumble.com/search/channel?q=";
             expectedSearchOriginalBaseUrl = "rumble.com/search/channel?q=";
 
+            System.setProperty("downloader", "MOCK");
+//            System.setProperty("downloader", "RECORDING");
             NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH + "verified"));
 
             final FilterItem channelFilterItem = DefaultSearchExtractorTest
