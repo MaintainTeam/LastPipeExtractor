@@ -2,6 +2,8 @@ package org.schabi.newpipe.extractor.services.rumble.extractors;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.channel.ChannelExtractor;
@@ -56,18 +58,21 @@ public class RumbleChannelExtractor extends ChannelExtractor {
     public String getId() throws ParsingException {
         final String channelId = RumbleParsingHelper.extractSafely(true,
                 "Could not get channel id",
-                () -> {
-                    final String cssQuery = "div.listing-header--content > div > button";
-                    final String channelName = doc.select(cssQuery).first().attr("data-slug");
-                    final String type = doc.select(cssQuery).first().attr("data-type");
-                    if ("channel".equals(type)) {
-                        return "c/" + channelName;
-                    } else if ("user".equals(type)) {
-                        return "user/" + channelName;
-                    }
-                    return null;
-                });
+                () -> getChannelId());
         return channelId;
+    }
+
+    private String getChannelId() {
+        final Element idData =
+                doc.select("div.listing-header--content button[data-title]").first();
+        final String channelName = idData.attr("data-slug");
+        final String type = idData.attr("data-type");
+        if ("channel".equals(type)) {
+            return "c/" + channelName;
+        } else if ("user".equals(type)) {
+            return "user/" + channelName;
+        }
+        return null;
     }
 
     @Nonnull
@@ -84,18 +89,25 @@ public class RumbleChannelExtractor extends ChannelExtractor {
     public String getAvatarUrl() throws ParsingException {
         final String url = RumbleParsingHelper.extractSafely(true,
                 "Could not get avatar url",
-                () -> doc.select("div.listing-header--content > img").attr("src")
+                () -> doc.select("div.listing-header--content img").first().attr("src")
         );
         return url;
     }
 
     @Override
     public String getBannerUrl() throws ParsingException {
-        final String bannerUrl = RumbleParsingHelper.extractSafely(false,
-                "Could not get banner",
-                () -> doc.select("div.listing-header--backsplash > div > img").attr("src")
-        );
-        return bannerUrl;
+        return RumbleParsingHelper.extractSafely(false,
+                "Could not get banner url",
+                this::extractBannerUrl);
+    }
+
+    private String extractBannerUrl() {
+        final Elements elements = doc.select("div.listing-header--backsplash img");
+        if (elements.isEmpty()) { // some have no banner so return null
+            return null;
+        } else {
+            return elements.first().attr("src");
+        }
     }
 
     @Override
