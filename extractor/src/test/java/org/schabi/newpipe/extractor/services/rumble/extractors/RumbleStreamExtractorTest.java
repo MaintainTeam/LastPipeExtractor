@@ -1,7 +1,6 @@
 package org.schabi.newpipe.extractor.services.rumble.extractors;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderFactory;
 import org.schabi.newpipe.extractor.NewPipe;
@@ -215,9 +214,9 @@ public class RumbleStreamExtractorTest {
             /** more info see: {@link RumbleSharedTests#infoItemsResultsTest} */
             final String[] someExpectedResults = {
                     /* here is the speciality LIVE_STREAM detection on releated streams */
-                    "StreamInfoItem{streamType=LIVE_STREAM, uploaderName='Right Side Broadcasting Network', textualUploadDate='null', viewCount=-1, duration=-1, uploaderUrl='https://rumble.com/user/RSBN', infoType=STREAM, serviceId=6, url='https://rumble.com/vi1or5-rsbn-live.html', name='RSBN 24/7 Stream - Live & Previously Aired', thumbnailUrl='https://sp.rmbl.ws/s8/1/r/w/O/Z/rwOZb.0kob.1v-small-RSBN-247-Stream-Live-and-Pr.jpg', uploaderVerified='false'}",
-                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='TheSaltyCracker', textualUploadDate='null', viewCount=-1, duration=8283, uploaderUrl='https://rumble.com/user/SaltyCracker', infoType=STREAM, serviceId=6, url='https://rumble.com/v1b0ec3-happy-4th-eve-reeeeee-stream-07-03-22.html', name='Happy 4th Eve ReeEEeE Stream 07-03-22', thumbnailUrl='https://sp.rmbl.ws/s8/6/t/E/n/T/tEnTe.0kob.jpg', uploaderVerified='false'}",
-                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Russell Brand', textualUploadDate='null', viewCount=-1, duration=603, uploaderUrl='https://rumble.com/user/russellbrand', infoType=STREAM, serviceId=6, url='https://rumble.com/v1aqapl-the-truth-about-the-corporate-media.html', name='The TRUTH About The Corporate Media', thumbnailUrl='https://sp.rmbl.ws/s8/1/5/A/A/R/5AARe.0kob-small-The-TRUTH-About-The-Corpora.jpg', uploaderVerified='false'}"
+                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Right Side Broadcasting Network', textualUploadDate='null', viewCount=300000, duration=80633, uploaderUrl='https://rumble.com/user/RSBN', infoType=STREAM, serviceId=6, url='https://rumble.com/v23xrx6-live-day-three-118th-congress-vote-on-speaker-of-the-house-152023.html', name='LIVE: Day Three - 118th Congress Vote on Speaker of the House - 1/5/2023', thumbnailUrl='https://sp.rmbl.ws/s8/1/A/A/J/M/AAJMh.0kob-small-LIVE-Day-Three-118th-Congre.jpg', uploaderVerified='false'}",
+                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Power Slap', textualUploadDate='null', viewCount=218, duration=122, uploaderUrl='https://rumble.com/user/powerslap', infoType=STREAM, serviceId=6, url='https://rumble.com/v24rlnu-power-slap-presents-the-art-of-the-slap.html', name='Power Slap Presents: The Art of the Slap', thumbnailUrl='https://sp.rmbl.ws/s8/1/Q/j/3/R/Qj3Rh.0kob-small-Power-Slap-Presents-The-Art.jpg', uploaderVerified='false'}",
+                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='UnchartedX', textualUploadDate='null', viewCount=9240, duration=5627, uploaderUrl='https://rumble.com/user/UnchartedX', infoType=STREAM, serviceId=6, url='https://rumble.com/v23t5ud-lost-ancient-technology-the-colossal-statues-of-ancient-egypt.html', name='Lost Ancient Technology: The Colossal Statues of Ancient Egypt', thumbnailUrl='https://sp.rmbl.ws/s8/1/v/3/U/L/v3ULh.0kob-small-Lost-Ancient-Technology-The.jpg', uploaderVerified='false'}"
             };
 
             RumbleSharedTests.infoItemsResultsTest(extractor.getService(),
@@ -247,7 +246,6 @@ public class RumbleStreamExtractorTest {
         }
     }
 
-    @Disabled("Test broken, Live Streams not supported atm")
     public static class LiveStreamExtractorTest extends NormalStreamExtractorTest {
 
 
@@ -261,7 +259,7 @@ public class RumbleStreamExtractorTest {
             expectedCategory = "";
             expectedAgeLimit = 0;
             expectedViewCountAtLeast = 92;
-            expectedUploaderName = "The Pete Santilli Show - LIVE Channel";
+            expectedUploaderName = "The Pete Santilli Show - LIVE Show";
             expectedUploadDate = "2021-04-28 12:07:24.000";
             expectedTextualUploadDate = "2021-04-28T12:07:24+00:00";
             expectedPrivacy = StreamExtractor.Privacy.PUBLIC;
