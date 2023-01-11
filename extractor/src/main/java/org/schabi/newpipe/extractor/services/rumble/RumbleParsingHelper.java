@@ -1,6 +1,7 @@
 package org.schabi.newpipe.extractor.services.rumble;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.utils.Utils;
 
@@ -167,5 +168,18 @@ public final class RumbleParsingHelper {
         // the uploaderUrl
         final String uploaderUrl = Rumble.getBaseUrl() + "/user/" + theUploader;
         return uploaderUrl;
+    }
+
+    public static long getViewCount(final Element element, final String pattern)
+            throws ParsingException {
+        final String errorMsg = "Could not extract the view count";
+        final String viewCount =
+                RumbleParsingHelper.extractSafely(true, errorMsg,
+                        () -> element.select(pattern).first().text());
+        try {
+            return Utils.mixedNumberWordToLong(viewCount);
+        } catch (final NumberFormatException e) {
+            throw new ParsingException(errorMsg, e);
+        }
     }
 }

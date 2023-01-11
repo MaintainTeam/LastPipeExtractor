@@ -77,7 +77,8 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
 
     @Override
     public long getViewCount() throws ParsingException {
-        return -1; // there is nothing we could extract the data from
+        return RumbleParsingHelper.getViewCount(element,
+                "div.video-counters--item.video-item--views");
     }
 
     @Override

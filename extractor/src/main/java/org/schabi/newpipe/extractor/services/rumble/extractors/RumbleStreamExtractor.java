@@ -7,7 +7,6 @@ import com.grack.nanojson.JsonParserException;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Parser;
@@ -56,7 +55,8 @@ public class RumbleStreamExtractor extends StreamExtractor {
     private final String videoDateJsonKey = "pubDate";
     private final String videoDurationJsonKey = "duration";
 
-    private final String videoViewerCountHtmlKey = "span.media-heading-info";
+    private final String videoViewerCountHtmlKey =
+            "div.media-engage div.video-counters--item.video-item--views";
     private final String relatedStreamHtmlKey = "ul.mediaList-list";
 
     private Document doc;
@@ -161,25 +161,7 @@ public class RumbleStreamExtractor extends StreamExtractor {
     @Override
     public long getViewCount() throws ParsingException {
         assertPageFetched();
-        // <span class="media-heading-info">2,043 Views</span>
-
-        final Elements viewCountData = doc.select(videoViewerCountHtmlKey);
-        if (viewCountData.size() == 0) {
-            throw new ParsingException("The viewCount match element is missing");
-        }
-
-        // Normally the second occurrence of 'videoViewerCountHtmlKey' is the Views count.
-        // But we iterate over every entry to make sure we won't miss in case of changed
-        // order or whatever. Should still be not too many items -> usually only 2.
-        for (final Element maybeViewCount : viewCountData) {
-            if (maybeViewCount.text().contains("Views")) {
-                final String views = maybeViewCount.text();
-                return Long.parseLong(Utils.removeNonDigitCharacters(views));
-            }
-        }
-
-        // some videos seem to not have a viewerCount -> eg. https://rumble.com/v1b00j9
-        return -1;
+        return RumbleParsingHelper.getViewCount(doc, videoViewerCountHtmlKey);
     }
 
     @Override
