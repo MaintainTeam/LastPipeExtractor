@@ -10,6 +10,7 @@ import org.schabi.newpipe.extractor.localization.TimeAgoParser;
 import org.schabi.newpipe.extractor.services.rumble.RumbleParsingHelper;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
 import org.schabi.newpipe.extractor.stream.StreamType;
+import org.schabi.newpipe.extractor.utils.Utils;
 
 import javax.annotation.Nullable;
 
@@ -77,8 +78,26 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
 
     @Override
     public long getViewCount() throws ParsingException {
-        return RumbleParsingHelper.getViewCount(element,
-                "div.video-counters--item.video-item--views");
+        if (getStreamType() == StreamType.LIVE_STREAM) {
+            return getLiveStreamWatchingCount(element,
+                    "small[class=mediaList-liveCount]");
+        } else {
+            try {
+                return RumbleParsingHelper.getViewCount(element,
+                        "div.video-counters--item.video-item--views");
+            } catch (final ParsingException e) {
+                e.printStackTrace();
+            }
+        }
+        return -1;
+    }
+
+    private long getLiveStreamWatchingCount(final Element elem, final String pattern)
+            throws ParsingException {
+        final String errorMsg = "Could not extract the live watching count";
+        final String viewCount = RumbleParsingHelper.extractSafely(true, errorMsg,
+                () -> elem.select(pattern).first().text());
+        return Long.parseLong(Utils.removeNonDigitCharacters(viewCount));
     }
 
     @Override
