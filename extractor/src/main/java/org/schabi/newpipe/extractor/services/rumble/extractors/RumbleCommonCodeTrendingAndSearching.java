@@ -115,18 +115,6 @@ public class RumbleCommonCodeTrendingAndSearching {
             final DateWrapper uploadDate =
                     new DateWrapper(OffsetDateTime.parse(textualDate), false);
 
-            //switch (kind) {
-            //    case BitchuteConstants.KIND_CHANNEL:
-            //        infoItemExtractor =
-            //           new BitchuteSearchExtractor.BitchuteQuickChannelInfoItemExtractor(
-            //                name,
-            //                url,
-            //                thumbUrl,
-            //                desc
-            //        );
-            //        break;
-            //    case BitchuteConstants.KIND_VIDEO:
-            //    default:
             infoItemExtractor = new RumbleSearchVideoStreamInfoItemExtractor(
                     Parser.unescapeEntities(title, false),
                     url,
@@ -139,7 +127,6 @@ public class RumbleCommonCodeTrendingAndSearching {
                     uploadDate,
                     isLive
             );
-            //}
 
             list.add(infoItemExtractor);
         }
