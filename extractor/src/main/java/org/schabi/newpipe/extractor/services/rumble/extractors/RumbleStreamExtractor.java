@@ -18,6 +18,7 @@ import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.downloader.Response;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
+import org.schabi.newpipe.extractor.exceptions.ReCaptchaException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
 import org.schabi.newpipe.extractor.services.rumble.RumbleParsingHelper;
@@ -37,6 +38,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,9 +68,11 @@ public class RumbleStreamExtractor extends StreamExtractor {
     private int ageLimit = -1;
     private List<VideoStream> videoStreams;
     private String hlsUrl = "";
+    private final String viewerId;
 
     public RumbleStreamExtractor(final StreamingService service, final LinkHandler linkHandler) {
         super(service, linkHandler);
+        viewerId = createRandomViewerId();
     }
 
     @Nonnull
@@ -161,7 +165,11 @@ public class RumbleStreamExtractor extends StreamExtractor {
     @Override
     public long getViewCount() throws ParsingException {
         assertPageFetched();
-        return RumbleParsingHelper.getViewCount(doc, videoViewerCountHtmlKey);
+        if (getStreamType() == StreamType.LIVE_STREAM) {
+            return getLiveViewCount();
+        } else {
+            return RumbleParsingHelper.getViewCount(doc, videoViewerCountHtmlKey);
+        }
     }
 
     @Override
@@ -478,5 +486,37 @@ public class RumbleStreamExtractor extends StreamExtractor {
             e.printStackTrace();
         }
         return realVideoId;
+    }
+
+    private long getLiveViewCount() {
+        return retrieveLiveStreamViewerCount(getDownloader(),
+                extractAndGetRealVideoId().substring(1), // the first char is not used here
+                viewerId);
+    }
+
+    private long retrieveLiveStreamViewerCount(final Downloader downloader,
+                                               final String video,
+                                               final String theViewerId) {
+        try {
+            final Response response =
+                    downloader.get("https://rumble.com/service.php?video="
+                            + video
+                            + "&viewer_id="
+                            + theViewerId
+                            + "&name=video.watching_now");
+            final JsonObject jsonObject =
+                    JsonParser.object().from(response.responseBody());
+            return jsonObject.getObject("data").getLong("viewer_count", -1);
+        } catch (final IOException | ReCaptchaException | JsonParserException e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
+
+    private String createRandomViewerId() {
+        // the magic 8 comes from: $$.generateRandomID(8));
+        // from the html page that belongs to the video
+        return YoutubeParsingHelper.generateTParameter().substring(0, 8);
     }
 }
