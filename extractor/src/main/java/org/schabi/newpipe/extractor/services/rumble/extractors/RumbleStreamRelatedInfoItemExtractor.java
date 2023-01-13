@@ -65,6 +65,10 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
 
             final Elements durationData = element.select("small.medialist-duration");
             if (durationData.isEmpty()) {
+                // upcoming event marked DVR or similar -> no duration given
+                if (!element.select("small.mediaList-upcoming").isEmpty()) {
+                    return -1;
+                }
                 throw new Exception("Could not extract duration from the usual place");
             }
             final String durationString = durationData.first().text();
