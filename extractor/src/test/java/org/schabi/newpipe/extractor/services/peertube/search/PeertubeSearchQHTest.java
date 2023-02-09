@@ -20,7 +20,7 @@ public class PeertubeSearchQHTest {
     }
 
     @Test
-    public void testRegularValues() throws Exception {
+    void testVideoSearch() throws Exception {
         assertEquals("https://peertube.mastodon.host/api/v1/search/videos?search=asdf", PeerTube.getSearchQHFactory().fromQuery("asdf").getUrl());
         assertEquals("https://peertube.mastodon.host/api/v1/search/videos?search=hans", PeerTube.getSearchQHFactory().fromQuery("hans").getUrl());
         assertEquals("https://peertube.mastodon.host/api/v1/search/videos?search=Poifj%26jaijf", PeerTube.getSearchQHFactory().fromQuery("Poifj&jaijf").getUrl());
@@ -32,5 +32,18 @@ public class PeertubeSearchQHTest {
                 singletonList(item), null).getUrl());
         assertEquals("https://anotherpeertubeindex.com/api/v1/search/videos?search=%3Fj%24%29H%C2%A7B", PeerTube.getSearchQHFactory().fromQuery("?j$)H§B",
                 singletonList(item), null, "https://anotherpeertubeindex.com").getUrl());
+    }
+
+    @Test
+    void testPlaylistSearch() throws Exception {
+        assertEquals("https://peertube.mastodon.host/api/v1/search/video-playlists?search=asdf", PeerTube.getSearchQHFactory().fromQuery("asdf", singletonList(PeertubeSearchQueryHandlerFactory.PLAYLISTS), "").getUrl());
+        assertEquals("https://peertube.mastodon.host/api/v1/search/video-playlists?search=hans", PeerTube.getSearchQHFactory().fromQuery("hans", singletonList(PeertubeSearchQueryHandlerFactory.PLAYLISTS), "").getUrl());
+    }
+
+    @Test
+    void testChannelSearch() throws Exception {
+        assertEquals("https://peertube.mastodon.host/api/v1/search/video-channels?search=asdf", PeerTube.getSearchQHFactory().fromQuery("asdf", singletonList(PeertubeSearchQueryHandlerFactory.CHANNELS), "").getUrl());
+        assertEquals("https://peertube.mastodon.host/api/v1/search/video-channels?search=hans", PeerTube.getSearchQHFactory().fromQuery("hans", singletonList(PeertubeSearchQueryHandlerFactory.CHANNELS), "").getUrl());
+
     }
 }

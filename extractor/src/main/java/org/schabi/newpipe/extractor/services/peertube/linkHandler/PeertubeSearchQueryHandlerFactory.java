@@ -20,7 +20,9 @@ public final class PeertubeSearchQueryHandlerFactory extends SearchQueryHandlerF
     public static final String VIDEOS = "videos";
     // sepia is the global index
     public static final String SEPIA_BASE_URL = "https://sepiasearch.org";
-    public static final String SEARCH_ENDPOINT = "/api/v1/search/videos";
+    public static final String SEARCH_ENDPOINT_PLAYLISTS = "/api/v1/search/video-playlists";
+    public static final String SEARCH_ENDPOINT_VIDEOS = "/api/v1/search/videos";
+    public static final String SEARCH_ENDPOINT_CHANNELS = "/api/v1/search/video-channels";
 
     private static PeertubeSearchQueryHandlerFactory instance = null;
 
