@@ -6,6 +6,7 @@ import org.schabi.newpipe.extractor.comments.CommentsInfoItemExtractor;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
+import org.schabi.newpipe.extractor.stream.Description;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,8 +28,8 @@ public class BitchuteCommentsInfoItemExtractor implements CommentsInfoItemExtrac
     }
 
     @Override
-    public String getCommentText() {
-        return json.getString("content");
+    public Description getCommentText() {
+        return new Description(json.getString("content"), Description.PLAIN_TEXT);
     }
 
     @Override
