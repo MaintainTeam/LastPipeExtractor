@@ -36,14 +36,21 @@ public class PeertubeSearchQHTest {
 
     @Test
     void testPlaylistSearch() throws Exception {
-        assertEquals("https://peertube.mastodon.host/api/v1/search/video-playlists?search=asdf", PeerTube.getSearchQHFactory().fromQuery("asdf", singletonList(PeertubeSearchQueryHandlerFactory.PLAYLISTS), "").getUrl());
-        assertEquals("https://peertube.mastodon.host/api/v1/search/video-playlists?search=hans", PeerTube.getSearchQHFactory().fromQuery("hans", singletonList(PeertubeSearchQueryHandlerFactory.PLAYLISTS), "").getUrl());
+        final FilterItem item = DefaultSearchExtractorTest.getFilterItem(
+                PeerTube, PeertubeFilters.ID_CF_MAIN_PLAYLISTS);
+        assertEquals("https://peertube.mastodon.host/api/v1/search/video-playlists?search=asdf", PeerTube.getSearchQHFactory().fromQuery("asdf",
+                singletonList(item), null).getUrl());
+        assertEquals("https://peertube.mastodon.host/api/v1/search/video-playlists?search=hans", PeerTube.getSearchQHFactory().fromQuery("hans",
+                singletonList(item), null).getUrl());
     }
 
     @Test
     void testChannelSearch() throws Exception {
-        assertEquals("https://peertube.mastodon.host/api/v1/search/video-channels?search=asdf", PeerTube.getSearchQHFactory().fromQuery("asdf", singletonList(PeertubeSearchQueryHandlerFactory.CHANNELS), "").getUrl());
-        assertEquals("https://peertube.mastodon.host/api/v1/search/video-channels?search=hans", PeerTube.getSearchQHFactory().fromQuery("hans", singletonList(PeertubeSearchQueryHandlerFactory.CHANNELS), "").getUrl());
-
+        final FilterItem item = DefaultSearchExtractorTest.getFilterItem(
+                PeerTube, PeertubeFilters.ID_CF_MAIN_CHANNELS);
+        assertEquals("https://peertube.mastodon.host/api/v1/search/video-channels?search=asdf", PeerTube.getSearchQHFactory().fromQuery("asdf",
+        singletonList(item), null).getUrl());
+        assertEquals("https://peertube.mastodon.host/api/v1/search/video-channels?search=hans", PeerTube.getSearchQHFactory().fromQuery("hans",
+        singletonList(item), null).getUrl());
     }
 }

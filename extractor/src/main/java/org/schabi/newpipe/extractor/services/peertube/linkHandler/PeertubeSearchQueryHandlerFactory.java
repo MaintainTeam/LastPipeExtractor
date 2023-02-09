@@ -51,9 +51,7 @@ public final class PeertubeSearchQueryHandlerFactory extends SearchQueryHandlerF
             throws ParsingException {
 
         final String baseUrl;
-        final Optional<FilterItem> sepiaFilter =
-                PeertubeHelpers.getSepiaFilter(selectedContentFilter);
-        if (sepiaFilter.isPresent()) {
+        if (isSepiaContentFilterPresent(selectedContentFilter)) {
             baseUrl = SEPIA_BASE_URL;
         } else {
             baseUrl = ServiceList.PeerTube.getBaseUrl();
@@ -73,10 +71,37 @@ public final class PeertubeSearchQueryHandlerFactory extends SearchQueryHandlerF
 
             final String filterQuery = searchFilters.evaluateSelectedFilters(null);
 
-            return baseUrl + SEARCH_ENDPOINT + "?search=" + Utils.encodeUrlUtf8(searchString)
+            String endpoint = SEARCH_ENDPOINT_VIDEOS;
+            if (selectedContentFilter != null
+                    && // SepiaFilter only supports SEARCH_ENDPOINT_VIDEOS
+                    !isSepiaContentFilterPresent(selectedContentFilter)) {
+                final Optional<FilterItem> contentFilter = selectedContentFilter.stream()
+                        .filter(PeertubeFilters.PeertubeContentFilterItem.class::isInstance)
+                        .findFirst();
+                if (contentFilter.isPresent()) {
+                    endpoint = ((PeertubeFilters.PeertubeContentFilterItem) contentFilter.get())
+                            .getEndpoint();
+                }
+            }
+
+            return baseUrl + endpoint + "?search=" + Utils.encodeUrlUtf8(searchString)
                     + filterQuery;
         } catch (final UnsupportedEncodingException e) {
             throw new ParsingException("Could not encode query", e);
         }
+    }
+
+    private boolean isSepiaContentFilterPresent(
+            @Nullable final List<FilterItem> selectedContentFilter) {
+        boolean isSepiaFilterPresent = false;
+        if (selectedContentFilter != null) {
+            final Optional<FilterItem> sepiaFilter =
+                    PeertubeHelpers.getSepiaFilter(selectedContentFilter);
+            if (sepiaFilter.isPresent()) {
+                isSepiaFilterPresent = true;
+            }
+        }
+
+        return isSepiaFilterPresent;
     }
 }
