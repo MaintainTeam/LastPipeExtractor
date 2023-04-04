@@ -8,6 +8,7 @@ import org.schabi.newpipe.extractor.services.youtube.dashmanifestcreators.Creati
 import org.schabi.newpipe.extractor.services.youtube.dashmanifestcreators.YoutubeOtfDashManifestCreator;
 import org.schabi.newpipe.extractor.services.youtube.dashmanifestcreators.YoutubeProgressiveDashManifestCreator;
 import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeStreamExtractor;
+import org.schabi.newpipe.extractor.stream.AudioTrackType;
 import org.schabi.newpipe.extractor.stream.DeliveryMethod;
 import org.schabi.newpipe.extractor.stream.Stream;
 import org.w3c.dom.Document;
@@ -20,6 +21,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -191,7 +193,7 @@ class YoutubeDashManifestCreatorsTest {
                 () -> assertMpdElement(document),
                 () -> assertPeriodElement(document),
                 () -> assertAdaptationSetElement(document, itagItem),
-                () -> assertRoleElement(document),
+                () -> assertRoleElement(document, itagItem),
                 () -> assertRepresentationElement(document, itagItem),
                 () -> {
                     if (itagItem.itagType.equals(ItagItem.ItagType.AUDIO)) {
@@ -220,10 +222,39 @@ class YoutubeDashManifestCreatorsTest {
                                             @Nonnull final ItagItem itagItem) {
         final Element element = assertGetElement(document, ADAPTATION_SET, PERIOD);
         assertAttrEquals(itagItem.getMediaFormat().getMimeType(), element, "mimeType");
+
+        if (itagItem.itagType == ItagItem.ItagType.AUDIO) {
+            final Locale itagAudioLocale = itagItem.getAudioLocale();
+            if (itagAudioLocale != null) {
+                assertAttrEquals(itagAudioLocale.getLanguage(), element, "lang");
+            }
+        }
     }
 
-    private void assertRoleElement(@Nonnull final Document document) {
-        assertGetElement(document, ROLE, ADAPTATION_SET);
+    private void assertRoleElement(@Nonnull final Document document,
+                                   @Nonnull final ItagItem itagItem) {
+        final Element element = assertGetElement(document, ROLE, ADAPTATION_SET);
+
+        final String expect;
+        if (itagItem.getAudioTrackType() == null) {
+            expect = "main";
+        } else {
+            switch (itagItem.getAudioTrackType()) {
+                case ORIGINAL:
+                    expect = "main";
+                    break;
+                case DUBBED:
+                    expect = "dub";
+                    break;
+                case DESCRIPTIVE:
+                    expect = "description";
+                    break;
+                default:
+                    expect = "alternate";
+            }
+        }
+
+        assertAttrEquals(expect, element, "value");
     }
 
     private void assertRepresentationElement(@Nonnull final Document document,
