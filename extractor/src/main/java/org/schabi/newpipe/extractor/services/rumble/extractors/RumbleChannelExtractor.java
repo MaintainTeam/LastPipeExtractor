@@ -64,7 +64,7 @@ public class RumbleChannelExtractor extends ChannelExtractor {
 
     private String getChannelId() {
         final Element idData =
-                doc.select("div.listing-header--content button[data-title]").first();
+                doc.select("div[class~=(listing|channel)-header--buttons] div").first();
         final String channelName = idData.attr("data-slug");
         final String type = idData.attr("data-type");
         if ("channel".equals(type)) {
@@ -89,7 +89,8 @@ public class RumbleChannelExtractor extends ChannelExtractor {
     public String getAvatarUrl() throws ParsingException {
         final String url = RumbleParsingHelper.extractSafely(true,
                 "Could not get avatar url",
-                () -> doc.select("div.listing-header--content img").first().attr("src")
+                () -> doc.select("div[class~=(channel|listing)-header--content] img")
+                        .first().attr("src")
         );
         return url;
     }
