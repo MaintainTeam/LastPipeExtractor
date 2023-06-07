@@ -103,7 +103,8 @@ public class RumbleChannelExtractor extends ChannelExtractor {
     }
 
     private String extractBannerUrl() {
-        final Elements elements = doc.select("div.listing-header--backsplash img");
+        final Elements elements =
+                doc.select("div[class~=(channel|listing)-header--backsplash] img");
         if (elements.isEmpty()) { // some have no banner so return null
             return null;
         } else {
