@@ -161,7 +161,7 @@ public class RumbleChannelExtractor extends ChannelExtractor {
     public boolean isVerified() throws ParsingException {
         final String verified = RumbleParsingHelper.extractSafely(false,
                 "",
-                () -> doc.select("svg.listing-header--verified").first().text()
+                () -> doc.select("svg[class~=(listing|channel)-header--verified]").first().text()
         );
 
         return verified != null;
