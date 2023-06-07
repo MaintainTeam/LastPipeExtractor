@@ -53,6 +53,7 @@ public class RumbleChannelExtractorTest {
                         + "\"}");
                 put(KeysForTestDataMap.doTestMoreRelatedItems, "false");
                 put(KeysForTestDataMap.mockPath, "channelTest");
+                put(KeysForTestDataMap.isVerified, "true");
             }};
             System.setProperty("downloader", "MOCK");
             // System.setProperty("downloader", "RECORDING");
@@ -86,6 +87,7 @@ public class RumbleChannelExtractorTest {
                         + "\"}");
                 put(KeysForTestDataMap.doTestMoreRelatedItems, "true");
                 put(KeysForTestDataMap.mockPath, "channelTestMulitplePages");
+                put(KeysForTestDataMap.isVerified, "true");
             }};
             System.setProperty("downloader", "MOCK");
             //System.setProperty("downloader", "RECORDING");
@@ -112,6 +114,7 @@ public class RumbleChannelExtractorTest {
                 put(KeysForTestDataMap.expectedBannerlUrl, "{\"hasBanner\":false,\"url\":\"\"}");
                 put(KeysForTestDataMap.doTestMoreRelatedItems, "true");
                 put(KeysForTestDataMap.mockPath, "userTestMulitplePages");
+                put(KeysForTestDataMap.isVerified, "false");
             }};
             System.setProperty("downloader", "MOCK");
             //System.setProperty("downloader", "RECORDING");
@@ -139,7 +142,8 @@ public class RumbleChannelExtractorTest {
             expectedAvatarUrl,
             expectedBannerlUrl,
             doTestMoreRelatedItems,
-            mockPath
+            mockPath,
+            isVerified
         }
 
         protected static RumbleChannelExtractor extractor;
@@ -252,8 +256,13 @@ public class RumbleChannelExtractorTest {
         }
 
         @Override
+        @Test
         public void testVerified() throws Exception {
-            assertFalse(extractor.isVerified());
+            if (Boolean.parseBoolean(testDataMap.get(KeysForTestDataMap.isVerified))) {
+                assertTrue(extractor.isVerified());
+            } else {
+                assertFalse(extractor.isVerified());
+            }
         }
     }
 }
