@@ -44,10 +44,10 @@ public class RumbleChannelExtractorTest {
                 put(KeysForTestDataMap.expectedDescription, "");
                 put(KeysForTestDataMap.expectedAvatarUrl,
                         "https://sp.rmbl.ws/z8/7/o/2/c/7o2ca.baa-GovRonDeSantis-qrikr6.jpeg");
-                put(KeysForTestDataMap.expectedBannerlUrl, "{\"hasBanner\":\""
+                put(KeysForTestDataMap.expectedBannerlUrl, "{\"hasBanner\":"
                         + /* ===expected to have banner? ===*/
                         "true"
-                        + "\",\"url\":\""
+                        + ",\"url\":\""
                         + /* ===set the expected url=== */
                         "https://sp.rmbl.ws/z8/7/o/2/c/7o2ca.caa-GovRonDeSantis-qrikr9.jpeg"
                         + "\"}");
@@ -77,12 +77,12 @@ public class RumbleChannelExtractorTest {
                 put(KeysForTestDataMap.expectedMinSubscriberCount, "1500000");
                 put(KeysForTestDataMap.expectedDescription, "");
                 put(KeysForTestDataMap.expectedAvatarUrl, "https://sp.rmbl.ws/z8/U/K/d/b/UKdba.baa.1-Bongino-rj8lv1.jpeg");
-                put(KeysForTestDataMap.expectedBannerlUrl, "{\"hasBanner\":\""
+                put(KeysForTestDataMap.expectedBannerlUrl, "{\"hasBanner\":"
                         + /* ===expected to have banner? ===*/
                         "true"
-                        + "\",\"url\":\""
+                        + ",\"url\":\""
                         + /* ===set the expected url=== */
-                        "https://sp.rmbl.ws/z8/U/K/d/b/UKdba.caa.3-Bongino-rjp4dn.jpeg"
+                        "https://sp.rmbl.ws/z8/U/K/d/b/UKdba.caa.4-Bongino-rqwkrs.jpeg"
                         + "\"}");
                 put(KeysForTestDataMap.doTestMoreRelatedItems, "true");
                 put(KeysForTestDataMap.mockPath, "channelTestMulitplePages");
@@ -109,7 +109,7 @@ public class RumbleChannelExtractorTest {
                 put(KeysForTestDataMap.expectedMinSubscriberCount, "915");
                 put(KeysForTestDataMap.expectedDescription, "");
                 put(KeysForTestDataMap.expectedAvatarUrl, "https://graph.facebook.com/10153436058551636/picture?type=large");
-                put(KeysForTestDataMap.expectedBannerlUrl, "{\"hasBanner\":\"false\",\"url\":\"\"}");
+                put(KeysForTestDataMap.expectedBannerlUrl, "{\"hasBanner\":false,\"url\":\"\"}");
                 put(KeysForTestDataMap.doTestMoreRelatedItems, "true");
                 put(KeysForTestDataMap.mockPath, "userTestMulitplePages");
             }};
