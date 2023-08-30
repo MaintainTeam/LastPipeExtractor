@@ -5,6 +5,7 @@ import com.grack.nanojson.JsonObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.schabi.newpipe.downloader.DownloaderFactory;
 import org.schabi.newpipe.downloader.DownloaderTestImpl;
 import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.StreamingService;
@@ -24,6 +25,7 @@ import java.util.NoSuchElementException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.schabi.newpipe.downloader.DownloaderFactory.RESOURCE_PATH;
 import static org.schabi.newpipe.extractor.ServiceList.Bitchute;
 
 public class BitchuteStreamExtractorTest extends DefaultStreamExtractorTest {
@@ -39,7 +41,7 @@ public class BitchuteStreamExtractorTest extends DefaultStreamExtractorTest {
     private static int expectedAgeLimit = 16;
     private static long expectedViewCountAtLeast = 230;
     private static String expectedUploaderName = "London Real";
-    private static String expectedUploadDate = "2021-04-05 22:00:00.000";
+    private static String expectedUploadDate = "2021-04-06 19:26:00.000";
     private static String expectedTextualUploadDate =
             "First published at 19:26 UTC on April 6th, 2021.";
     private static StreamExtractor.Privacy expectedPrivacy = StreamExtractor.Privacy.OTHER;
@@ -49,9 +51,16 @@ public class BitchuteStreamExtractorTest extends DefaultStreamExtractorTest {
     private static boolean expectedHasVideoStreams = true;
     private static String expectedArtistProfilePictureInfix = ".bitchute.com/live/channel_images/";
 
+    protected static final String MOCK_PATH =
+            RESOURCE_PATH + "/services/bitchute/extractor/stream/";
+
     @BeforeAll
     public static void setUp() throws ExtractionException, IOException {
-        NewPipe.init(DownloaderTestImpl.getInstance());
+        System.setProperty("downloader", "MOCK");
+        //System.setProperty("downloader", "RECORDING");
+
+        NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH
+                + "/streamExtractor"));
 
         extractor = (BitchuteStreamExtractor) Bitchute
                 .getStreamExtractor(url);
