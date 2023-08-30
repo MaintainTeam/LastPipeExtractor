@@ -94,15 +94,14 @@ public class BitchuteStreamExtractor extends StreamExtractor {
     @Nullable
     @Override
     public DateWrapper getUploadDate() throws ParsingException {
-        int in = getTextualUploadDate().indexOf("on");
-        in += 2;
-        final String textualDate = getTextualUploadDate().substring(in)
+        final String textualDate = getTextualUploadDate()
                 .replaceAll("(?<=\\d)(st|nd|rd|th)", "").trim();
         try {
             final Date date;
             try {
-                final SimpleDateFormat df =
-                        new SimpleDateFormat("MMM d, yyyy.", BitchuteConstants.BITCHUTE_LOCALE);
+                final SimpleDateFormat df = new SimpleDateFormat(
+                        "'First published at' HH:mm zzz 'on' MMM d, yyyy",
+                        BitchuteConstants.BITCHUTE_LOCALE);
                 date = df.parse(textualDate);
             } catch (final ParseException e) {
                 throw new ParsingException("Couldn't parse Date: " + textualDate);
