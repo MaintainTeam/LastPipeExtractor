@@ -15,6 +15,8 @@ public final class BitchuteConstants {
     public static final String SEARCH_URL_AUTOM = SEARCH_URL_PREFIX;
     public static final Locale BITCHUTE_LOCALE = Locale.ENGLISH;
     public static final String COMMENTS_URL = "https://commentfreely.bitchute.com";
+    public static final String BASE_RSS = BASE_URL + "/feeds/rss";
+
     private BitchuteConstants() {
     }
 }
