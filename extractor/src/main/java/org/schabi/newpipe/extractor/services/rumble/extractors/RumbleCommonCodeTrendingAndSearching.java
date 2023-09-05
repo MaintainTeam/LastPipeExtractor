@@ -134,7 +134,9 @@ public class RumbleCommonCodeTrendingAndSearching {
         return list;
     }
 
-    private String getClassValue(final Element element, final String className, final String attr) {
+    protected String getClassValue(final Element element,
+                                   final String className,
+                                   final String attr) {
         return element.getElementsByClass(className).first().attr(attr);
     }
 }

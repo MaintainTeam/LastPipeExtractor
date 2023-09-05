@@ -29,7 +29,7 @@ public class RumbleTrendingExtractor extends KioskExtractor<StreamInfoItem> {
 
         try {
             sharedTrendingAndChannelCode =
-                    new RumbleCommonCodeTrendingAndChannel(getServiceId(), getUrl());
+                    new RumbleCommonCodeTrendingAndChannel(getServiceId(), getUrl(), kioskId);
         } catch (final ParsingException e) {
             e.printStackTrace();
         }

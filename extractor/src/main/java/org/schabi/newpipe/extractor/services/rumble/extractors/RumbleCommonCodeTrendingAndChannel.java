@@ -4,12 +4,15 @@ import org.jsoup.nodes.Document;
 import org.schabi.newpipe.extractor.ListExtractor;
 import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
+import org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleTrendingLinkHandlerFactory;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemsCollector;
 
 import java.io.IOException;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * shared code for {@link RumbleTrendingExtractor} and {@link RumbleChannelExtractor}
@@ -20,9 +23,16 @@ public class RumbleCommonCodeTrendingAndChannel {
     private final RumbleCommonCodeTrendingAndSearching rumbleCommonCodeTrendingAndSearching;
 
     RumbleCommonCodeTrendingAndChannel(final int serviceId,
-                                       final String baseUrl) {
+                                       final String baseUrl,
+                                       final @Nullable String kioskId) {
         this.serviceId = serviceId;
-        this.rumbleCommonCodeTrendingAndSearching = new RumbleCommonCodeTrendingAndSearching();
+
+        // ATM. we only use the live category for the trending list
+        if (RumbleTrendingLinkHandlerFactory.LIVE.equals(kioskId)) {
+            this.rumbleCommonCodeTrendingAndSearching = new RumbleBrowseCategory();
+        } else {
+            this.rumbleCommonCodeTrendingAndSearching = new RumbleCommonCodeTrendingAndSearching();
+        }
         this.baseUrl = baseUrl;
     }
 
