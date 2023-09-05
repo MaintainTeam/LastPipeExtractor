@@ -31,7 +31,7 @@ public class RumbleChannelExtractor extends ChannelExtractor {
 
         try {
             sharedTrendingAndChannelCode =
-                    new RumbleCommonCodeTrendingAndChannel(getServiceId(), getUrl());
+                    new RumbleCommonCodeTrendingAndChannel(getServiceId(), getUrl(), null);
         } catch (final ParsingException e) {
             e.printStackTrace();
         }

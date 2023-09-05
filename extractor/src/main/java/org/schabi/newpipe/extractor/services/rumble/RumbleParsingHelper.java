@@ -7,6 +7,10 @@ import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +20,8 @@ public final class RumbleParsingHelper {
 
     private RumbleParsingHelper() {
     }
+
+    private static final Map<String, List<String>> HEADERS = new HashMap<>();
 
     public static int parseDurationString(final String input) throws ParsingException {
         // input has the form of 18m10s or 1d10h20m4s etc
@@ -181,5 +187,28 @@ public final class RumbleParsingHelper {
         } catch (final NumberFormatException e) {
             throw new ParsingException(errorMsg, e);
         }
+    }
+
+    /**
+     * Rumble needs a cookie to avoid 307 return codes for category browse.
+     *
+     * Generate random cookies -> seems to work for now. Used atm only in
+     * {@link org.schabi.newpipe.extractor.services.rumble.extractors.RumbleTrendingExtractor}
+     *
+     * @return Cookie with random values
+     */
+    private static String randomCookieGenerator() {
+        final String rand = String.valueOf((int) (Math.random() * 10000));
+        final String rand2 = String.valueOf((int) (Math.random() * 10000));
+        final String randomCookie = "PNRC=" + rand + " ; RNRC=" + rand2;
+        return randomCookie;
+    }
+
+    public static synchronized Map<String, List<String>> getMinimalHeaders() {
+        final String cookie = "Cookie";
+        if (!HEADERS.containsKey(cookie)) {
+            HEADERS.put("Cookie", Collections.singletonList(randomCookieGenerator()));
+        }
+        return HEADERS;
     }
 }
