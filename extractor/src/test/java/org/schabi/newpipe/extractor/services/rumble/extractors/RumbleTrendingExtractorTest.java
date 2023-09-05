@@ -24,16 +24,14 @@ import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestRela
 /**
  * Tests for {@link RumbleTrendingExtractor}
  *
- * We have atm 7 different Kiosk categories:
- *
+ * We have atm 5 different Kiosk categories:
+ *<p>
  * - Live
  * - Editor Picks
- * - News
- * - Viral
- * - Podcasts
+ * - Trending
  * - Today's Battle Leaderboard Top 50
- * - Sports
- *
+ * - Latest
+ *<p>
  *  Here we have a base class called Trending that implements testing for all of those categories.
  *  For every category we have one derived test class.
  */
@@ -45,8 +43,8 @@ public class RumbleTrendingExtractorTest {
             testDataMap = new HashMap() {{
                 put(KeysForTestDataMap.name, "Live");
                 put(KeysForTestDataMap.id, "Live");
-                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/live-videos");
-                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/live-videos");
+                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/browse/live");
+                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "browse/live");
             }};
             Trending.setUp();
         }
@@ -65,40 +63,14 @@ public class RumbleTrendingExtractorTest {
         }
     }
 
-    public static class News extends Trending {
+    public static class Latest extends Trending {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(KeysForTestDataMap.name, "News");
-                put(KeysForTestDataMap.id, "News");
-                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/category/news");
-                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/category/news");
-            }};
-            Trending.setUp();
-        }
-    }
-
-    public static class Viral extends Trending {
-        @BeforeAll
-        public static void setUp() throws Exception {
-            testDataMap = new HashMap() {{
-                put(KeysForTestDataMap.name, "Viral");
-                put(KeysForTestDataMap.id, "Viral");
-                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/category/viral");
-                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/category/viral");
-            }};
-            Trending.setUp();
-        }
-    }
-
-    public static class Podcasts extends Trending {
-        @BeforeAll
-        public static void setUp() throws Exception {
-            testDataMap = new HashMap() {{
-                put(KeysForTestDataMap.name, "Podcasts");
-                put(KeysForTestDataMap.id, "Podcasts");
-                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/category/podcasts");
-                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/category/podcasts");
+                put(KeysForTestDataMap.name, "Latest");
+                put(KeysForTestDataMap.id, "Latest");
+                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/videos?date=this-week");
+                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/videos?date=this-week");
             }};
             Trending.setUp();
         }
@@ -123,19 +95,19 @@ public class RumbleTrendingExtractorTest {
         }
     }
 
-    public static class Sports extends Trending {
+    public static class TrendingToday extends Trending {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(KeysForTestDataMap.name, "Sports");
-                put(KeysForTestDataMap.id, "Sports");
-                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/category/sports");
-                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl() + "/category/sports");
+                put(KeysForTestDataMap.name, "Trending Today");
+                put(KeysForTestDataMap.id, "Trending Today");
+                put(KeysForTestDataMap.url, Rumble.getBaseUrl() + "/videos?sort=views&date=today");
+                put(KeysForTestDataMap.originalUrl, Rumble.getBaseUrl()
+                        + "/videos?sort=views&date=today");
             }};
             Trending.setUp();
         }
     }
-
 
     public abstract static class Trending implements BaseListExtractorTest {
 
