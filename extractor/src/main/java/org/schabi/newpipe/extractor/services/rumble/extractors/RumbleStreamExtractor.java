@@ -45,6 +45,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.schabi.newpipe.extractor.stream.Stream.ID_UNKNOWN;
 import static org.schabi.newpipe.extractor.utils.Utils.isNullOrEmpty;
@@ -68,11 +70,9 @@ public class RumbleStreamExtractor extends StreamExtractor {
     private int ageLimit = -1;
     private List<VideoStream> videoStreams;
     private String hlsUrl = "";
-    private final String viewerId;
 
     public RumbleStreamExtractor(final StreamingService service, final LinkHandler linkHandler) {
         super(service, linkHandler);
-        viewerId = createRandomViewerId();
     }
 
     @Nonnull
@@ -395,6 +395,7 @@ public class RumbleStreamExtractor extends StreamExtractor {
             embedJsonStreamInfoObj = JsonParser.object().from(response2.responseBody());
         } catch (final JsonParserException e) {
             e.printStackTrace();
+            throw new ParsingException("Could not read json from: " + queryUrl);
         }
     }
 
@@ -497,22 +498,36 @@ public class RumbleStreamExtractor extends StreamExtractor {
         return realVideoId;
     }
 
-    private long getLiveViewCount() {
+    private long getLiveViewCount() throws ParsingException {
+        final Pattern matchChecksum = Pattern.compile("viewer_id: \"(.*)\"");
+        final Matcher matcher = matchChecksum.matcher(doc.toString());
+        if (!matcher.find()) {
+            throw new ParsingException("Could not extract viewer_id");
+        }
+        final String viewerId = matcher.group(1);
+
         return retrieveLiveStreamViewerCount(getDownloader(),
-                extractAndGetRealVideoId().substring(1), // the first char is not used here
+                retrieveNumericVideoId(),
                 viewerId);
     }
 
     private long retrieveLiveStreamViewerCount(final Downloader downloader,
-                                               final String video,
+                                               final String videoNumericId,
                                                final String theViewerId) {
         try {
-            final Response response =
-                    downloader.get("https://rumble.com/service.php?video="
-                            + video
+
+            // This is the post version of below get version. It does not work but kept here
+            // for maybe later:)
+            // final Response response = downloader
+            //         .post("https://wn0.rumble.com/service.php?api=7&name=video.watching-now",
+            //                 null,
+            //                 ("video_id=" + videoId + "&viewer_id=" + theViewerId).getBytes());
+            final Response response = downloader
+                    .get("https://wn0.rumble.com/service.php?video_id="
+                            + videoNumericId
                             + "&viewer_id="
                             + theViewerId
-                            + "&name=video.watching_now");
+                            + "&name=video.watching-now");
             final JsonObject jsonObject =
                     JsonParser.object().from(response.responseBody());
             return jsonObject.getObject("data").getLong("viewer_count", -1);
@@ -523,9 +538,14 @@ public class RumbleStreamExtractor extends StreamExtractor {
         return -1;
     }
 
+    // as of somewhere in 2023 it is no longer working. Kept for reference
     private String createRandomViewerId() {
         // the magic 8 comes from: $$.generateRandomID(8));
         // from the html page that belongs to the video
         return YoutubeParsingHelper.generateTParameter().substring(0, 8);
+    }
+
+    private String retrieveNumericVideoId() {
+        return embedJsonStreamInfoObj.get("vid").toString();
     }
 }
