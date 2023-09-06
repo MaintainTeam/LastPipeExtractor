@@ -168,7 +168,16 @@ public class RumbleStreamExtractor extends StreamExtractor {
         if (getStreamType() == StreamType.LIVE_STREAM) {
             return getLiveViewCount();
         } else {
-            return RumbleParsingHelper.getViewCount(doc, videoViewerCountHtmlKey);
+            final String errorMsg = "Could not extract the view count";
+            try {
+                final String viewCount =
+                        RumbleParsingHelper.extractSafely(true, errorMsg,
+                                () -> doc.select("div.media-description-info-tag")
+                                        .get(1).text());
+                return Utils.mixedNumberWordToLong(viewCount);
+            } catch (final NumberFormatException e) {
+                throw new ParsingException(errorMsg, e);
+            }
         }
     }
 
