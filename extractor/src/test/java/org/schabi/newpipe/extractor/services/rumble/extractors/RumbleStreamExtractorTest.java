@@ -250,24 +250,24 @@ public class RumbleStreamExtractorTest {
 
         @BeforeAll
         public static void setUp() throws ExtractionException, IOException {
-            url = "https://rumble.com/vg7h6j";
-            expectedUrl = "https://rumble.com/vg7h6j";
-            expectedName = "EP 2422-9AM UKRAINIANS USED BY FBI TO SPY ON AMERICANS?  FISA Warrants Issued MONTHS Before Jan 6th";
-            expectedId = "vg7h6j";
-            expectedDesc = "EP 2422-9AM UKRAINIAN ASSETS USED BY FBI TO SPY ON AMERICANS - FISA Warrants Issued MONTHS Before Jan 6th";
+            url = "https://rumble.com/v3e90sa";
+            expectedUrl = "https://rumble.com/v3e90sa";
+            expectedName = "America 1st News & Politics Live TV | MAGA Media";
+            expectedId = "v3e90sa";
+            expectedDesc = "Patriot News Outlet Live | America 1st News & Politics";
             expectedCategory = "";
             expectedAgeLimit = 0;
-            expectedViewCountAtLeast = 92;
-            expectedUploaderName = "The Pete Santilli Show - LIVE Show";
-            expectedUploadDate = "2021-04-28 12:07:24.000";
-            expectedTextualUploadDate = "2021-04-28T12:07:24+00:00";
+            expectedViewCountAtLeast = 66;
+            expectedUploaderName = "Patriot News Outlet Live";
+            expectedUploadDate = "2023-09-02 23:01:40.000";
+            expectedTextualUploadDate = "2023-09-02T23:01:40+00:00";
             expectedPrivacy = StreamExtractor.Privacy.PUBLIC;
-            expectedUploaderUrl = "https://rumble.com/c/PeteLive";
+            expectedUploaderUrl = "https://rumble.com/c/PatriotNews4u";
             expectedSupportInfo = "";
             expectedHasAudioStreams = false;
             expectedHasVideoStreams = true;
             expectedArtistProfilePictureInfix = ".rumble.com/live/channel_images/"; // TODO
-            expectedLength = 59;
+            expectedLength = 0;
             System.setProperty("downloader", "MOCK");
             //System.setProperty("downloader", "RECORDING");
             NewPipe.init(new DownloaderFactory().getDownloader(MOCK_PATH
@@ -278,6 +278,10 @@ public class RumbleStreamExtractorTest {
             extractor.fetchPage();
         }
 
+        @Override
+        public StreamType expectedStreamType() {
+            return StreamType.LIVE_STREAM;
+        }
         /**
          *  Test for {@link RumbleStreamRelatedInfoItemExtractor}
          */
