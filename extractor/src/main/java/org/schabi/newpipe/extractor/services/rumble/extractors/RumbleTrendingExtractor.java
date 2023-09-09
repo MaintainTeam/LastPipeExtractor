@@ -59,7 +59,7 @@ public class RumbleTrendingExtractor extends KioskExtractor<StreamInfoItem> {
         }
 
         doc = Jsoup.parse(getDownloader().get(
-                        getUrl(),
+                        page.getUrl(),
                         RumbleParsingHelper.getMinimalHeaders(),
                         NewPipe.getPreferredLocalization())
                 .responseBody());

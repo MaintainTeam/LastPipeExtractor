@@ -50,8 +50,17 @@ public class RumbleCommonCodeTrendingAndChannel {
 
         final Page nextPage = rumbleCommonCodeTrendingAndSearching
                 .getNewPageIfThereAreMoreThanOnePageResults(
-                        infoItemsList.size(), doc, baseUrl + "?page=");
+                        infoItemsList.size(), doc, generateNextPageUrl(baseUrl, "page="));
 
         return new ListExtractor.InfoItemsPage<>(collector, nextPage);
+    }
+
+    private String generateNextPageUrl(final String url,
+                                       final String pageParameter) {
+        if (url.contains("?")) {
+            // already parameterized -> append parameter
+            return url + '&' + pageParameter;
+        }
+        return url + '?' + pageParameter;
     }
 }
