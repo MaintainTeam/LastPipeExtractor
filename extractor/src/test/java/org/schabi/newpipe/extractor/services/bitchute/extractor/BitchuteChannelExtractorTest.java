@@ -58,8 +58,8 @@ public class BitchuteChannelExtractorTest {
                 put(KeysForTestDataMap.expectedMinSubscriberCount, "400");
                 // 20210414 at the writing of this test the channel has no description added
                 put(KeysForTestDataMap.expectedDescription, "");
-                put(KeysForTestDataMap.expectedAvatarUrl, "https://www.bitchute.com/static/v137a/images/blank_small.png");
-                put(KeysForTestDataMap.expectedBannerlUrl, "https://www.bitchute.com/static/v137a/images/blank_small.png");
+                put(KeysForTestDataMap.expectedAvatarUrl, "2fqQXi6GCbgyrXaPQ540PLNu_small.jpg");
+                put(KeysForTestDataMap.expectedBannerlUrl, "2fqQXi6GCbgyrXaPQ540PLNu_small.jpg");
                 // 20210414 at the writing of this test the channel has not more than one page videos are added
                 put(KeysForTestDataMap.doTestMoreRelatedItems, "false");
             }};

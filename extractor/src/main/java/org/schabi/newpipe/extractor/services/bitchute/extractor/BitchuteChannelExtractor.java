@@ -80,7 +80,7 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
     public String getAvatarUrl() throws ParsingException {
         try {
             if (avatarUrl == null) {
-                avatarUrl = doc.select("#page-bar > div > div > div.image-container > a > img")
+                avatarUrl = doc.select("#page-bar > div > div > div.image-container > img")
                         .first().attr("data-src");
                 if (avatarUrl.startsWith("/")) {
                     avatarUrl = BitchuteConstants.BASE_URL + avatarUrl;
