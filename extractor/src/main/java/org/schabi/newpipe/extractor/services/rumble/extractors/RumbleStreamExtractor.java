@@ -291,6 +291,14 @@ public class RumbleStreamExtractor extends StreamExtractor {
         final Set<String> formatKeys =
                 embedJsonStreamInfoObj.getObject(videoAlternativesKey).keySet();
         for (final String formatKey : formatKeys) { // mp4 or webm or whatever format
+
+            // For some videos there is also a "timeline stream" that is identified
+            // by the key 'timeline'. It has only one frame per second and is
+            // not useful here --> so we skip it
+            if (formatKey.equals("timeline")) {
+                continue;
+            }
+
             // todo validate if we want to support this formats or not
             final JsonObject formatObj =
                     embedJsonStreamInfoObj.getObject(videoAlternativesKey).getObject(formatKey);
