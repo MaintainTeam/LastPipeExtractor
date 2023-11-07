@@ -58,6 +58,8 @@ public class RumbleStreamExtractor extends StreamExtractor {
     private final String videoCoverImageJsonKey = "i";
     private final String videoDateJsonKey = "pubDate";
     private final String videoDurationJsonKey = "duration";
+    private final String bitrateJsonKey = "bitrate";
+    private final String resHeightJsonKey = "h";
 
     private final String videoViewerCountHtmlKey =
             "div.media-engage div.video-counters--item.video-item--views";
@@ -315,11 +317,25 @@ public class RumbleStreamExtractor extends StreamExtractor {
                     return fakeVideoStreamForLiveStream(videoStreamsList, videoUrl);
                 }
 
+                // rumble has some videos resolution data incorrect in 'res'
+                // --> now we use the apparently correct resolution from the available metadata.
+                // --> as the resolution is not sufficient to distinguish the streams, we also
+                //     add the bitrate to the resolution specification, e.g: "1080p@2000k"
+                final String actualRes;
+                final String bitrate;
+                if (metadata.has(resHeightJsonKey) && metadata.has(bitrateJsonKey)) {
+                    actualRes = String.valueOf(metadata.getInt(resHeightJsonKey));
+                    bitrate = "@" + metadata.getInt(bitrateJsonKey) + "k";
+                } else {
+                    actualRes = res;
+                    bitrate = "";
+                }
+
                 final MediaFormat format = MediaFormat.getFromSuffix(formatKey);
                 final VideoStream.Builder builder = new VideoStream.Builder()
                         .setId(ID_UNKNOWN)
                         .setIsVideoOnly(false)
-                        .setResolution(res + "p")
+                        .setResolution(actualRes + "p" + bitrate)
                         .setContent(videoUrl, true)
                         .setMediaFormat(format);
 
