@@ -17,7 +17,6 @@ import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.downloader.Response;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
-import org.schabi.newpipe.extractor.exceptions.ReCaptchaException;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
@@ -140,7 +139,7 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
      *
      * See {@link #getPubDateViaRssFeed(String)}
      * @throws IOException
-     * @throws ReCaptchaException
+     * @throws ExtractionException
      */
     private void fetchRssFeed() throws IOException, ExtractionException {
         final String channelRss;
@@ -165,13 +164,11 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
      *
      * @param videoId the Bitchute video id
      * @return
-     * @throws IOException
-     * @throws ReCaptchaException
      * @throws ParsingException if there is no RSS feed data for requested videoId
      * @throws ParseException
      */
     private Date getPubDateViaRssFeed(final String videoId)
-            throws IOException, ReCaptchaException, ParsingException, ParseException {
+            throws ParsingException, ParseException {
         if (null == xmlFeed) {
             throw new ParsingException("xml feed is not present");
         }
@@ -268,8 +265,7 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
                         final Calendar calendar = Calendar.getInstance();
                         calendar.setTime(date);
                         return new DateWrapper(calendar);
-                    } catch (final ParseException | ReCaptchaException
-                                   | IOException | ParsingException ex) {
+                    } catch (final ParseException | ParsingException ex) {
                         // use the html way if there is no RSS feed information available
                         return super.getUploadDate();
                     }
