@@ -37,6 +37,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants.BASE_RSS;
+import static org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants.BASE_URL;
 
 public class BitchuteChannelExtractor extends ChannelExtractor {
     private Document doc;
@@ -141,10 +142,13 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
      * @throws IOException
      * @throws ReCaptchaException
      */
-    private void fetchRssFeed() throws IOException, ReCaptchaException {
-        final String channelUrlName =
-                this.doc.select("div.details > p.name > a").attr("href");
-        final String channelRss = BASE_RSS + channelUrlName;
+    private void fetchRssFeed() throws IOException, ExtractionException {
+        final String channelRss;
+        try {
+            channelRss = getUrl().replace(BASE_URL, BASE_RSS);
+        } catch (final ParsingException e) {
+            throw new ExtractionException("Could not create channel RSS Url: " + e.getMessage());
+        }
         final Response rssFeed = getDownloader().get(channelRss);
 
         xmlFeed = Jsoup.parse(rssFeed.responseBody(), "", Parser.xmlParser());
