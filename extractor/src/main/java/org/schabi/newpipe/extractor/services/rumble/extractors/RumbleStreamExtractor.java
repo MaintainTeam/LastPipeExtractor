@@ -174,9 +174,9 @@ public class RumbleStreamExtractor extends StreamExtractor {
             try {
                 final String viewCount =
                         RumbleParsingHelper.extractSafely(true, errorMsg,
-                                () -> doc.select("div.media-description-info-tag")
-                                        .get(1).text());
-                return Utils.mixedNumberWordToLong(viewCount);
+                                () -> doc.select("div.media-description-info-views")
+                                        .first().text());
+                return Utils.mixedNumberWordToLong(viewCount.replace(",", ""));
             } catch (final NumberFormatException e) {
                 throw new ParsingException(errorMsg, e);
             }
