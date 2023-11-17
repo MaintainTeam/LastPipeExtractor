@@ -72,7 +72,8 @@ public class RumbleStreamRelatedInfoItemExtractor implements StreamInfoItemExtra
                 throw new Exception("Could not extract duration from the usual place");
             }
             final String durationString = durationData.first().text();
-            final long duration = RumbleParsingHelper.parseDurationString(durationString);
+            final long duration =
+                    RumbleParsingHelper.parseDurationStringForRelatedStreams(durationString);
             return duration;
 
         } catch (final Exception e) {

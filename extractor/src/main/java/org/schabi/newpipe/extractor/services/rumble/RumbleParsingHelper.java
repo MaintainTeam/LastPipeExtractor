@@ -23,9 +23,10 @@ public final class RumbleParsingHelper {
 
     private static final Map<String, List<String>> HEADERS = new HashMap<>();
 
-    public static int parseDurationString(final String input) throws ParsingException {
-        // input has the form of 18m10s or 1d10h20m4s etc
-        return parseDurationString(input, "(d|h|m|s)");
+    public static int parseDurationStringForRelatedStreams(final String input)
+            throws ParsingException {
+        // input has the form of h:m:s
+        return parseDurationString(input, "(:|:|:)");
     }
 
     public static int parseDurationString(final String input, final String split)
