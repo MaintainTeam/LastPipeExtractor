@@ -15,7 +15,6 @@ public final class MediaCCCRecentListLinkHandlerFactory extends ListLinkHandlerF
 
     private static final MediaCCCRecentListLinkHandlerFactory INSTANCE =
             new MediaCCCRecentListLinkHandlerFactory();
-
     private static final String PATTERN = "^(https?://)?media\\.ccc\\.de/recent/?$";
 
     private MediaCCCRecentListLinkHandlerFactory() {

@@ -15,7 +15,6 @@ public final class MediaCCCLiveListLinkHandlerFactory extends ListLinkHandlerFac
 
     private static final MediaCCCLiveListLinkHandlerFactory INSTANCE =
             new MediaCCCLiveListLinkHandlerFactory();
-
     private static final String STREAM_PATTERN = "^(?:https?://)?media\\.ccc\\.de/live$";
 
     private MediaCCCLiveListLinkHandlerFactory() {

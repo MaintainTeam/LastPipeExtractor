@@ -50,4 +50,14 @@ public class FilterItem {
     public LibraryStringIds getNameId() {
         return this.nameId;
     }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return (obj instanceof FilterItem) && ((FilterItem) obj).identifier == this.identifier;
+    }
+
+    @Override
+    public int hashCode() {
+        return identifier;
+    }
 }

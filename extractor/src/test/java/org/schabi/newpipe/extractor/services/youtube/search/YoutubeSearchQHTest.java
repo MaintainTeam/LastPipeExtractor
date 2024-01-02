@@ -1,36 +1,30 @@
 package org.schabi.newpipe.extractor.services.youtube.search;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.schabi.newpipe.extractor.ServiceList.YouTube;
+import static java.util.Collections.singletonList;
+
 import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.extractor.search.filter.FilterContainer;
-import org.schabi.newpipe.extractor.search.filter.FilterGroup;
 import org.schabi.newpipe.extractor.search.filter.FilterItem;
 import org.schabi.newpipe.extractor.services.DefaultSearchExtractorTest;
 import org.schabi.newpipe.extractor.services.youtube.search.filter.YoutubeFilters;
 
 import java.util.List;
 
-import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.schabi.newpipe.extractor.ServiceList.YouTube;
-
 public class YoutubeSearchQHTest {
 
-    public static int getNoOfFilterItems(final List<FilterContainer> filterContainers) {
-        return filterContainers.stream()
-                .mapToInt(filterContainer -> filterContainer.getFilterGroups().stream()
-                        .map(FilterGroup::getFilterItems)
-                        .mapToInt(filterItems -> filterItems.size())
-                        .sum()).sum();
-    }
-
     @Test
-    public void testRegularValues() throws Exception {
+    public void testDefaultSearch() throws Exception {
         assertEquals("https://www.youtube.com/results?search_query=asdf&sp=8AEB", YouTube.getSearchQHFactory().fromQuery("asdf").getUrl());
         assertEquals("https://www.youtube.com/results?search_query=hans&sp=8AEB", YouTube.getSearchQHFactory().fromQuery("hans").getUrl());
         assertEquals("https://www.youtube.com/results?search_query=Poifj%26jaijf&sp=8AEB", YouTube.getSearchQHFactory().fromQuery("Poifj&jaijf").getUrl());
         assertEquals("https://www.youtube.com/results?search_query=G%C3%BCl%C3%BCm&sp=8AEB", YouTube.getSearchQHFactory().fromQuery("Gülüm").getUrl());
         assertEquals("https://www.youtube.com/results?search_query=%3Fj%24%29H%C2%A7B&sp=8AEB", YouTube.getSearchQHFactory().fromQuery("?j$)H§B").getUrl());
+    }
 
+    @Test
+    public void testMusicSongsSearch() throws Exception {
         final FilterItem item = DefaultSearchExtractorTest.getFilterItem(YouTube, YoutubeFilters.ID_CF_MAIN_YOUTUBE_MUSIC_SONGS);
         assertEquals("https://music.youtube.com/search?q=asdf", YouTube.getSearchQHFactory().fromQuery("asdf", singletonList(item), null).getUrl());
         assertEquals("https://music.youtube.com/search?q=hans", YouTube.getSearchQHFactory().fromQuery("hans", singletonList(item), null).getUrl());
@@ -59,13 +53,13 @@ public class YoutubeSearchQHTest {
         final FilterItem channelsFilterItem = DefaultSearchExtractorTest.getFilterItem(YouTube, YoutubeFilters.ID_CF_MAIN_CHANNELS);
         final FilterItem playlistsFilterItem = DefaultSearchExtractorTest.getFilterItem(YouTube, YoutubeFilters.ID_CF_MAIN_PLAYLISTS);
         final FilterItem musicSongsFilterItem = DefaultSearchExtractorTest.getFilterItem(YouTube, YoutubeFilters.ID_CF_MAIN_YOUTUBE_MUSIC_SONGS);
-        assertEquals("https://www.youtube.com/results?search_query=asdf&sp=EgIQAQ%3D%3D", YouTube.getSearchQHFactory()
+        assertEquals("https://www.youtube.com/results?search_query=asdf&sp=EgIQAfABAQ%3D%3D", YouTube.getSearchQHFactory()
                 .fromQuery("asdf", singletonList(videoFilterItem), null).getUrl());
-        assertEquals("https://www.youtube.com/results?search_query=asdf&sp=EgIQAg%3D%3D", YouTube.getSearchQHFactory()
+        assertEquals("https://www.youtube.com/results?search_query=asdf&sp=EgIQAvABAQ%3D%3D", YouTube.getSearchQHFactory()
                 .fromQuery("asdf", singletonList(channelsFilterItem), null).getUrl());
-        assertEquals("https://www.youtube.com/results?search_query=asdf&sp=EgIQAw%3D%3D", YouTube.getSearchQHFactory()
+        assertEquals("https://www.youtube.com/results?search_query=asdf&sp=EgIQA_ABAQ%3D%3D", YouTube.getSearchQHFactory()
                 .fromQuery("asdf", singletonList(playlistsFilterItem), null).getUrl());
-        assertEquals("https://www.youtube.com/results?search_query=asdf", YouTube.getSearchQHFactory()
+        assertEquals("https://www.youtube.com/results?search_query=asdf&sp=8AEB", YouTube.getSearchQHFactory()
                 .fromQuery("asdf", singletonList(null), null).getUrl());
 
         assertEquals("https://music.youtube.com/search?q=asdf", YouTube.getSearchQHFactory()

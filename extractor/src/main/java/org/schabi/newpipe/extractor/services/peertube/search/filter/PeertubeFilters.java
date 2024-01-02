@@ -86,6 +86,7 @@ public final class PeertubeFilters extends BaseSearchFilters {
         return sortQuery.toString();
     }
 
+    @SuppressWarnings("checkstyle:MethodLength")
     @Override
     protected void init() {
 

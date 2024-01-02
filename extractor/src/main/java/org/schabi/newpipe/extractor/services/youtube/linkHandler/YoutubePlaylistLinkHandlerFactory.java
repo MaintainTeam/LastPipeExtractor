@@ -30,7 +30,8 @@ public final class YoutubePlaylistLinkHandlerFactory extends ListLinkHandlerFact
     }
 
     @Override
-    public String getUrl(final String id, @Nonnull final List<FilterItem> contentFilters,
+    public String getUrl(final String id,
+                         @Nonnull final List<FilterItem> contentFilters,
                          @Nullable final List<FilterItem> sortFilter)
             throws ParsingException, UnsupportedOperationException {
         return "https://www.youtube.com/playlist?list=" + id;

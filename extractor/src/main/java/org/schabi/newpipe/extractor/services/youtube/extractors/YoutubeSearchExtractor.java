@@ -8,9 +8,6 @@ import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.prepareDesktopJsonBuilder;
 import static org.schabi.newpipe.extractor.utils.Utils.isNullOrEmpty;
 
-import org.schabi.newpipe.extractor.search.SearchExtractor;
-import org.schabi.newpipe.extractor.search.filter.FilterItem;
-import org.schabi.newpipe.extractor.services.youtube.search.filter.YoutubeFilters;
 import com.grack.nanojson.JsonArray;
 import com.grack.nanojson.JsonBuilder;
 import com.grack.nanojson.JsonObject;
@@ -28,7 +25,9 @@ import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler;
 import org.schabi.newpipe.extractor.localization.Localization;
 import org.schabi.newpipe.extractor.localization.TimeAgoParser;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
+import org.schabi.newpipe.extractor.search.filter.FilterItem;
 import org.schabi.newpipe.extractor.services.youtube.YoutubeMetaInfoHelper;
+import org.schabi.newpipe.extractor.services.youtube.search.filter.YoutubeFilters;
 import org.schabi.newpipe.extractor.utils.JsonUtils;
 import org.schabi.newpipe.extractor.utils.Utils;
 
@@ -71,19 +70,20 @@ public class YoutubeSearchExtractor extends SearchExtractor {
     public YoutubeSearchExtractor(final StreamingService service,
                                   final SearchQueryHandler linkHandler) {
         super(service, linkHandler);
-        final FilterItem searchType = Utils.getFirstContentFilterItem(linkHandler);
+        final List<FilterItem> contentFilters = linkHandler.getContentFilters();
+
         // Save whether we should extract video, channel and playlist results depending on the
         // requested search type, as YouTube returns sometimes videos inside channel search results
         // If no search type is provided or ALL filter is requested, extract everything
-        extractVideoResults = searchType == null
-                || YoutubeFilters.ID_CF_MAIN_ALL == searchType.getIdentifier()
-                || YoutubeFilters.ID_CF_MAIN_VIDEOS == searchType.getIdentifier();
-        extractChannelResults = searchType == null
-                || YoutubeFilters.ID_CF_MAIN_ALL == searchType.getIdentifier()
-                || YoutubeFilters.ID_CF_MAIN_CHANNELS == searchType.getIdentifier();
-        extractPlaylistResults = searchType == null
-                || YoutubeFilters.ID_CF_MAIN_ALL == searchType.getIdentifier()
-                || YoutubeFilters.ID_CF_MAIN_PLAYLISTS == searchType.getIdentifier();
+        final boolean nullOrAll = contentFilters == null || contentFilters.isEmpty()
+                || contentFilters.stream()
+                        .anyMatch(item -> item.getIdentifier() == YoutubeFilters.ID_CF_MAIN_ALL);
+        extractVideoResults = nullOrAll || contentFilters.stream()
+                .anyMatch(item -> item.getIdentifier() == YoutubeFilters.ID_CF_MAIN_VIDEOS);
+        extractChannelResults = nullOrAll || contentFilters.stream()
+                .anyMatch(item -> item.getIdentifier() == YoutubeFilters.ID_CF_MAIN_CHANNELS);
+        extractPlaylistResults = nullOrAll || contentFilters.stream()
+                .anyMatch(item -> item.getIdentifier() == YoutubeFilters.ID_CF_MAIN_PLAYLISTS);
     }
 
     @Override

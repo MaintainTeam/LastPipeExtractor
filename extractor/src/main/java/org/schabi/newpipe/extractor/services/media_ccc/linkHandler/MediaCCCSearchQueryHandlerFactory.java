@@ -26,7 +26,8 @@ public final class MediaCCCSearchQueryHandlerFactory extends SearchQueryHandlerF
     }
 
     @Override
-    public String getUrl(final String query, @Nonnull final List<FilterItem> contentFilter,
+    public String getUrl(final String query,
+                         @Nonnull final List<FilterItem> contentFilter,
                          @Nullable final List<FilterItem> sortFilter)
             throws ParsingException, UnsupportedOperationException {
         try {

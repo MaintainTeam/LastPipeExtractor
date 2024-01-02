@@ -5,7 +5,6 @@ import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandlerFactory;
 import org.schabi.newpipe.extractor.search.filter.FilterItem;
 import org.schabi.newpipe.extractor.services.youtube.search.filter.YoutubeFilters;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -29,7 +28,7 @@ public final class YoutubeSearchQueryHandlerFactory extends SearchQueryHandlerFa
     public String getUrl(final String searchString,
                          @Nonnull final List<FilterItem> selectedContentFilter,
                          @Nullable final List<FilterItem> selectedSortFilter)
-            throws ParsingException, UnsupportedOperationException {
+            throws ParsingException {
         searchFilters.setSelectedContentFilter(selectedContentFilter);
         searchFilters.setSelectedSortFilter(selectedSortFilter);
         return searchFilters.evaluateSelectedFilters(searchString);

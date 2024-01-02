@@ -62,19 +62,7 @@ public final class PeertubeSearchQueryHandlerFactory extends SearchQueryHandlerF
 
             final String filterQuery = searchFilters.evaluateSelectedFilters(null);
 
-            String endpoint = SEARCH_ENDPOINT_VIDEOS;
-            if (selectedContentFilter != null
-                    && // SepiaFilter only supports SEARCH_ENDPOINT_VIDEOS
-                    !isSepiaContentFilterPresent(selectedContentFilter)) {
-                final Optional<FilterItem> contentFilter = selectedContentFilter.stream()
-                        .filter(PeertubeFilters.PeertubeContentFilterItem.class::isInstance)
-                        .findFirst();
-                if (contentFilter.isPresent()) {
-                    endpoint = ((PeertubeFilters.PeertubeContentFilterItem) contentFilter.get())
-                            .getEndpoint();
-                }
-            }
-
+            final String endpoint = getContentFilterDependingEndpoint(selectedContentFilter);
             return baseUrl + endpoint + "?search=" + Utils.encodeUrlUtf8(searchString)
                     + filterQuery;
         } catch (final UnsupportedEncodingException e) {
@@ -94,5 +82,23 @@ public final class PeertubeSearchQueryHandlerFactory extends SearchQueryHandlerF
         }
 
         return isSepiaFilterPresent;
+    }
+
+    private String getContentFilterDependingEndpoint(
+            @Nullable final List<FilterItem> selectedContentFilter) {
+        // default to video search endpoint
+        String endpoint = SEARCH_ENDPOINT_VIDEOS;
+        if (selectedContentFilter != null
+                && // SepiaFilter only supports SEARCH_ENDPOINT_VIDEOS
+                !isSepiaContentFilterPresent(selectedContentFilter)) {
+            final Optional<FilterItem> contentFilter = selectedContentFilter.stream()
+                    .filter(PeertubeFilters.PeertubeContentFilterItem.class::isInstance)
+                    .findFirst();
+            if (contentFilter.isPresent()) {
+                endpoint = ((PeertubeFilters.PeertubeContentFilterItem) contentFilter.get())
+                        .getEndpoint();
+            }
+        }
+        return endpoint;
     }
 }

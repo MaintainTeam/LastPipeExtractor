@@ -39,7 +39,6 @@ public final class BandcampSearchQueryHandlerFactory extends SearchQueryHandlerF
         searchFilters.setSelectedContentFilter(selectedContentFilter);
 
         final String filterQuery = searchFilters.evaluateSelectedContentFilters();
-
         try {
             return BASE_URL + "/search?q=" + Utils.encodeUrlUtf8(query)
                     + filterQuery + "&page=1";

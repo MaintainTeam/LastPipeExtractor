@@ -11,11 +11,10 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class MediaCCCConferenceLinkHandlerFactory extends ListLinkHandlerFactory {
+public final class MediaCCCConferenceLinkHandlerFactory extends ListLinkHandlerFactory {
 
     private static final MediaCCCConferenceLinkHandlerFactory INSTANCE
             = new MediaCCCConferenceLinkHandlerFactory();
-
     public static final String CONFERENCE_API_ENDPOINT
             = "https://api.media.ccc.de/public/conferences/";
     public static final String CONFERENCE_PATH = "https://media.ccc.de/c/";

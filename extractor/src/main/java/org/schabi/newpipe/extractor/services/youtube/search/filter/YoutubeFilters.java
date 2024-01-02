@@ -194,6 +194,7 @@ public class YoutubeFilters extends BaseSearchFilters {
         }
     }
 
+    @SuppressWarnings("checkstyle:MethodLength")
     @Override
     protected void init() {
         /* sort filters */

@@ -54,7 +54,8 @@ public final class BandcampChannelLinkHandlerFactory extends ListLinkHandlerFact
      * Uses the mobile endpoint as a "translator" from id to url
      */
     @Override
-    public String getUrl(final String id, @Nonnull final List<FilterItem> contentFilter,
+    public String getUrl(final String id,
+                         @Nonnull final List<FilterItem> contentFilter,
                          @Nullable final List<FilterItem> sortFilter)
             throws ParsingException, UnsupportedOperationException {
         final JsonObject artistDetails = BandcampExtractorHelper.getArtistDetails(id);

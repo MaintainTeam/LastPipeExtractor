@@ -7,6 +7,7 @@ import com.grack.nanojson.JsonParserException;
 import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.channel.ChannelExtractor;
+import org.schabi.newpipe.extractor.channel.tabs.ChannelTabs;
 import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.downloader.Response;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
@@ -15,7 +16,6 @@ import org.schabi.newpipe.extractor.exceptions.ReCaptchaException;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler;
 import org.schabi.newpipe.extractor.services.peertube.linkHandler.PeertubeChannelLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.peertube.linkHandler.PeertubeChannelTabLinkHandlerFactory;
-import org.schabi.newpipe.extractor.services.peertube.search.filter.PeertubeFilters;
 import org.schabi.newpipe.extractor.utils.JsonUtils;
 
 import javax.annotation.Nonnull;
@@ -115,13 +115,9 @@ public class PeertubeAccountExtractor extends ChannelExtractor {
     public List<ListLinkHandler> getTabs() throws ParsingException {
         return List.of(
                 PeertubeChannelTabLinkHandlerFactory.getInstance().fromQuery(getId(),
-                        List.of(getService().getSearchQHFactory()
-                                .getFilterItem(PeertubeFilters.ID_CF_MAIN_VIDEOS)),
-                        null, getBaseUrl()),
+                        List.of(ChannelTabs.VIDEOS), List.of(), getBaseUrl()),
                 PeertubeChannelTabLinkHandlerFactory.getInstance().fromQuery(getId(),
-                        List.of(getService().getSearchQHFactory()
-                                .getFilterItem(PeertubeFilters.ID_CF_MAIN_CHANNELS)),
-                        null, getBaseUrl()));
+                        List.of(ChannelTabs.CHANNELS), List.of(), getBaseUrl()));
     }
 
     @Override

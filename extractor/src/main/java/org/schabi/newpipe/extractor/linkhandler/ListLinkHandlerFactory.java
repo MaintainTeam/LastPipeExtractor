@@ -4,7 +4,6 @@ import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.search.filter.FilterItem;
 import org.schabi.newpipe.extractor.utils.Utils;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -80,11 +79,12 @@ public abstract class ListLinkHandlerFactory extends LinkHandlerFactory {
      * @return the url corresponding to id without any filters applied
      */
     public String getUrl(final String id) throws ParsingException, UnsupportedOperationException {
-        return getUrl(id, Collections.emptyList(), Collections.emptyList());
+        return getUrl(id, List.of(), List.of());
     }
 
     @Override
-    public String getUrl(final String id, final String baseUrl) throws ParsingException {
-        return getUrl(id, Collections.emptyList(), Collections.emptyList(), baseUrl);
+    public String getUrl(final String id, final String baseUrl)
+            throws ParsingException, UnsupportedOperationException {
+        return getUrl(id, List.of(), List.of(), baseUrl);
     }
 }

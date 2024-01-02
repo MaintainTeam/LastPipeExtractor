@@ -5,7 +5,6 @@ import org.schabi.newpipe.extractor.search.filter.BaseSearchFilters;
 import org.schabi.newpipe.extractor.search.filter.FilterContainer;
 import org.schabi.newpipe.extractor.search.filter.FilterItem;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -23,7 +22,8 @@ public abstract class SearchQueryHandlerFactory extends ListLinkHandlerFactory {
     ///////////////////////////////////
 
     @Override
-    public abstract String getUrl(String query, @Nonnull List<FilterItem> selectedContentFilter,
+    public abstract String getUrl(String query,
+                                  @Nonnull List<FilterItem> selectedContentFilter,
                                   @Nullable List<FilterItem> selectedSortFilter)
             throws ParsingException, UnsupportedOperationException;
 
@@ -49,7 +49,7 @@ public abstract class SearchQueryHandlerFactory extends ListLinkHandlerFactory {
     }
 
     public SearchQueryHandler fromQuery(final String query) throws ParsingException {
-        return fromQuery(query, Collections.emptyList(), Collections.emptyList());
+        return fromQuery(query, List.of(), List.of());
     }
 
     /**

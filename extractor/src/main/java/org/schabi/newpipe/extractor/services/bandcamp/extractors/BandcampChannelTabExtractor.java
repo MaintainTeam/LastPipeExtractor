@@ -14,7 +14,6 @@ import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler;
 import org.schabi.newpipe.extractor.search.filter.FilterItem;
 import org.schabi.newpipe.extractor.services.bandcamp.extractors.streaminfoitem.BandcampDiscographStreamInfoItemExtractor;
-import org.schabi.newpipe.extractor.services.bandcamp.search.filter.BandcampFilters;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -27,17 +26,13 @@ public class BandcampChannelTabExtractor extends ChannelTabExtractor {
                                        final ListLinkHandler linkHandler) {
         super(service, linkHandler);
 
-
-        final FilterItem tab = linkHandler.getContentFilters().get(0);
-        switch (tab.getIdentifier()) {
-            case BandcampFilters.ID_CF_MAIN_TRACKS:
-                filter = "track";
-                break;
-            case BandcampFilters.ID_CF_MAIN_ALBUMS:
-                filter = "album";
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported channel tab: " + tab);
+        final FilterItem type = getChannelTabType();
+        if (type.equals(ChannelTabs.TRACKS)) {
+            filter = "track";
+        } else if (type.equals(ChannelTabs.ALBUMS)) {
+            filter = "album";
+        } else {
+            throw new IllegalArgumentException("Unsupported channel tab: " + type);
         }
     }
 

@@ -97,4 +97,11 @@ public enum LibraryStringIds {
     SEARCH_FILTERS_FEATURE_45M_PLUS, /* Feature (45m+) */
     SEARCH_FILTERS_NEWEST_FIRST, /* Newest First */
     SEARCH_FILTERS_OLDEST_FIRST, /* Oldest First */
+    CHANNEL_TAB_VIDEOS, /* Videos */
+    CHANNEL_TAB_TRACKS, /* Tracks */
+    CHANNEL_TAB_SHORTS, /* Shorts */
+    CHANNEL_TAB_LIVESTREAMS, /* Livestreams */
+    CHANNEL_TAB_CHANNELS, /* Channels */
+    CHANNEL_TAB_PLAYLISTS, /* Playlists */
+    CHANNEL_TAB_ALBUMS, /* Albums */
 }
