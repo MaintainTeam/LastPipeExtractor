@@ -51,8 +51,8 @@ public class BitchuteSearchExtractorTest {
 
         assertEquals(streamSearchQuery, searchResultItem.getName().toLowerCase());
         assertEquals(expectedUploader, searchResultItem.getUploaderName());
-        assertTrue(searchResultItem.getThumbnailUrl().endsWith(".jpg"));
-        assertTrue(searchResultItem.getThumbnailUrl().contains(".bitchute.com/live/cover_images/"));
+        assertTrue(searchResultItem.getThumbnails().get(0).getUrl().endsWith(".jpg"));
+        assertTrue(searchResultItem.getThumbnails().get(0).getUrl().contains(".bitchute.com/live/cover_images/"));
         assertEquals(InfoItem.InfoType.STREAM, searchResultItem.getInfoType());
         assertNotNull(searchResultItem.getUploadDate());
     }

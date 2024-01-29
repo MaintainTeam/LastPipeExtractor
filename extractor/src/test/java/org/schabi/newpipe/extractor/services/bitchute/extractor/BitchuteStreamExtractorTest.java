@@ -191,7 +191,7 @@ public class BitchuteStreamExtractorTest extends DefaultStreamExtractorTest {
 
     @Test
     public void testArtistProfilePicture() throws Exception {
-        final String uploaderAvatarUrl = extractor().getUploaderAvatarUrl();
+        final String uploaderAvatarUrl = extractor().getUploaderAvatars().get(0).getUrl();
         assertTrue(uploaderAvatarUrl.contains(expectedArtistProfilePictureInfix)
                 && uploaderAvatarUrl.endsWith(".jpg"));
     }
