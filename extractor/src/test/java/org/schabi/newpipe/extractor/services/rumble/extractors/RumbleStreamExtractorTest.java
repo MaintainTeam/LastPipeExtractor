@@ -74,7 +74,7 @@ public class RumbleStreamExtractorTest {
 
         @Test
         public void testAvatarThumbnailPicture() throws Exception {
-            final String avatarUrl = extractor().getUploaderAvatarUrl();
+            final String avatarUrl = extractor().getUploaderAvatars().get(0).getUrl();
             assertTrue(!avatarUrl.isEmpty() || avatarUrl == null);
         }
 
@@ -214,8 +214,9 @@ public class RumbleStreamExtractorTest {
             /** more info see: {@link RumbleSharedTests#infoItemsResultsTest} */
             final String[] someExpectedResults = {
                     /* here is the speciality 'streamType=LIVE_STREAM' detection test on releated streams */
-                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Fresh and Fit', textualUploadDate='null', viewCount=125000, duration=9414, uploaderUrl='https://rumble.com/user/freshandfit', infoType=STREAM, serviceId=6, url='https://rumble.com/v3w1i6a-fresh-and-fit-after-hours-w-special-guest.html', name='Fresh&Fit After Hours w/ Jack Doherty', thumbnailUrl='https://sp.rmbl.ws/s8/1/c/5/r/b/c5rbo.0kob-small-Fresh-and-Fit-After-Hours-w.jpg', uploaderVerified='false'}",
-                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Right Side Broadcasting Network', textualUploadDate='null', viewCount=121000, duration=5506, uploaderUrl='https://rumble.com/user/RSBN', infoType=STREAM, serviceId=6, url='https://rumble.com/v3vgcbm-u.s.-house-votes-on-articles-of-impeachment-on-dhs-secretary-mayorkas-11132.html', name='U.S. House Votes on Articles of Impeachment on DHS Secretary Mayorkas - 11/13/23', thumbnailUrl='https://sp.rmbl.ws/s8/1/I/1/G/9/I1G9n.0kob-small-U.S.-House-Votes-on-Article.jpg', uploaderVerified='false'}"
+                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='Right Side Broadcasting Network', textualUploadDate='null', viewCount=633000, duration=51896, uploaderUrl='https://rumble.com/user/RSBN', infoType=STREAM, serviceId=6, url='https://rumble.com/v46zwql-live-trump-to-deliver-remarks-in-atkinson-new-hampshire-11624.html', name='LIVE REPLAY: Trump to Deliver Remarks in Atkinson, New Hampshire - 1/16/24', thumbnails='[Image {url=https://ak2.rmbl.ws/s8/1/9/z/E/h/9zEhp.0kob.1-small-LIVE-Trump-to-Deliver-Remar.jpg, height=-1, width=-1, estimatedResolutionLevel=UNKNOWN}]', uploaderVerified='false'}",
+                    "StreamInfoItem{streamType=LIVE_STREAM, uploaderName='Right Side Broadcasting Network', textualUploadDate='null', viewCount=5276, duration=-1, uploaderUrl='https://rumble.com/user/RSBN', infoType=STREAM, serviceId=6, url='https://rumble.com/v47mb75-live-president-trump-to-give-remarks-in-concord-new-hampshire-11924.html', name='LIVE: President Trump to Give Remarks in Concord, New Hampshire - 1/19/24', thumbnails='[Image {url=https://ak2.rmbl.ws/s8/1/X/K/D/l/XKDlp.0kob-small-LIVE-President-Trump-to-Giv.jpg, height=-1, width=-1, estimatedResolutionLevel=UNKNOWN}]', uploaderVerified='false'}",
+                    "StreamInfoItem{streamType=VIDEO_STREAM, uploaderName='The Breanna Morello Show', textualUploadDate='null', viewCount=60900, duration=3487, uploaderUrl='https://rumble.com/user/TheBreannaMorelloShow', infoType=STREAM, serviceId=6, url='https://rumble.com/v47zo38-the-breanna-morello-show.html', name='Muslim 'Grooming Gangs' are Raping Children in the U.K. - Tommy Robinson; China Allegedly Creates 100% Lethal COVID Strain - Naomi Wolf | The Breanna', thumbnails='[Image {url=https://ak2.rmbl.ws/s8/1/0/U/1/n/0U1np.0kob-small-The-Breanna-Morello-Show.jpg, height=-1, width=-1, estimatedResolutionLevel=UNKNOWN}]', uploaderVerified='false'}"
             };
 
             RumbleSharedTests.infoItemsResultsTest(extractor.getService(),
