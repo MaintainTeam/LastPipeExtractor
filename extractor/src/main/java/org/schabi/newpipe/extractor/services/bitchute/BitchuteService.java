@@ -2,6 +2,7 @@ package org.schabi.newpipe.extractor.services.bitchute;
 
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.channel.ChannelExtractor;
+import org.schabi.newpipe.extractor.channel.tabs.ChannelTabExtractor;
 import org.schabi.newpipe.extractor.comments.CommentsExtractor;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.kiosk.KioskExtractor;
@@ -15,6 +16,7 @@ import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandlerFactory;
 import org.schabi.newpipe.extractor.playlist.PlaylistExtractor;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteChannelExtractor;
+import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteChannelTabExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteCommentsExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteRecommendedChannelKioskExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteSearchExtractor;
@@ -22,6 +24,7 @@ import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteStreamEx
 import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteSuggestionExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.extractor.BitchuteTrendingKioskExtractor;
 import org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteChannelLinkHandlerFactory;
+import org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteChannelTabLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteCommentsLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteKioskLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.bitchute.linkHandler.BitchuteSearchQueryHandlerFactory;
@@ -59,6 +62,11 @@ public class BitchuteService extends StreamingService {
     @Override
     public ListLinkHandlerFactory getChannelLHFactory() {
         return BitchuteChannelLinkHandlerFactory.getInstance();
+    }
+
+    @Override
+    public ListLinkHandlerFactory getChannelTabLHFactory() {
+        return BitchuteChannelTabLinkHandlerFactory.getInstance();
     }
 
     @Override
@@ -145,6 +153,12 @@ public class BitchuteService extends StreamingService {
     public ChannelExtractor getChannelExtractor(final ListLinkHandler linkHandler)
             throws ExtractionException {
         return new BitchuteChannelExtractor(this, linkHandler);
+    }
+
+    @Override
+    public ChannelTabExtractor getChannelTabExtractor(final ListLinkHandler linkHandler)
+            throws ExtractionException {
+        return new BitchuteChannelTabExtractor(this, linkHandler);
     }
 
     @Override
