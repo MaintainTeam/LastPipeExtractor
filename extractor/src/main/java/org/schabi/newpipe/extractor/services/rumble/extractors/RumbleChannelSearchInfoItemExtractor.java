@@ -2,10 +2,15 @@ package org.schabi.newpipe.extractor.services.rumble.extractors;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.channel.ChannelInfoItemExtractor;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.services.rumble.RumbleParsingHelper;
 import org.schabi.newpipe.extractor.utils.Utils;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import static org.schabi.newpipe.extractor.ListExtractor.ITEM_COUNT_UNKNOWN;
 import static org.schabi.newpipe.extractor.ServiceList.Rumble;
@@ -103,8 +108,10 @@ class RumbleChannelSearchInfoItemExtractor implements ChannelInfoItemExtractor {
         return url;
     }
 
+    @Nonnull
     @Override
-    public String getThumbnailUrl() throws ParsingException {
-        return thumbUrl;
+    public List<Image> getThumbnails() throws ParsingException {
+        return List.of(new Image(thumbUrl,
+                Image.HEIGHT_UNKNOWN, Image.WIDTH_UNKNOWN, Image.ResolutionLevel.UNKNOWN));
     }
 }

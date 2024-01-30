@@ -1,5 +1,6 @@
 package org.schabi.newpipe.extractor.services.rumble.extractors;
 
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
 import org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper;
@@ -7,6 +8,9 @@ import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
 import org.schabi.newpipe.extractor.stream.StreamType;
 import org.schabi.newpipe.extractor.utils.Utils;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class RumbleSearchVideoStreamInfoItemExtractor implements StreamInfoItemExtractor {
@@ -14,7 +18,7 @@ public class RumbleSearchVideoStreamInfoItemExtractor implements StreamInfoItemE
     String textualDate;
     String name;
     String url;
-    String thumbUrl;
+    List<Image> thumbUrls;
     String duration;
     String uploader;
     String uploaderUrl;
@@ -22,17 +26,18 @@ public class RumbleSearchVideoStreamInfoItemExtractor implements StreamInfoItemE
     boolean isLive;
 
     @SuppressWarnings("checkstyle:ParameterNumber")
-    public RumbleSearchVideoStreamInfoItemExtractor(final String name, final String url,
-                                                    final String thumbUrl, final String viewCount,
-                                                    final String textualDate, final String duration,
-                                                    final String uploader, final String uploaderUrl,
-                                                    final DateWrapper uploadDate,
-                                                    final boolean isLive) {
+    public RumbleSearchVideoStreamInfoItemExtractor(
+            final String name, final String url,
+            final List<Image> thumbUrls, final String viewCount,
+            final String textualDate, final String duration,
+            final String uploader, final String uploaderUrl,
+            final DateWrapper uploadDate,
+            final boolean isLive) {
         this.viewCount = viewCount;
         this.textualDate = textualDate;
         this.name = name;
         this.url = url;
-        this.thumbUrl = thumbUrl;
+        this.thumbUrls = thumbUrls;
         this.duration = duration;
         this.uploader = uploader;
         this.uploaderUrl = uploaderUrl;
@@ -110,14 +115,9 @@ public class RumbleSearchVideoStreamInfoItemExtractor implements StreamInfoItemE
         return url;
     }
 
+    @Nonnull
     @Override
-    public String getThumbnailUrl() throws ParsingException {
-        return thumbUrl;
-    }
-
-    @Nullable
-    @Override
-    public String getUploaderAvatarUrl() throws ParsingException {
-        return null;
+    public List<Image> getThumbnails() throws ParsingException {
+        return thumbUrls;
     }
 }

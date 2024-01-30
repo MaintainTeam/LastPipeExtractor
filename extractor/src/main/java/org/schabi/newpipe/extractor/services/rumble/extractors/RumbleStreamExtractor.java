@@ -11,6 +11,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.MediaFormat;
 import org.schabi.newpipe.extractor.MetaInfo;
 import org.schabi.newpipe.extractor.StreamingService;
@@ -109,10 +110,11 @@ public class RumbleStreamExtractor extends StreamExtractor {
 
     @Nonnull
     @Override
-    public String getThumbnailUrl() throws ParsingException {
+    public List<Image> getThumbnails() throws ParsingException {
         assertPageFetched();
         final String thumbUrl = embedJsonStreamInfoObj.getString(videoCoverImageJsonKey);
-        return thumbUrl;
+        return List.of(new Image(thumbUrl,
+                Image.HEIGHT_UNKNOWN, Image.WIDTH_UNKNOWN, Image.ResolutionLevel.UNKNOWN));
     }
 
     @Nonnull
@@ -217,7 +219,7 @@ public class RumbleStreamExtractor extends StreamExtractor {
 
     @Nonnull
     @Override
-    public String getUploaderAvatarUrl() throws ParsingException {
+    public List<Image> getUploaderAvatars() throws ParsingException {
         assertPageFetched();
         final Elements elems = doc.getElementsByClass("media-by--a");
         final String theUserPathToHisAvatar =
@@ -225,7 +227,8 @@ public class RumbleStreamExtractor extends StreamExtractor {
         try {
             final String thumbnailUrl = RumbleParsingHelper
                     .totalMessMethodToGetUploaderThumbnailUrl(theUserPathToHisAvatar, doc);
-            return thumbnailUrl;
+            return List.of(new Image(thumbnailUrl,
+                    Image.HEIGHT_UNKNOWN, Image.WIDTH_UNKNOWN, Image.ResolutionLevel.UNKNOWN));
         } catch (final Exception e) {
             throw new ParsingException(
                     "Could not extract the avatar url: " + theUserPathToHisAvatar);
@@ -241,12 +244,6 @@ public class RumbleStreamExtractor extends StreamExtractor {
     @Nonnull
     @Override
     public String getSubChannelName() {
-        return "";
-    }
-
-    @Nonnull
-    @Override
-    public String getSubChannelAvatarUrl() {
         return "";
     }
 

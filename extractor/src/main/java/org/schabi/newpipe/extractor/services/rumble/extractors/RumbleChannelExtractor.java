@@ -4,6 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.channel.ChannelExtractor;
@@ -17,6 +18,7 @@ import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -85,21 +87,36 @@ public class RumbleChannelExtractor extends ChannelExtractor {
         return name;
     }
 
+    @Nonnull
     @Override
-    public String getAvatarUrl() throws ParsingException {
-        final String url = RumbleParsingHelper.extractSafely(true,
+    public List<Image> getAvatars() throws ParsingException {
+        final String url;
+        url = RumbleParsingHelper.extractSafely(false,
                 "Could not get avatar url",
                 () -> doc.select("div[class~=(channel|listing)-header--content] img")
                         .first().attr("src")
         );
-        return url;
+
+        if (null == url) { // try to determine if there is no avatar set at all
+            if (!doc.select("[class~=channel-header--letter border-box]").isEmpty()) {
+                return List.of();
+            } else {
+                throw new ParsingException(
+                        "there is neither a avatar nor stated that there is none");
+            }
+        }
+        return List.of(new Image(url,
+                Image.HEIGHT_UNKNOWN, Image.WIDTH_UNKNOWN, Image.ResolutionLevel.UNKNOWN));
     }
 
+    @Nonnull
     @Override
-    public String getBannerUrl() throws ParsingException {
-        return RumbleParsingHelper.extractSafely(false,
+    public List<Image> getBanners() throws ParsingException {
+        final String url = RumbleParsingHelper.extractSafely(false,
                 "Could not get banner url",
                 this::extractBannerUrl);
+        return List.of(new Image(url,
+                Image.HEIGHT_UNKNOWN, Image.WIDTH_UNKNOWN, Image.ResolutionLevel.UNKNOWN));
     }
 
     private String extractBannerUrl() {
@@ -152,9 +169,9 @@ public class RumbleChannelExtractor extends ChannelExtractor {
         return "";
     }
 
-    @Override
-    public String getParentChannelAvatarUrl() throws ParsingException {
-        return "";
+    @Nonnull
+    public List<Image> getParentChannelAvatars() throws ParsingException {
+        return List.of();
     }
 
     @Override
