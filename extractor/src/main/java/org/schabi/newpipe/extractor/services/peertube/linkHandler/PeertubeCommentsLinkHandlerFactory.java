@@ -7,6 +7,8 @@ import org.schabi.newpipe.extractor.exceptions.FoundAdException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandlerFactory;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -32,7 +34,12 @@ public final class PeertubeCommentsLinkHandlerFactory extends ListLinkHandlerFac
 
     @Override
     public boolean onAcceptUrl(final String url) throws FoundAdException {
-        return url.contains("/videos/") || url.contains("/w/");
+        try {
+            new URL(url);
+            return url.contains("/videos/") || url.contains("/w/");
+        } catch (final MalformedURLException e) {
+            return false;
+        }
     }
 
     @Override
