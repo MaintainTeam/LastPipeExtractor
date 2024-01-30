@@ -1,5 +1,6 @@
 package org.schabi.newpipe.extractor.services.bitchute.extractor;
 
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.services.bitchute.search.filter.BitchuteFilters;
 import org.schabi.newpipe.extractor.search.filter.FilterItem;
 import com.grack.nanojson.JsonArray;
@@ -264,12 +265,6 @@ public class BitchuteSearchExtractor extends SearchExtractor {
             return this.uploaderUrl;
         }
 
-        @Nullable
-        @Override
-        public String getUploaderAvatarUrl() throws ParsingException {
-            return null;
-        }
-
         @Override
         public boolean isUploaderVerified() throws ParsingException {
             return false; // TODO evermind: this is just to get it compiled not verified
@@ -297,9 +292,11 @@ public class BitchuteSearchExtractor extends SearchExtractor {
             return url;
         }
 
+        @Nonnull
         @Override
-        public String getThumbnailUrl() throws ParsingException {
-            return thumbUrl;
+        public List<Image> getThumbnails() throws ParsingException {
+            return List.of(new Image(thumbUrl,
+                    Image.HEIGHT_UNKNOWN, Image.WIDTH_UNKNOWN, Image.ResolutionLevel.UNKNOWN));
         }
     }
 
@@ -348,9 +345,11 @@ public class BitchuteSearchExtractor extends SearchExtractor {
             return url;
         }
 
+        @Nonnull
         @Override
-        public String getThumbnailUrl() throws ParsingException {
-            return thumbUrl;
+        public List<Image> getThumbnails() throws ParsingException {
+            return List.of(new Image(thumbUrl,
+                    Image.HEIGHT_UNKNOWN, Image.WIDTH_UNKNOWN, Image.ResolutionLevel.UNKNOWN));
         }
     }
 }

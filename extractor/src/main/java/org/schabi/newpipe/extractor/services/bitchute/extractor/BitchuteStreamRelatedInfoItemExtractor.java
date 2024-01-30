@@ -1,6 +1,7 @@
 package org.schabi.newpipe.extractor.services.bitchute.extractor;
 
 import org.jsoup.nodes.Element;
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
 import org.schabi.newpipe.extractor.localization.TimeAgoParser;
@@ -9,6 +10,9 @@ import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
 import org.schabi.newpipe.extractor.stream.StreamType;
 import org.schabi.newpipe.extractor.utils.Utils;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BitchuteStreamRelatedInfoItemExtractor implements StreamInfoItemExtractor {
@@ -114,18 +118,16 @@ public class BitchuteStreamRelatedInfoItemExtractor implements StreamInfoItemExt
         }
     }
 
+    @Nonnull
     @Override
-    public String getThumbnailUrl() throws ParsingException {
+    public List<Image> getThumbnails() throws ParsingException {
         try {
-            return element.select(".video-card-image img").first().attr("data-src");
+            final String thumbnailUrl = element.select(
+                    ".video-card-image img").first().attr("data-src");
+            return List.of(new Image(thumbnailUrl,
+                    Image.HEIGHT_UNKNOWN, Image.WIDTH_UNKNOWN, Image.ResolutionLevel.UNKNOWN));
         } catch (final Exception e) {
             throw new ParsingException("Error parsing thumbnail url");
         }
-    }
-
-    @Nullable
-    @Override
-    public String getUploaderAvatarUrl() throws ParsingException {
-        return null;
     }
 }

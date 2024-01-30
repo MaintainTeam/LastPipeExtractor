@@ -1,8 +1,13 @@
 package org.schabi.newpipe.extractor.services.bitchute.extractor;
 
 import org.jsoup.nodes.Element;
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.channel.ChannelInfoItemExtractor;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 public class BitchuteRecommendedChannelInfoItemExtractor implements ChannelInfoItemExtractor {
 
@@ -51,14 +56,19 @@ public class BitchuteRecommendedChannelInfoItemExtractor implements ChannelInfoI
         }
     }
 
+    @Nonnull
     @Override
-    public String getThumbnailUrl() throws ParsingException {
+    public List<Image> getThumbnails() throws ParsingException {
         try {
-            return element.select("a > img")
+            final String thumbnailUrl = element.select("a > img")
                     .first().attr("data-src");
+            return List.of(
+                    new Image(thumbnailUrl,
+                            Image.HEIGHT_UNKNOWN,
+                            Image.WIDTH_UNKNOWN,
+                            Image.ResolutionLevel.UNKNOWN));
         } catch (final Exception e) {
             throw new ParsingException("Error parsing thumbnail url");
         }
     }
-
 }

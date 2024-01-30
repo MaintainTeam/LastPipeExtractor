@@ -11,6 +11,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.schabi.newpipe.extractor.Page;
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.channel.ChannelExtractor;
 import org.schabi.newpipe.extractor.downloader.Downloader;
@@ -76,8 +77,9 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
         }
     }
 
+    @Nonnull
     @Override
-    public String getAvatarUrl() throws ParsingException {
+    public List<Image> getAvatars() throws ParsingException {
         try {
             if (avatarUrl == null) {
                 avatarUrl = doc.select("#page-bar > div > div > div.image-container > img")
@@ -86,7 +88,11 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
                     avatarUrl = BitchuteConstants.BASE_URL + avatarUrl;
                 }
             }
-            return avatarUrl;
+            return List.of(
+                    new Image(avatarUrl,
+                            Image.HEIGHT_UNKNOWN,
+                            Image.WIDTH_UNKNOWN,
+                            Image.ResolutionLevel.UNKNOWN));
         } catch (final Exception e) {
             throw new ParsingException("Error parsing Channel Avatar Url");
         }
@@ -111,9 +117,10 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
         return null;
     }
 
+    @Nonnull
     @Override
-    public String getParentChannelAvatarUrl() throws ParsingException {
-        return null;
+    public List<Image> getParentChannelAvatars() throws ParsingException {
+        return Collections.emptyList();
     }
 
     @Override

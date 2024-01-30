@@ -1,6 +1,7 @@
 package org.schabi.newpipe.extractor.services.bitchute.extractor;
 
 import org.jsoup.nodes.Element;
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
 import org.schabi.newpipe.extractor.services.bitchute.BitchuteConstants;
@@ -14,7 +15,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class BitchuteChannelStreamInfoItemExtractor implements StreamInfoItemExtractor {
@@ -84,10 +87,17 @@ public abstract class BitchuteChannelStreamInfoItemExtractor implements StreamIn
                 .absUrl("href");
     }
 
+    @Nonnull
     @Override
-    public String getThumbnailUrl() throws ParsingException {
-        return element.select("div.channel-videos-image > img").first()
-                .absUrl("data-src");
+    public List<Image> getThumbnails() throws ParsingException {
+        final String thumbnailUrl = element.select(
+                "div.channel-videos-image > img").first().absUrl("data-src");
+
+        return List.of(
+                new Image(thumbnailUrl,
+                        Image.HEIGHT_UNKNOWN,
+                        Image.WIDTH_UNKNOWN,
+                        Image.ResolutionLevel.UNKNOWN));
     }
 
     /**
@@ -106,18 +116,12 @@ public abstract class BitchuteChannelStreamInfoItemExtractor implements StreamIn
                     + "\", \"uploaderUrl\": \"" + getUploaderUrl()
                     + "\", \"name\": \"" + getName()
                     + "\", \"url\": \"" + getUrl()
-                    + "\", \"thumbnailUrl\": \"" + getThumbnailUrl()
+                    + "\", \"thumbnailUrls\": \"" + getThumbnails()
                     + "\", \"isUploaderVerified\": \"" + isUploaderVerified()
                     + "\"}";
         } catch (final ParsingException e) {
             e.printStackTrace();
         }
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public String getUploaderAvatarUrl() throws ParsingException {
         return null;
     }
 }

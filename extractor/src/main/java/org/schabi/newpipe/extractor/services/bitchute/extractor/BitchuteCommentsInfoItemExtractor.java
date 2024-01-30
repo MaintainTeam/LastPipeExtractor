@@ -2,6 +2,7 @@ package org.schabi.newpipe.extractor.services.bitchute.extractor;
 
 import com.grack.nanojson.JsonObject;
 
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.comments.CommentsInfoItemExtractor;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.localization.DateWrapper;
@@ -10,7 +11,9 @@ import org.schabi.newpipe.extractor.stream.Description;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BitchuteCommentsInfoItemExtractor implements CommentsInfoItemExtractor {
@@ -37,9 +40,13 @@ public class BitchuteCommentsInfoItemExtractor implements CommentsInfoItemExtrac
         return json.getString("fullname");
     }
 
+    @Nonnull
     @Override
-    public String getUploaderAvatarUrl() {
-        return BitchuteConstants.BASE_URL + json.getString("profile_picture_url");
+    public List<Image> getUploaderAvatars() throws ParsingException {
+        final String avatarUrl =
+                BitchuteConstants.BASE_URL + json.getString("profile_picture_url");
+        return List.of(new Image(avatarUrl,
+                Image.HEIGHT_UNKNOWN, Image.WIDTH_UNKNOWN, Image.ResolutionLevel.UNKNOWN));
     }
 
     @Override
@@ -73,9 +80,10 @@ public class BitchuteCommentsInfoItemExtractor implements CommentsInfoItemExtrac
         return url;
     }
 
+    @Nonnull
     @Override
-    public String getThumbnailUrl() {
-        return getUploaderAvatarUrl();
+    public List<Image> getThumbnails() throws ParsingException {
+        return getUploaderAvatars();
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.schabi.newpipe.extractor.services.bitchute.extractor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.MediaFormat;
 import org.schabi.newpipe.extractor.MetaInfo;
@@ -116,9 +117,12 @@ public class BitchuteStreamExtractor extends StreamExtractor {
 
     @Nonnull
     @Override
-    public String getThumbnailUrl() throws ParsingException {
+    public List<Image> getThumbnails() throws ParsingException {
         try {
-            return doc.select("#player").first().attr("poster");
+            final String thumbUrl =
+                    doc.select("#player").first().attr("poster");
+            return List.of(new Image(thumbUrl,
+                    Image.HEIGHT_UNKNOWN, Image.WIDTH_UNKNOWN, Image.ResolutionLevel.UNKNOWN));
         } catch (final Exception e) {
             throw new ParsingException("Error parsing thumbnail url");
         }
@@ -258,10 +262,12 @@ public class BitchuteStreamExtractor extends StreamExtractor {
 
     @Nonnull
     @Override
-    public String getUploaderAvatarUrl() throws ParsingException {
+    public List<Image> getUploaderAvatars() throws ParsingException {
         try {
-            return doc.select("#video-watch div.image-container > a > img")
+            final String thumbnailUrl = doc.select("#video-watch div.image-container > a > img")
                     .first().attr("data-src");
+            return List.of(new Image(thumbnailUrl,
+                    Image.HEIGHT_UNKNOWN, Image.WIDTH_UNKNOWN, Image.ResolutionLevel.UNKNOWN));
         } catch (final Exception e) {
             throw new ParsingException("Error parsing upload avatar url");
         }
@@ -276,12 +282,6 @@ public class BitchuteStreamExtractor extends StreamExtractor {
     @Nonnull
     @Override
     public String getSubChannelName() {
-        return ""; // TODO evermind: this is just to get it compiled not verified
-    }
-
-    @Nonnull
-    @Override
-    public String getSubChannelAvatarUrl() {
         return ""; // TODO evermind: this is just to get it compiled not verified
     }
 
