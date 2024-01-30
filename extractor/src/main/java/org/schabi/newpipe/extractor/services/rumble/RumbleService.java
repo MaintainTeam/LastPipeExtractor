@@ -2,6 +2,7 @@ package org.schabi.newpipe.extractor.services.rumble;
 
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.channel.ChannelExtractor;
+import org.schabi.newpipe.extractor.channel.tabs.ChannelTabExtractor;
 import org.schabi.newpipe.extractor.comments.CommentsExtractor;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.kiosk.KioskExtractor;
@@ -15,10 +16,12 @@ import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandlerFactory;
 import org.schabi.newpipe.extractor.playlist.PlaylistExtractor;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
 import org.schabi.newpipe.extractor.services.rumble.extractors.RumbleChannelExtractor;
+import org.schabi.newpipe.extractor.services.rumble.extractors.RumbleChannelTabExtractor;
 import org.schabi.newpipe.extractor.services.rumble.extractors.RumbleSearchExtractor;
 import org.schabi.newpipe.extractor.services.rumble.extractors.RumbleStreamExtractor;
 import org.schabi.newpipe.extractor.services.rumble.extractors.RumbleTrendingExtractor;
 import org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleChannelLinkHandlerFactory;
+import org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleChannelTabLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleSearchQueryHandlerFactory;
 import org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleStreamLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleTrendingLinkHandlerFactory;
@@ -52,6 +55,11 @@ public class RumbleService extends StreamingService {
     }
 
     @Override
+    public ListLinkHandlerFactory getChannelTabLHFactory() {
+        return RumbleChannelTabLinkHandlerFactory.getInstance();
+    }
+
+    @Override
     public ListLinkHandlerFactory getPlaylistLHFactory() {
         return null;
     }
@@ -69,6 +77,12 @@ public class RumbleService extends StreamingService {
     @Override
     public ChannelExtractor getChannelExtractor(final ListLinkHandler linkHandler) {
         return new RumbleChannelExtractor(this, linkHandler);
+    }
+
+    @Override
+    public ChannelTabExtractor getChannelTabExtractor(final ListLinkHandler linkHandler)
+            throws ExtractionException {
+        return new RumbleChannelTabExtractor(this, linkHandler);
     }
 
     @Override

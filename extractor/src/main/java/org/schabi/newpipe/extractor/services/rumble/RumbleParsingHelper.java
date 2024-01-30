@@ -168,7 +168,11 @@ public final class RumbleParsingHelper {
         }
 
         // extract uploader name
-        final String path = thumbnailUrl.substring(thumbnailUrl.lastIndexOf("/") + 1);
+        final int skipNoOfLetters = 5;
+        final String path = thumbnailUrl.substring(thumbnailUrl.lastIndexOf("/")
+                + 1 // skip '/'
+                // the letters are not relevant but cause problems if there is a '-' -> skip them
+                + skipNoOfLetters);
         final String[] splitPath = path.split("-", 0);
         final String theUploader = splitPath[1];
 

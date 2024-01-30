@@ -1,8 +1,5 @@
 package org.schabi.newpipe.extractor.services.rumble.extractors;
 
-import org.schabi.newpipe.extractor.search.filter.FilterItem;
-import org.schabi.newpipe.extractor.services.rumble.search.filter.RumbleFilters;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,26 +14,28 @@ import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
+import org.schabi.newpipe.extractor.search.filter.FilterItem;
+import org.schabi.newpipe.extractor.services.rumble.search.filter.RumbleFilters;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
-
-import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import static org.schabi.newpipe.extractor.utils.Utils.isNullOrEmpty;
 
 public class RumbleSearchExtractor extends SearchExtractor {
-    private Document doc;
     RumbleCommonCodeTrendingAndSearching rumbleCommonCodeTrendingAndSearching;
+    private Document doc;
 
     public RumbleSearchExtractor(final StreamingService service,
                                  final SearchQueryHandler linkHandler) {
         super(service, linkHandler);
-        rumbleCommonCodeTrendingAndSearching = new RumbleCommonCodeTrendingAndSearching();
-
+        rumbleCommonCodeTrendingAndSearching = new RumbleCommonCodeTrendingAndSearching(
+                new RumbleSearchTrendingItemsExtractorImpl());
     }
 
     @Override

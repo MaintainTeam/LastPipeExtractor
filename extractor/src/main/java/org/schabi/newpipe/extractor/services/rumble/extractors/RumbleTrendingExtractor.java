@@ -11,6 +11,7 @@ import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.kiosk.KioskExtractor;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler;
 import org.schabi.newpipe.extractor.services.rumble.RumbleParsingHelper;
+import org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleTrendingLinkHandlerFactory;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 
 import java.io.IOException;
@@ -28,8 +29,16 @@ public class RumbleTrendingExtractor extends KioskExtractor<StreamInfoItem> {
         super(service, linkHandler, kioskId);
 
         try {
-            sharedTrendingAndChannelCode =
-                    new RumbleCommonCodeTrendingAndChannel(getServiceId(), getUrl(), kioskId);
+            final RumbleItemsExtractorImpl itemsExtractor;
+            if (RumbleTrendingLinkHandlerFactory.LIVE.equals(kioskId)) {
+                itemsExtractor = new RumbleBrowseLiveItemExtractorImpl();
+            } else if (RumbleTrendingLinkHandlerFactory.EDITOR_PICKS.equals(kioskId)) {
+                itemsExtractor = new RumbleEditorPicksItemsExtractorImpl();
+            } else {
+                itemsExtractor = new RumbleSearchTrendingItemsExtractorImpl();
+            }
+            sharedTrendingAndChannelCode = new RumbleCommonCodeTrendingAndChannel(
+                    getServiceId(), getUrl(), itemsExtractor);
         } catch (final ParsingException e) {
             e.printStackTrace();
         }
@@ -64,12 +73,12 @@ public class RumbleTrendingExtractor extends KioskExtractor<StreamInfoItem> {
                         NewPipe.getPreferredLocalization())
                 .responseBody());
 
-        return sharedTrendingAndChannelCode.extractAndGetInfoItemsFromPage(doc);
+        return sharedTrendingAndChannelCode.extractAndGetStreamInfoItemsFromPage(doc);
     }
 
     @Nonnull
     @Override
     public InfoItemsPage<StreamInfoItem> getInitialPage() throws IOException, ExtractionException {
-        return sharedTrendingAndChannelCode.extractAndGetInfoItemsFromPage(doc);
+        return sharedTrendingAndChannelCode.extractAndGetStreamInfoItemsFromPage(doc);
     }
 }

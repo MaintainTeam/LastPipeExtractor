@@ -2,41 +2,37 @@ package org.schabi.newpipe.extractor.services.rumble.extractors;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.schabi.newpipe.extractor.Image;
-import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.channel.ChannelExtractor;
 import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler;
+import org.schabi.newpipe.extractor.search.filter.FilterItem;
+import org.schabi.newpipe.extractor.services.rumble.RumbleChannelParsingHelper;
 import org.schabi.newpipe.extractor.services.rumble.RumbleParsingHelper;
 import org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleChannelLinkHandlerFactory;
-import org.schabi.newpipe.extractor.stream.StreamInfoItem;
+import org.schabi.newpipe.extractor.services.rumble.linkHandler.RumbleChannelTabLinkHandlerFactory;
+import org.schabi.newpipe.extractor.utils.BraveNewPipeExtractorUtils;
 import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import static org.schabi.newpipe.extractor.ListExtractor.ITEM_COUNT_UNKNOWN;
+
 public class RumbleChannelExtractor extends ChannelExtractor {
 
-    private RumbleCommonCodeTrendingAndChannel sharedTrendingAndChannelCode;
     private Document doc;
 
     public RumbleChannelExtractor(final StreamingService service,
                                   final ListLinkHandler linkHandler) {
         super(service, linkHandler);
-
-        try {
-            sharedTrendingAndChannelCode =
-                    new RumbleCommonCodeTrendingAndChannel(getServiceId(), getUrl(), null);
-        } catch (final ParsingException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -60,31 +56,14 @@ public class RumbleChannelExtractor extends ChannelExtractor {
     public String getId() throws ParsingException {
         final String channelId = RumbleParsingHelper.extractSafely(true,
                 "Could not get channel id",
-                () -> getChannelId());
+                () -> RumbleChannelParsingHelper.getChannelId(doc));
         return channelId;
-    }
-
-    private String getChannelId() {
-        final Element idData =
-                doc.select("div[class~=(listing|channel)-header--buttons] div").first();
-        final String channelName = idData.attr("data-slug");
-        final String type = idData.attr("data-type");
-        if ("channel".equals(type)) {
-            return "c/" + channelName;
-        } else if ("user".equals(type)) {
-            return "user/" + channelName;
-        }
-        return null;
     }
 
     @Nonnull
     @Override
     public String getName() throws ParsingException {
-        final String name = RumbleParsingHelper.extractSafely(true,
-                "Could not get channel name",
-                () -> doc.getElementsByTag("title").first().text()
-        );
-        return name;
+        return RumbleChannelParsingHelper.getChannelName(doc);
     }
 
     @Nonnull
@@ -184,21 +163,14 @@ public class RumbleChannelExtractor extends ChannelExtractor {
         return verified != null;
     }
 
-
-    @Override
-    public InfoItemsPage<StreamInfoItem> getPage(final Page page)
-            throws IOException, ExtractionException {
-        if (null == page) {
-            return null;
-        }
-
-        doc = Jsoup.parse(getDownloader().get(page.getUrl()).responseBody());
-        return sharedTrendingAndChannelCode.extractAndGetInfoItemsFromPage(doc);
-    }
-
     @Nonnull
     @Override
-    public InfoItemsPage<StreamInfoItem> getInitialPage() throws IOException, ExtractionException {
-        return sharedTrendingAndChannelCode.extractAndGetInfoItemsFromPage(doc);
+    public List<ListLinkHandler> getTabs() throws ParsingException {
+        final String id = getId();
+
+        final Map<FilterItem, String> tab2Suffix =
+                RumbleChannelTabLinkHandlerFactory.getTab2UrlSuffixes();
+
+        return BraveNewPipeExtractorUtils.generateTabsFromSuffixMap(getUrl(), id, tab2Suffix);
     }
 }
