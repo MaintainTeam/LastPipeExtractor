@@ -5,6 +5,7 @@ import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonParser;
 import com.grack.nanojson.JsonParserException;
 
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.MetaInfo;
 import org.schabi.newpipe.extractor.MultiInfoItemsCollector;
@@ -37,7 +38,8 @@ public class MediaCCCSearchExtractor extends SearchExtractor {
         super(service, linkHandler);
         try {
             conferenceKiosk = new MediaCCCConferenceKiosk(service,
-                    new MediaCCCConferencesListLinkHandlerFactory().fromId("conferences"),
+                    MediaCCCConferencesListLinkHandlerFactory.getInstance()
+                            .fromId("conferences"),
                     "conferences");
         } catch (final Exception e) {
             e.printStackTrace();
@@ -164,9 +166,10 @@ public class MediaCCCSearchExtractor extends SearchExtractor {
                         return item.getUrl();
                     }
 
+                    @Nonnull
                     @Override
-                    public String getThumbnailUrl() {
-                        return item.getThumbnailUrl();
+                    public List<Image> getThumbnails() {
+                        return item.getThumbnails();
                     }
                 });
             }

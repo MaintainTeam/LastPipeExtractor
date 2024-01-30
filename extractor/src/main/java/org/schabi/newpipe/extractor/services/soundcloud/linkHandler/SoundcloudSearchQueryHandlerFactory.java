@@ -20,25 +20,24 @@ import javax.annotation.Nullable;
 
 public final class SoundcloudSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
 
+    private static final SoundcloudSearchQueryHandlerFactory INSTANCE =
+            new SoundcloudSearchQueryHandlerFactory();
+
     public static final int ITEMS_PER_PAGE = 10;
-    private static SoundcloudSearchQueryHandlerFactory instance = null;
 
     private SoundcloudSearchQueryHandlerFactory() {
         super(new SoundcloudFilters());
     }
 
-    public static synchronized SoundcloudSearchQueryHandlerFactory getInstance() {
-        if (instance == null) {
-            instance = new SoundcloudSearchQueryHandlerFactory();
-        }
-        return instance;
+    public static SoundcloudSearchQueryHandlerFactory getInstance() {
+        return INSTANCE;
     }
 
     @Override
     public String getUrl(final String id,
                          @Nonnull final List<FilterItem> selectedContentFilter,
                          @Nullable final List<FilterItem> selectedSortFilter)
-            throws ParsingException {
+            throws ParsingException, UnsupportedOperationException {
 
         String url = SOUNDCLOUD_API_V2_URL + "search";
         String sortQuery = "";

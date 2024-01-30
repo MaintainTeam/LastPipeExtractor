@@ -29,7 +29,8 @@ public class RumbleChannelLinkHandlerFactory extends ListLinkHandlerFactory {
      */
     @Override
     public String getUrl(final String id, final List<FilterItem> contentFilters,
-                         final List<FilterItem> searchFilter) {
+                         final List<FilterItem> searchFilter)
+            throws ParsingException, UnsupportedOperationException {
         return "https://rumble.com/" + id;
     }
 

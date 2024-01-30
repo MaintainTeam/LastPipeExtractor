@@ -10,15 +10,27 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class MediaCCCConferencesListLinkHandlerFactory extends ListLinkHandlerFactory {
+public final class MediaCCCConferencesListLinkHandlerFactory extends ListLinkHandlerFactory {
+
+    private static final MediaCCCConferencesListLinkHandlerFactory INSTANCE =
+            new MediaCCCConferencesListLinkHandlerFactory();
+
+    private MediaCCCConferencesListLinkHandlerFactory() {
+    }
+
+    public static MediaCCCConferencesListLinkHandlerFactory getInstance() {
+        return INSTANCE;
+    }
+
     @Override
-    public String getId(final String url) throws ParsingException {
+    public String getId(final String url) throws ParsingException, UnsupportedOperationException {
         return "conferences";
     }
 
     @Override
     public String getUrl(final String id, @Nonnull final List<FilterItem> contentFilter,
-                         @Nullable final List<FilterItem> sortFilter) throws ParsingException {
+                         @Nullable final List<FilterItem> sortFilter)
+            throws ParsingException, UnsupportedOperationException {
         return "https://media.ccc.de/public/conferences";
     }
 

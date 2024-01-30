@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.schabi.newpipe.extractor.ServiceList.PeerTube;
+import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestImageCollection;
 
 public class PeertubeCommentsExtractorTest {
     public static class Default {
@@ -73,12 +74,12 @@ public class PeertubeCommentsExtractorTest {
                     .forEach(commentsInfoItem -> {
                         assertFalse(Utils.isBlank(commentsInfoItem.getUploaderUrl()));
                         assertFalse(Utils.isBlank(commentsInfoItem.getUploaderName()));
-                        assertFalse(Utils.isBlank(commentsInfoItem.getUploaderAvatarUrl()));
+                        defaultTestImageCollection(commentsInfoItem.getUploaderAvatars());
                         assertFalse(Utils.isBlank(commentsInfoItem.getCommentId()));
                         assertFalse(Utils.isBlank(commentsInfoItem.getCommentText().getContent()));
                         assertFalse(Utils.isBlank(commentsInfoItem.getName()));
                         assertFalse(Utils.isBlank(commentsInfoItem.getTextualUploadDate()));
-                        assertFalse(Utils.isBlank(commentsInfoItem.getThumbnailUrl()));
+                        defaultTestImageCollection(commentsInfoItem.getThumbnails());
                         assertFalse(Utils.isBlank(commentsInfoItem.getUrl()));
                         assertEquals(-1, commentsInfoItem.getLikeCount());
                         assertTrue(Utils.isBlank(commentsInfoItem.getTextualLikeCount()));
@@ -126,26 +127,46 @@ public class PeertubeCommentsExtractorTest {
      */
     public static class NestedComments {
         private static PeertubeCommentsExtractor extractor;
+        private static InfoItemsPage<CommentsInfoItem> comments = null;
 
         @BeforeAll
         public static void setUp() throws Exception {
             NewPipe.init(DownloaderTestImpl.getInstance());
             extractor = (PeertubeCommentsExtractor) PeerTube
                     .getCommentsExtractor("https://share.tube/w/vxu4uTstUBAUromWwXGHrq");
+            comments = extractor.getInitialPage();
         }
 
         @Test
         void testGetComments() throws IOException, ExtractionException {
-            final InfoItemsPage<CommentsInfoItem> comments = extractor.getInitialPage();
             assertFalse(comments.getItems().isEmpty());
             final Optional<CommentsInfoItem> nestedCommentHeadOpt =
-                    comments.getItems()
-                            .stream()
-                            .filter(c -> c.getCommentId().equals("9770"))
-                            .findFirst();
+                    findCommentWithId("9770", comments.getItems());
             assertTrue(nestedCommentHeadOpt.isPresent());
             assertTrue(findNestedCommentWithId("9773", nestedCommentHeadOpt.get()), "The nested comment replies were not found");
         }
+
+        @Test
+        void testHasCreatorReply() {
+            assertCreatorReply("9770", true);
+            assertCreatorReply("9852", false);
+            assertCreatorReply("11239", false);
+        }
+
+        private static void assertCreatorReply(final String id, final boolean expected) {
+            final Optional<CommentsInfoItem> comment =
+                    findCommentWithId(id, comments.getItems());
+            assertTrue(comment.isPresent());
+            assertEquals(expected, comment.get().hasCreatorReply());
+        }
+    }
+
+    private static Optional<CommentsInfoItem> findCommentWithId(
+            final String id, final List<CommentsInfoItem> comments) {
+        return comments
+                .stream()
+                .filter(c -> c.getCommentId().equals(id))
+                .findFirst();
     }
 
     private static boolean findNestedCommentWithId(final String id, final CommentsInfoItem comment)

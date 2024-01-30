@@ -4,16 +4,18 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderTestImpl;
 import org.schabi.newpipe.extractor.NewPipe;
-import org.schabi.newpipe.extractor.channel.ChannelExtractor;
+import org.schabi.newpipe.extractor.channel.tabs.ChannelTabs;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.services.BaseChannelExtractorTest;
 import org.schabi.newpipe.extractor.services.soundcloud.extractors.SoundcloudChannelExtractor;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.schabi.newpipe.extractor.ExtractorAsserts.assertEmpty;
-import static org.schabi.newpipe.extractor.ExtractorAsserts.assertIsSecureUrl;
+import static org.schabi.newpipe.extractor.ExtractorAsserts.assertTabsContain;
 import static org.schabi.newpipe.extractor.ServiceList.SoundCloud;
-import static org.schabi.newpipe.extractor.services.DefaultTests.*;
+import static org.schabi.newpipe.extractor.services.DefaultTests.defaultTestImageCollection;
 
 /**
  * Test for {@link SoundcloudChannelExtractor}
@@ -60,20 +62,6 @@ public class SoundcloudChannelExtractorTest {
         }
 
         /*//////////////////////////////////////////////////////////////////////////
-        // ListExtractor
-        //////////////////////////////////////////////////////////////////////////*/
-
-        @Test
-        public void testRelatedItems() throws Exception {
-            defaultTestRelatedItems(extractor);
-        }
-
-        @Test
-        public void testMoreRelatedItems() throws Exception {
-            defaultTestMoreItems(extractor);
-        }
-
-        /*//////////////////////////////////////////////////////////////////////////
         // ChannelExtractor
         //////////////////////////////////////////////////////////////////////////*/
 
@@ -83,13 +71,13 @@ public class SoundcloudChannelExtractorTest {
         }
 
         @Test
-        public void testAvatarUrl() {
-            assertIsSecureUrl(extractor.getAvatarUrl());
+        public void testAvatars() {
+            defaultTestImageCollection(extractor.getAvatars());
         }
 
         @Test
-        public void testBannerUrl() {
-            assertIsSecureUrl(extractor.getBannerUrl());
+        public void testBanners() {
+            defaultTestImageCollection(extractor.getBanners());
         }
 
         @Test
@@ -106,6 +94,19 @@ public class SoundcloudChannelExtractorTest {
         public void testVerified() throws Exception {
             assertTrue(extractor.isVerified());
         }
+
+        @Test
+        @Override
+        public void testTabs() throws Exception {
+            assertTabsContain(extractor.getTabs(), ChannelTabs.TRACKS, ChannelTabs.PLAYLISTS,
+                    ChannelTabs.ALBUMS);
+        }
+
+        @Test
+        @Override
+        public void testTags() throws Exception {
+            assertTrue(extractor.getTags().isEmpty());
+        }
     }
 
     public static class DubMatix implements BaseChannelExtractorTest {
@@ -117,16 +118,6 @@ public class SoundcloudChannelExtractorTest {
             extractor = (SoundcloudChannelExtractor) SoundCloud
                     .getChannelExtractor("https://soundcloud.com/dubmatix");
             extractor.fetchPage();
-        }
-
-        /*//////////////////////////////////////////////////////////////////////////
-        // Additional Testing
-        //////////////////////////////////////////////////////////////////////////*/
-
-        @Test
-        public void testGetPageInNewExtractor() throws Exception {
-            final ChannelExtractor newExtractor = SoundCloud.getChannelExtractor(extractor.getUrl());
-            defaultTestGetPageInNewExtractor(extractor, newExtractor);
         }
 
         /*//////////////////////////////////////////////////////////////////////////
@@ -159,20 +150,6 @@ public class SoundcloudChannelExtractorTest {
         }
 
         /*//////////////////////////////////////////////////////////////////////////
-        // ListExtractor
-        //////////////////////////////////////////////////////////////////////////*/
-
-        @Test
-        public void testRelatedItems() throws Exception {
-            defaultTestRelatedItems(extractor);
-        }
-
-        @Test
-        public void testMoreRelatedItems() throws Exception {
-            defaultTestMoreItems(extractor);
-        }
-
-        /*//////////////////////////////////////////////////////////////////////////
         // ChannelExtractor
         //////////////////////////////////////////////////////////////////////////*/
 
@@ -182,13 +159,13 @@ public class SoundcloudChannelExtractorTest {
         }
 
         @Test
-        public void testAvatarUrl() {
-            assertIsSecureUrl(extractor.getAvatarUrl());
+        public void testAvatars() {
+            defaultTestImageCollection(extractor.getAvatars());
         }
 
         @Test
-        public void testBannerUrl() {
-            assertIsSecureUrl(extractor.getBannerUrl());
+        public void testBanners() {
+            defaultTestImageCollection(extractor.getBanners());
         }
 
         @Test
@@ -204,6 +181,19 @@ public class SoundcloudChannelExtractorTest {
         @Override
         public void testVerified() throws Exception {
             assertTrue(extractor.isVerified());
+        }
+
+        @Test
+        @Override
+        public void testTabs() throws Exception {
+            assertTabsContain(extractor.getTabs(), ChannelTabs.TRACKS, ChannelTabs.PLAYLISTS,
+                    ChannelTabs.ALBUMS);
+        }
+
+        @Test
+        @Override
+        public void testTags() throws Exception {
+            assertTrue(extractor.getTags().isEmpty());
         }
     }
 }

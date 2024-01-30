@@ -11,11 +11,22 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class MediaCCCLiveListLinkHandlerFactory extends ListLinkHandlerFactory {
+public final class MediaCCCLiveListLinkHandlerFactory extends ListLinkHandlerFactory {
+
+    private static final MediaCCCLiveListLinkHandlerFactory INSTANCE =
+            new MediaCCCLiveListLinkHandlerFactory();
+
     private static final String STREAM_PATTERN = "^(?:https?://)?media\\.ccc\\.de/live$";
 
+    private MediaCCCLiveListLinkHandlerFactory() {
+    }
+
+    public static MediaCCCLiveListLinkHandlerFactory getInstance() {
+        return INSTANCE;
+    }
+
     @Override
-    public String getId(final String url) throws ParsingException {
+    public String getId(final String url) throws ParsingException, UnsupportedOperationException {
         return "live";
     }
 
@@ -27,7 +38,8 @@ public class MediaCCCLiveListLinkHandlerFactory extends ListLinkHandlerFactory {
     @Override
     public String getUrl(final String id,
                          @Nonnull final List<FilterItem> contentFilter,
-                         @Nullable final List<FilterItem> sortFilter) throws ParsingException {
+                         @Nullable final List<FilterItem> sortFilter)
+            throws ParsingException, UnsupportedOperationException {
         // FIXME: wrong URL; should be https://streaming.media.ccc.de/{conference_slug}/{room_slug}
         return "https://media.ccc.de/live";
     }

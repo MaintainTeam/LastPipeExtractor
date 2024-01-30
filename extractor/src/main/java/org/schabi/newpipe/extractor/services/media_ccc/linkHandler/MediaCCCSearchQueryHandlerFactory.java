@@ -14,13 +14,21 @@ import javax.annotation.Nullable;
 
 public final class MediaCCCSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
 
-    public MediaCCCSearchQueryHandlerFactory() {
+    private static final MediaCCCSearchQueryHandlerFactory INSTANCE =
+            new MediaCCCSearchQueryHandlerFactory();
+
+    private MediaCCCSearchQueryHandlerFactory() {
         super(new MediaCCCFilters());
+    }
+
+    public static MediaCCCSearchQueryHandlerFactory getInstance() {
+        return INSTANCE;
     }
 
     @Override
     public String getUrl(final String query, @Nonnull final List<FilterItem> contentFilter,
-                         @Nullable final List<FilterItem> sortFilter) throws ParsingException {
+                         @Nullable final List<FilterItem> sortFilter)
+            throws ParsingException, UnsupportedOperationException {
         try {
             return "https://media.ccc.de/public/events/search?q=" + Utils.encodeUrlUtf8(query);
         } catch (final UnsupportedEncodingException e) {

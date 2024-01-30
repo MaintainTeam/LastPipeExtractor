@@ -18,15 +18,22 @@ import javax.annotation.Nullable;
 
 public final class BandcampSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
 
-    public BandcampSearchQueryHandlerFactory() {
+    private static final BandcampSearchQueryHandlerFactory INSTANCE
+            = new BandcampSearchQueryHandlerFactory();
+
+    private BandcampSearchQueryHandlerFactory() {
         super(new BandcampFilters());
+    }
+
+    public static BandcampSearchQueryHandlerFactory getInstance() {
+        return INSTANCE;
     }
 
     @Override
     public String getUrl(final String query,
                          @Nonnull final List<FilterItem> selectedContentFilter,
                          @Nullable final List<FilterItem> selectedSortFilter)
-            throws ParsingException {
+            throws ParsingException, UnsupportedOperationException {
 
         searchFilters.setSelectedSortFilter(selectedSortFilter);
         searchFilters.setSelectedContentFilter(selectedContentFilter);

@@ -17,6 +17,9 @@ import javax.annotation.Nullable;
 
 public final class PeertubeSearchQueryHandlerFactory extends SearchQueryHandlerFactory {
 
+    private static final PeertubeSearchQueryHandlerFactory INSTANCE =
+            new PeertubeSearchQueryHandlerFactory();
+
     public static final String VIDEOS = "videos";
     // sepia is the global index
     public static final String SEPIA_BASE_URL = "https://sepiasearch.org";
@@ -24,32 +27,19 @@ public final class PeertubeSearchQueryHandlerFactory extends SearchQueryHandlerF
     public static final String SEARCH_ENDPOINT_VIDEOS = "/api/v1/search/videos";
     public static final String SEARCH_ENDPOINT_CHANNELS = "/api/v1/search/video-channels";
 
-    private static PeertubeSearchQueryHandlerFactory instance = null;
-
     private PeertubeSearchQueryHandlerFactory() {
         super(new PeertubeFilters());
     }
 
-    /**
-     * Singleton to get the same objects of filters during search.
-     * <p>
-     * The sort filter holds a variable search parameter: (filter.getQueryData())
-     *
-     * @return
-     */
-    public static synchronized PeertubeSearchQueryHandlerFactory getInstance() {
-        if (instance == null) {
-            instance = new PeertubeSearchQueryHandlerFactory();
-        }
-        return instance;
+    public static PeertubeSearchQueryHandlerFactory getInstance() {
+        return INSTANCE;
     }
 
     @Override
     public String getUrl(final String searchString,
                          @Nonnull final List<FilterItem> selectedContentFilter,
                          @Nullable final List<FilterItem> selectedSortFilters)
-            throws ParsingException {
-
+            throws ParsingException, UnsupportedOperationException {
         final String baseUrl;
         if (isSepiaContentFilterPresent(selectedContentFilter)) {
             baseUrl = SEPIA_BASE_URL;
@@ -64,7 +54,8 @@ public final class PeertubeSearchQueryHandlerFactory extends SearchQueryHandlerF
     public String getUrl(final String searchString,
                          final List<FilterItem> selectedContentFilter,
                          final List<FilterItem> selectedSortFilter,
-                         final String baseUrl) throws ParsingException {
+                         final String baseUrl)
+            throws ParsingException, UnsupportedOperationException {
         try {
             searchFilters.setSelectedSortFilter(selectedSortFilter);
             searchFilters.setSelectedContentFilter(selectedContentFilter);

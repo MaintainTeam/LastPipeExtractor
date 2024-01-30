@@ -28,6 +28,9 @@ public final class PeertubeTrendingLinkHandlerFactory extends ListLinkHandlerFac
             KIOSK_RECENT, "%s/api/v1/videos?sort=-publishedAt",
             KIOSK_LOCAL, "%s/api/v1/videos?sort=-publishedAt&filter=local");
 
+    private PeertubeTrendingLinkHandlerFactory() {
+    }
+
     public static PeertubeTrendingLinkHandlerFactory getInstance() {
         return INSTANCE;
     }
@@ -35,7 +38,8 @@ public final class PeertubeTrendingLinkHandlerFactory extends ListLinkHandlerFac
     @Override
     public String getUrl(final String id,
                          @Nonnull final List<FilterItem> contentFilters,
-                         @Nullable final List<FilterItem> sortFilter) {
+                         @Nullable final List<FilterItem> sortFilter)
+            throws ParsingException, UnsupportedOperationException {
         return getUrl(id, contentFilters, sortFilter, ServiceList.PeerTube.getBaseUrl());
     }
 
@@ -43,12 +47,13 @@ public final class PeertubeTrendingLinkHandlerFactory extends ListLinkHandlerFac
     public String getUrl(final String id,
                          final List<FilterItem> contentFilters,
                          final List<FilterItem> sortFilter,
-                         final String baseUrl) {
+                         final String baseUrl)
+            throws ParsingException, UnsupportedOperationException {
         return String.format(KIOSK_MAP.get(id), baseUrl);
     }
 
     @Override
-    public String getId(final String url) throws ParsingException {
+    public String getId(final String url) throws ParsingException, UnsupportedOperationException {
         final String cleanUrl = url.replace(ServiceList.PeerTube.getBaseUrl(), "%s");
         if (cleanUrl.contains("/videos/trending")) {
             return KIOSK_TRENDING;

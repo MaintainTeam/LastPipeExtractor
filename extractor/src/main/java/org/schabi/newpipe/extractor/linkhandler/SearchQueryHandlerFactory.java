@@ -25,7 +25,7 @@ public abstract class SearchQueryHandlerFactory extends ListLinkHandlerFactory {
     @Override
     public abstract String getUrl(String query, @Nonnull List<FilterItem> selectedContentFilter,
                                   @Nullable List<FilterItem> selectedSortFilter)
-            throws ParsingException;
+            throws ParsingException, UnsupportedOperationException;
 
     @SuppressWarnings("unused")
     public String getSearchString(final String url) {
@@ -37,7 +37,7 @@ public abstract class SearchQueryHandlerFactory extends ListLinkHandlerFactory {
     ///////////////////////////////////
 
     @Override
-    public String getId(final String url) {
+    public String getId(final String url) throws ParsingException, UnsupportedOperationException {
         return getSearchString(url);
     }
 

@@ -31,12 +31,13 @@ public final class YoutubePlaylistLinkHandlerFactory extends ListLinkHandlerFact
 
     @Override
     public String getUrl(final String id, @Nonnull final List<FilterItem> contentFilters,
-                         @Nullable final List<FilterItem> sortFilter) {
+                         @Nullable final List<FilterItem> sortFilter)
+            throws ParsingException, UnsupportedOperationException {
         return "https://www.youtube.com/playlist?list=" + id;
     }
 
     @Override
-    public String getId(final String url) throws ParsingException {
+    public String getId(final String url) throws ParsingException, UnsupportedOperationException {
         try {
             final URL urlObj = Utils.stringToURL(url);
 

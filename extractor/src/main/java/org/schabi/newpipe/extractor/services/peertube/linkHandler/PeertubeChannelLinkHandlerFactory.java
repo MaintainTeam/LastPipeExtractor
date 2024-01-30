@@ -27,14 +27,15 @@ public final class PeertubeChannelLinkHandlerFactory extends ListLinkHandlerFact
     }
 
     @Override
-    public String getId(final String url) throws ParsingException {
+    public String getId(final String url) throws ParsingException, UnsupportedOperationException {
         return fixId(Parser.matchGroup(ID_PATTERN, url, 0));
     }
 
     @Override
     public String getUrl(final String id,
                          @Nonnull final List<FilterItem> contentFilters,
-                         @Nullable final List<FilterItem> searchFilter) throws ParsingException {
+                         @Nullable final List<FilterItem> searchFilter)
+            throws ParsingException, UnsupportedOperationException {
         return getUrl(id, contentFilters, searchFilter, ServiceList.PeerTube.getBaseUrl());
     }
 
@@ -43,7 +44,7 @@ public final class PeertubeChannelLinkHandlerFactory extends ListLinkHandlerFact
                          final List<FilterItem> contentFilter,
                          final List<FilterItem> sortFilter,
                          final String baseUrl)
-            throws ParsingException {
+            throws ParsingException, UnsupportedOperationException {
         if (id.matches(ID_PATTERN)) {
             return baseUrl + "/" + fixId(id);
         } else {

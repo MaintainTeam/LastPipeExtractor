@@ -1,7 +1,7 @@
 /*
  * Created by Christian Schabesberger on 12.08.17.
  *
- * Copyright (C) Christian Schabesberger 2018 <chris.schabesberger@mailbox.org>
+ * Copyright (C) 2018 Christian Schabesberger <chris.schabesberger@mailbox.org>
  * YoutubeTrendingExtractor.java is part of NewPipe Extractor.
  *
  * NewPipe Extractor is free software: you can redistribute it and/or modify
@@ -46,6 +46,9 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 
 public class YoutubeTrendingExtractor extends KioskExtractor<StreamInfoItem> {
+
+    public static final String KIOSK_ID = "Trending";
+
     private JsonObject initialData;
 
     private static final String VIDEOS_TAB_PARAMS = "4gIOGgxtb3N0X3BvcHVsYXI%3D";

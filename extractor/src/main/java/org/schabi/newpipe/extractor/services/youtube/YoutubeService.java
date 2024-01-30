@@ -11,6 +11,7 @@ import static java.util.Arrays.asList;
 
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.channel.ChannelExtractor;
+import org.schabi.newpipe.extractor.channel.tabs.ChannelTabExtractor;
 import org.schabi.newpipe.extractor.comments.CommentsExtractor;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.feed.FeedExtractor;
@@ -19,6 +20,7 @@ import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandlerFactory;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandlerFactory;
+import org.schabi.newpipe.extractor.linkhandler.ReadyChannelTabListLinkHandler;
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler;
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandlerFactory;
 import org.schabi.newpipe.extractor.localization.ContentCountry;
@@ -26,6 +28,7 @@ import org.schabi.newpipe.extractor.localization.Localization;
 import org.schabi.newpipe.extractor.playlist.PlaylistExtractor;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
 import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeChannelExtractor;
+import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeChannelTabExtractor;
 import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeCommentsExtractor;
 import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeFeedExtractor;
 import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeMixPlaylistExtractor;
@@ -37,6 +40,7 @@ import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeSubscript
 import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeSuggestionExtractor;
 import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeTrendingExtractor;
 import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeChannelLinkHandlerFactory;
+import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeChannelTabLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeCommentsLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubePlaylistLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeSearchQueryHandlerFactory;
@@ -54,21 +58,21 @@ import javax.annotation.Nonnull;
 /*
  * Created by Christian Schabesberger on 23.08.15.
  *
- * Copyright (C) Christian Schabesberger 2018 <chris.schabesberger@mailbox.org>
- * YoutubeService.java is part of NewPipe.
+ * Copyright (C) 2018 Christian Schabesberger <chris.schabesberger@mailbox.org>
+ * YoutubeService.java is part of NewPipe Extractor.
  *
- * NewPipe is free software: you can redistribute it and/or modify
+ * NewPipe Extractor is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * NewPipe is distributed in the hope that it will be useful,
+ * NewPipe Extractor is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with NewPipe.  If not, see <http://www.gnu.org/licenses/>.
+ * along with NewPipe Extractor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 public class YoutubeService extends StreamingService {
@@ -93,6 +97,11 @@ public class YoutubeService extends StreamingService {
     }
 
     @Override
+    public ListLinkHandlerFactory getChannelTabLHFactory() {
+        return YoutubeChannelTabLinkHandlerFactory.getInstance();
+    }
+
+    @Override
     public ListLinkHandlerFactory getPlaylistLHFactory() {
         return YoutubePlaylistLinkHandlerFactory.getInstance();
     }
@@ -110,6 +119,15 @@ public class YoutubeService extends StreamingService {
     @Override
     public ChannelExtractor getChannelExtractor(final ListLinkHandler linkHandler) {
         return new YoutubeChannelExtractor(this, linkHandler);
+    }
+
+    @Override
+    public ChannelTabExtractor getChannelTabExtractor(final ListLinkHandler linkHandler) {
+        if (linkHandler instanceof ReadyChannelTabListLinkHandler) {
+            return ((ReadyChannelTabListLinkHandler) linkHandler).getChannelTabExtractor(this);
+        } else {
+            return new YoutubeChannelTabExtractor(this, linkHandler);
+        }
     }
 
     @Override
@@ -141,19 +159,20 @@ public class YoutubeService extends StreamingService {
     @Override
     public KioskList getKioskList() throws ExtractionException {
         final KioskList list = new KioskList(this);
+        final ListLinkHandlerFactory h = YoutubeTrendingLinkHandlerFactory.getInstance();
 
         // add kiosks here e.g.:
         try {
             list.addKioskEntry(
                     (streamingService, url, id) -> new YoutubeTrendingExtractor(
                             YoutubeService.this,
-                            new YoutubeTrendingLinkHandlerFactory().fromUrl(url),
+                            h.fromUrl(url),
                             id
                     ),
-                    new YoutubeTrendingLinkHandlerFactory(),
-                    "Trending"
+                    h,
+                    YoutubeTrendingExtractor.KIOSK_ID
             );
-            list.setDefaultKiosk("Trending");
+            list.setDefaultKiosk(YoutubeTrendingExtractor.KIOSK_ID);
         } catch (final Exception e) {
             throw new ExtractionException(e);
         }

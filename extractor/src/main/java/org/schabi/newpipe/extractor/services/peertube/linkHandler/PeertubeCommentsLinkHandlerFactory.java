@@ -26,7 +26,7 @@ public final class PeertubeCommentsLinkHandlerFactory extends ListLinkHandlerFac
     }
 
     @Override
-    public String getId(final String url) throws ParsingException, IllegalArgumentException {
+    public String getId(final String url) throws ParsingException, UnsupportedOperationException {
         return PeertubeStreamLinkHandlerFactory.getInstance().getId(url); // the same id is needed
     }
 
@@ -38,7 +38,8 @@ public final class PeertubeCommentsLinkHandlerFactory extends ListLinkHandlerFac
     @Override
     public String getUrl(final String id,
                          @Nonnull final List<FilterItem> contentFilter,
-                         @Nullable final List<FilterItem> sortFilter) throws ParsingException {
+                         @Nullable final List<FilterItem> sortFilter)
+            throws ParsingException, UnsupportedOperationException {
         return getUrl(id, contentFilter, sortFilter, ServiceList.PeerTube.getBaseUrl());
     }
 
@@ -46,7 +47,8 @@ public final class PeertubeCommentsLinkHandlerFactory extends ListLinkHandlerFac
     public String getUrl(final String id,
                          final List<FilterItem> contentFilter,
                          final List<FilterItem> sortFilter,
-                         final String baseUrl) throws ParsingException {
+                         final String baseUrl)
+            throws ParsingException, UnsupportedOperationException {
         return baseUrl + String.format(COMMENTS_ENDPOINT, id);
     }
 

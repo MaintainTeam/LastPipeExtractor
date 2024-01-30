@@ -3,10 +3,10 @@ package org.schabi.newpipe.extractor.services.youtube.extractors;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.DISABLE_PRETTY_PRINT_PARAMETER;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.YOUTUBEI_V1_URL;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.extractPlaylistTypeFromPlaylistUrl;
-import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.fixThumbnailUrl;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getJsonPostResponse;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getKey;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getTextFromObject;
+import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getImagesFromThumbnailsArray;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getUrlFromNavigationEndpoint;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.prepareDesktopJsonBuilder;
 import static org.schabi.newpipe.extractor.utils.Utils.isNullOrEmpty;
@@ -15,6 +15,7 @@ import com.grack.nanojson.JsonArray;
 import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonWriter;
 
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.downloader.Downloader;
@@ -33,6 +34,7 @@ import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,6 +43,9 @@ public class YoutubePlaylistExtractor extends PlaylistExtractor {
     // Names of some objects in JSON response frequently used in this class
     private static final String PLAYLIST_VIDEO_RENDERER = "playlistVideoRenderer";
     private static final String PLAYLIST_VIDEO_LIST_RENDERER = "playlistVideoListRenderer";
+    private static final String RICH_GRID_RENDERER = "richGridRenderer";
+    private static final String RICH_ITEM_RENDERER = "richItemRenderer";
+    private static final String REEL_ITEM_RENDERER = "reelItemRenderer";
     private static final String SIDEBAR = "sidebar";
     private static final String VIDEO_OWNER_RENDERER = "videoOwnerRenderer";
 
@@ -83,10 +88,6 @@ public class YoutubePlaylistExtractor extends PlaylistExtractor {
      * <p>
      * The new response can be detected by checking whether a header JSON object is returned in the
      * browse response (the old returns instead a sidebar one).
-     * </p>
-     *
-     * <p>
-     * This new playlist UI is currently A/B tested.
      * </p>
      *
      * @return Whether the playlist response is using only the new playlist design
@@ -161,39 +162,35 @@ public class YoutubePlaylistExtractor extends PlaylistExtractor {
 
     @Nonnull
     @Override
-    public String getThumbnailUrl() throws ParsingException {
-        String url;
+    public List<Image> getThumbnails() throws ParsingException {
+        final JsonArray playlistMetadataThumbnailsArray;
         if (isNewPlaylistInterface) {
-            url = getPlaylistHeader().getObject("playlistHeaderBanner")
+            playlistMetadataThumbnailsArray = getPlaylistHeader().getObject("playlistHeaderBanner")
                     .getObject("heroPlaylistThumbnailRenderer")
                     .getObject("thumbnail")
-                    .getArray("thumbnails")
-                    .getObject(0)
-                    .getString("url");
+                    .getArray("thumbnails");
         } else {
-            url = getPlaylistInfo().getObject("thumbnailRenderer")
+            playlistMetadataThumbnailsArray = playlistInfo.getObject("thumbnailRenderer")
                     .getObject("playlistVideoThumbnailRenderer")
                     .getObject("thumbnail")
-                    .getArray("thumbnails")
-                    .getObject(0)
-                    .getString("url");
+                    .getArray("thumbnails");
+        }
+
+        if (!isNullOrEmpty(playlistMetadataThumbnailsArray)) {
+            return getImagesFromThumbnailsArray(playlistMetadataThumbnailsArray);
         }
 
         // This data structure is returned in both layouts
-        if (isNullOrEmpty(url)) {
-            url = browseResponse.getObject("microformat")
+        final JsonArray microFormatThumbnailsArray = browseResponse.getObject("microformat")
                     .getObject("microformatDataRenderer")
                     .getObject("thumbnail")
-                    .getArray("thumbnails")
-                    .getObject(0)
-                    .getString("url");
+                    .getArray("thumbnails");
 
-            if (isNullOrEmpty(url)) {
-                throw new ParsingException("Could not get playlist thumbnail");
-            }
+        if (!isNullOrEmpty(microFormatThumbnailsArray)) {
+            return getImagesFromThumbnailsArray(microFormatThumbnailsArray);
         }
 
-        return fixThumbnailUrl(url);
+        throw new ParsingException("Could not get playlist thumbnails");
     }
 
     @Override
@@ -221,23 +218,19 @@ public class YoutubePlaylistExtractor extends PlaylistExtractor {
         }
     }
 
+    @Nonnull
     @Override
-    public String getUploaderAvatarUrl() throws ParsingException {
+    public List<Image> getUploaderAvatars() throws ParsingException {
         if (isNewPlaylistInterface) {
             // The new playlist interface doesn't provide an uploader avatar
-            return "";
+            return List.of();
         }
 
         try {
-            final String url = getUploaderInfo()
-                    .getObject("thumbnail")
-                    .getArray("thumbnails")
-                    .getObject(0)
-                    .getString("url");
-
-            return fixThumbnailUrl(url);
+            return getImagesFromThumbnailsArray(getUploaderInfo().getObject("thumbnail")
+                    .getArray("thumbnails"));
         } catch (final Exception e) {
-            throw new ParsingException("Could not get playlist uploader avatar", e);
+            throw new ParsingException("Could not get playlist uploader avatars", e);
         }
     }
 
@@ -327,17 +320,22 @@ public class YoutubePlaylistExtractor extends PlaylistExtractor {
                 .map(content -> content.getObject("itemSectionRenderer")
                         .getArray("contents")
                         .getObject(0))
-                .filter(contentItemSectionRendererContents ->
-                        contentItemSectionRendererContents.has(PLAYLIST_VIDEO_LIST_RENDERER)
-                                || contentItemSectionRendererContents.has(
-                                "playlistSegmentRenderer"))
+                .filter(content -> content.has(PLAYLIST_VIDEO_LIST_RENDERER)
+                        || content.has(RICH_GRID_RENDERER))
                 .findFirst()
                 .orElse(null);
 
-        if (videoPlaylistObject != null && videoPlaylistObject.has(PLAYLIST_VIDEO_LIST_RENDERER)) {
-            final JsonArray videosArray = videoPlaylistObject
-                    .getObject(PLAYLIST_VIDEO_LIST_RENDERER)
-                    .getArray("contents");
+        if (videoPlaylistObject != null) {
+            final JsonObject renderer;
+            if (videoPlaylistObject.has(PLAYLIST_VIDEO_LIST_RENDERER)) {
+                renderer = videoPlaylistObject.getObject(PLAYLIST_VIDEO_LIST_RENDERER);
+            } else if (videoPlaylistObject.has(RICH_GRID_RENDERER)) {
+                renderer = videoPlaylistObject.getObject(RICH_GRID_RENDERER);
+            } else {
+                return new InfoItemsPage<>(collector, null);
+            }
+
+            final JsonArray videosArray = renderer.getArray("contents");
             collectStreamsFrom(collector, videosArray);
 
             nextPage = getNextPageFrom(videosArray);
@@ -399,14 +397,25 @@ public class YoutubePlaylistExtractor extends PlaylistExtractor {
     private void collectStreamsFrom(@Nonnull final StreamInfoItemsCollector collector,
                                     @Nonnull final JsonArray videos) {
         final TimeAgoParser timeAgoParser = getTimeAgoParser();
-
         videos.stream()
                 .filter(JsonObject.class::isInstance)
                 .map(JsonObject.class::cast)
-                .filter(video -> video.has(PLAYLIST_VIDEO_RENDERER))
-                .map(video -> new YoutubeStreamInfoItemExtractor(
-                        video.getObject(PLAYLIST_VIDEO_RENDERER), timeAgoParser))
-                .forEachOrdered(collector::commit);
+                .forEach(video -> {
+                    if (video.has(PLAYLIST_VIDEO_RENDERER)) {
+                        collector.commit(new YoutubeStreamInfoItemExtractor(
+                                video.getObject(PLAYLIST_VIDEO_RENDERER), timeAgoParser));
+                    } else if (video.has(RICH_ITEM_RENDERER)) {
+                        final JsonObject richItemRenderer = video.getObject(RICH_ITEM_RENDERER);
+                        if (richItemRenderer.has("content")) {
+                            final JsonObject richItemRendererContent =
+                                    richItemRenderer.getObject("content");
+                            if (richItemRendererContent.has(REEL_ITEM_RENDERER)) {
+                                collector.commit(new YoutubeReelInfoItemExtractor(
+                                        richItemRendererContent.getObject(REEL_ITEM_RENDERER)));
+                            }
+                        }
+                    }
+                });
     }
 
     @Nonnull

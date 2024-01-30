@@ -1,7 +1,7 @@
 /*
  * Created by Christian Schabesberger on 02.02.16.
  *
- * Copyright (C) Christian Schabesberger 2018 <chris.schabesberger@mailbox.org>
+ * Copyright (C) 2018 Christian Schabesberger <chris.schabesberger@mailbox.org>
  * YoutubeStreamLinkHandlerFactory.java is part of NewPipe Extractor.
  *
  * NewPipe Extractor is free software: you can redistribute it and/or modify
@@ -79,7 +79,7 @@ public final class YoutubeStreamLinkHandlerFactory extends LinkHandlerFactory {
 
     @Nonnull
     @Override
-    public String getUrl(final String id) {
+    public String getUrl(final String id) throws ParsingException, UnsupportedOperationException {
         return "https://www.youtube.com/watch?v=" + id;
     }
 
@@ -87,7 +87,7 @@ public final class YoutubeStreamLinkHandlerFactory extends LinkHandlerFactory {
     @Nonnull
     @Override
     public String getId(final String theUrlString)
-            throws ParsingException, IllegalArgumentException {
+            throws ParsingException, UnsupportedOperationException {
         String urlString = theUrlString;
         try {
             final URI uri = new URI(urlString);

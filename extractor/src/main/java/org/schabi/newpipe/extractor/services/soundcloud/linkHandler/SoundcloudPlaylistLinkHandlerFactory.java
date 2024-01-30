@@ -27,7 +27,7 @@ public final class SoundcloudPlaylistLinkHandlerFactory extends ListLinkHandlerF
     }
 
     @Override
-    public String getId(final String url) throws ParsingException {
+    public String getId(final String url) throws ParsingException, UnsupportedOperationException {
         Utils.checkUrl(URL_PATTERN, url);
 
         try {
@@ -42,7 +42,7 @@ public final class SoundcloudPlaylistLinkHandlerFactory extends ListLinkHandlerF
     public String getUrl(final String id,
                          @Nonnull final List<FilterItem> contentFilter,
                          @Nullable final List<FilterItem> sortFilter)
-            throws ParsingException {
+            throws ParsingException, UnsupportedOperationException {
         try {
             return SoundcloudParsingHelper.resolveUrlWithEmbedPlayer(
                     "https://api.soundcloud.com/playlists/" + id);

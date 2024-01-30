@@ -29,7 +29,8 @@ public final class SoundcloudCommentsLinkHandlerFactory extends ListLinkHandlerF
     @Override
     public String getUrl(final String id,
                          @Nonnull final List<FilterItem> contentFilter,
-                         @Nullable final List<FilterItem> sortFilter) throws ParsingException {
+                         @Nullable final List<FilterItem> sortFilter)
+            throws ParsingException, UnsupportedOperationException {
         try {
             return "https://api-v2.soundcloud.com/tracks/" + id + "/comments" + "?client_id="
                     + clientId() + "&threaded=0" + "&filter_replies=1";
@@ -42,7 +43,7 @@ public final class SoundcloudCommentsLinkHandlerFactory extends ListLinkHandlerF
     }
 
     @Override
-    public String getId(final String url) throws ParsingException {
+    public String getId(final String url) throws ParsingException, UnsupportedOperationException {
         // Delegation to avoid duplicate code, as we need the same id
         return SoundcloudStreamLinkHandlerFactory.getInstance().getId(url);
     }

@@ -4,6 +4,7 @@ package org.schabi.newpipe.extractor.services.bandcamp.linkHandler;
 
 import org.schabi.newpipe.extractor.search.filter.FilterItem;
 
+import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.bandcamp.extractors.BandcampExtractorHelper;
 import org.schabi.newpipe.extractor.utils.Utils;
@@ -18,12 +19,23 @@ import static org.schabi.newpipe.extractor.services.bandcamp.extractors.Bandcamp
 import static org.schabi.newpipe.extractor.services.bandcamp.extractors.BandcampRadioExtractor.KIOSK_RADIO;
 import static org.schabi.newpipe.extractor.services.bandcamp.extractors.BandcampRadioExtractor.RADIO_API_URL;
 
-public class BandcampFeaturedLinkHandlerFactory extends ListLinkHandlerFactory {
+public final class BandcampFeaturedLinkHandlerFactory extends ListLinkHandlerFactory {
+
+    private static final BandcampFeaturedLinkHandlerFactory INSTANCE =
+            new BandcampFeaturedLinkHandlerFactory();
+
+    private BandcampFeaturedLinkHandlerFactory() {
+    }
+
+    public static BandcampFeaturedLinkHandlerFactory getInstance() {
+        return INSTANCE;
+    }
 
     @Override
     public String getUrl(final String id,
                          @Nonnull final List<FilterItem> contentFilter,
-                         @Nullable final List<FilterItem> sortFilter) {
+                         @Nullable final List<FilterItem> sortFilter)
+            throws ParsingException, UnsupportedOperationException {
         if (id.equals(KIOSK_FEATURED)) {
             return FEATURED_API_URL; // doesn't have a website
         } else if (id.equals(KIOSK_RADIO)) {
@@ -34,7 +46,7 @@ public class BandcampFeaturedLinkHandlerFactory extends ListLinkHandlerFactory {
     }
 
     @Override
-    public String getId(final String url) {
+    public String getId(final String url) throws ParsingException, UnsupportedOperationException {
         final String fixedUrl = Utils.replaceHttpWithHttps(url);
         if (BandcampExtractorHelper.isRadioUrl(fixedUrl) || fixedUrl.equals(RADIO_API_URL)) {
             return KIOSK_RADIO;

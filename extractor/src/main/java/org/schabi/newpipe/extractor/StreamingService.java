@@ -3,6 +3,7 @@ package org.schabi.newpipe.extractor;
 import org.schabi.newpipe.extractor.search.filter.FilterItem;
 
 import org.schabi.newpipe.extractor.channel.ChannelExtractor;
+import org.schabi.newpipe.extractor.channel.tabs.ChannelTabExtractor;
 import org.schabi.newpipe.extractor.comments.CommentsExtractor;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
@@ -30,21 +31,21 @@ import java.util.Collections;
 import java.util.List;
 
 /*
- * Copyright (C) Christian Schabesberger 2018 <chris.schabesberger@mailbox.org>
- * StreamingService.java is part of NewPipe.
+ * Copyright (C) 2018 Christian Schabesberger <chris.schabesberger@mailbox.org>
+ * StreamingService.java is part of NewPipe Extractor.
  *
- * NewPipe is free software: you can redistribute it and/or modify
+ * NewPipe Extractor is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * NewPipe is distributed in the hope that it will be useful,
+ * NewPipe Extractor is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with NewPipe.  If not, see <http://www.gnu.org/licenses/>.
+ * along with NewPipe Extractor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 public abstract class StreamingService {
@@ -143,6 +144,14 @@ public abstract class StreamingService {
     public abstract ListLinkHandlerFactory getChannelLHFactory();
 
     /**
+     * Must return a new instance of an implementation of ListLinkHandlerFactory for channel tabs.
+     * If support for channel tabs is not given null must be returned.
+     *
+     * @return an instance of a ListLinkHandlerFactory for channels or null
+     */
+    public abstract ListLinkHandlerFactory getChannelTabLHFactory();
+
+    /**
      * Must return a new instance of an implementation of ListLinkHandlerFactory for playlists.
      * If support for playlists is not given null must be returned.
      * @return an instance of a ListLinkHandlerFactory for playlists or null
@@ -207,6 +216,15 @@ public abstract class StreamingService {
             throws ExtractionException;
 
     /**
+     * Must create a new instance of a ChannelTabExtractor implementation.
+     *
+     * @param linkHandler is pointing to the channel which should be handled by this new instance.
+     * @return a new ChannelTabExtractor
+     */
+    public abstract ChannelTabExtractor getChannelTabExtractor(ListLinkHandler linkHandler)
+            throws ExtractionException;
+
+    /**
      * Must crete a new instance of a PlaylistExtractor implementation.
      * @param linkHandler is pointing to the playlist which should be handled by this new instance.
      * @return a new PlaylistExtractor
@@ -263,6 +281,20 @@ public abstract class StreamingService {
 
     public ChannelExtractor getChannelExtractor(final String url) throws ExtractionException {
         return getChannelExtractor(getChannelLHFactory().fromUrl(url));
+    }
+
+    public ChannelTabExtractor getChannelTabExtractorFromId(final String id, final String tab)
+            throws ExtractionException {
+        return getChannelTabExtractor(getChannelTabLHFactory().fromQuery(
+                id, Collections.singletonList(tab), ""));
+    }
+
+    public ChannelTabExtractor getChannelTabExtractorFromIdAndBaseUrl(final String id,
+                                                                      final String tab,
+                                                                      final String baseUrl)
+            throws ExtractionException {
+        return getChannelTabExtractor(getChannelTabLHFactory().fromQuery(
+                id, Collections.singletonList(tab), "", baseUrl));
     }
 
     public PlaylistExtractor getPlaylistExtractor(final String url) throws ExtractionException {

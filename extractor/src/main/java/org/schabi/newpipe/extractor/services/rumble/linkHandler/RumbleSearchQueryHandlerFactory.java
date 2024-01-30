@@ -28,7 +28,7 @@ public final class RumbleSearchQueryHandlerFactory extends SearchQueryHandlerFac
     public String getUrl(final String searchString,
                          final List<FilterItem> selectedContentFilter,
                          final List<FilterItem> selectedSortFilter)
-            throws ParsingException {
+            throws ParsingException, UnsupportedOperationException {
 
         searchFilters.setSelectedSortFilter(selectedSortFilter);
         searchFilters.setSelectedContentFilter(selectedContentFilter);

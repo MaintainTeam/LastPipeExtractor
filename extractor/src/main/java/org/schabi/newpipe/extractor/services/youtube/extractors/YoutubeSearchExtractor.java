@@ -6,10 +6,13 @@ import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getKey;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getTextFromObject;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.prepareDesktopJsonBuilder;
+import static org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeSearchQueryHandlerFactory.ALL;
+import static org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeSearchQueryHandlerFactory.CHANNELS;
+import static org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeSearchQueryHandlerFactory.PLAYLISTS;
+import static org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeSearchQueryHandlerFactory.VIDEOS;
+import static org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeSearchQueryHandlerFactory.getSearchParameter;
 import static org.schabi.newpipe.extractor.utils.Utils.isNullOrEmpty;
 
-import org.schabi.newpipe.extractor.search.SearchExtractor;
-import org.schabi.newpipe.extractor.services.youtube.search.filter.YoutubeFilters;
 import com.grack.nanojson.JsonArray;
 import com.grack.nanojson.JsonBuilder;
 import com.grack.nanojson.JsonObject;
@@ -26,13 +29,14 @@ import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler;
 import org.schabi.newpipe.extractor.localization.Localization;
 import org.schabi.newpipe.extractor.localization.TimeAgoParser;
+import org.schabi.newpipe.extractor.search.SearchExtractor;
 import org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper;
 import org.schabi.newpipe.extractor.utils.JsonUtils;
-import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,29 +44,47 @@ import javax.annotation.Nullable;
 /*
  * Created by Christian Schabesberger on 22.07.2018
  *
- * Copyright (C) Christian Schabesberger 2018 <chris.schabesberger@mailbox.org>
- * YoutubeSearchExtractor.java is part of NewPipe.
+ * Copyright (C) 2018 Christian Schabesberger <chris.schabesberger@mailbox.org>
+ * YoutubeSearchExtractor.java is part of NewPipe Extractor.
  *
- * NewPipe is free software: you can redistribute it and/or modify
+ * NewPipe Extractor is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * NewPipe is distributed in the hope that it will be useful,
+ * NewPipe Extractor is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with NewPipe.  If not, see <http://www.gnu.org/licenses/>.
+ * along with NewPipe Extractor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 public class YoutubeSearchExtractor extends SearchExtractor {
+
+    @Nullable
+    private final String searchType;
+    private final boolean extractVideoResults;
+    private final boolean extractChannelResults;
+    private final boolean extractPlaylistResults;
+
     private JsonObject initialData;
 
     public YoutubeSearchExtractor(final StreamingService service,
                                   final SearchQueryHandler linkHandler) {
         super(service, linkHandler);
+        final List<String> contentFilters = linkHandler.getContentFilters();
+        searchType = isNullOrEmpty(contentFilters) ? null : contentFilters.get(0);
+        // Save whether we should extract video, channel and playlist results depending on the
+        // requested search type, as YouTube returns sometimes videos inside channel search results
+        // If no search type is provided or ALL filter is requested, extract everything
+        extractVideoResults = searchType == null || ALL.equals(searchType)
+                || VIDEOS.equals(searchType);
+        extractChannelResults = searchType == null || ALL.equals(searchType)
+                || CHANNELS.equals(searchType);
+        extractPlaylistResults = searchType == null || ALL.equals(searchType)
+                || PLAYLISTS.equals(searchType);
     }
 
     @Override
@@ -70,12 +92,7 @@ public class YoutubeSearchExtractor extends SearchExtractor {
             ExtractionException {
         final String query = super.getSearchString();
         final Localization localization = getExtractorLocalization();
-
-        final YoutubeFilters.YoutubeContentFilterItem contentFilterItem =
-                Utils.getFirstContentFilterItem(getLinkHandler());
-        // Get the search parameter for the request. If getParams() be null
-        // (which should never happen - only in test cases), JsonWriter.string() can handle it
-        final String params = (contentFilterItem != null) ? contentFilterItem.getParams() : null;
+        final String params = getSearchParameter(searchType);
 
         final JsonBuilder<JsonObject> jsonBody = prepareDesktopJsonBuilder(localization,
                 getExtractorContentCountry())
@@ -108,18 +125,17 @@ public class YoutubeSearchExtractor extends SearchExtractor {
         final JsonObject didYouMeanRenderer = itemSectionRenderer.getArray("contents")
                 .getObject(0)
                 .getObject("didYouMeanRenderer");
-        final JsonObject showingResultsForRenderer = itemSectionRenderer.getArray("contents")
-                .getObject(0)
-                .getObject("showingResultsForRenderer");
 
         if (!didYouMeanRenderer.isEmpty()) {
             return JsonUtils.getString(didYouMeanRenderer,
                     "correctedQueryEndpoint.searchEndpoint.query");
-        } else if (showingResultsForRenderer != null) {
-            return getTextFromObject(showingResultsForRenderer.getObject("correctedQuery"));
-        } else {
-            return "";
         }
+
+        return Objects.requireNonNullElse(
+                getTextFromObject(itemSectionRenderer.getArray("contents")
+                        .getObject(0)
+                        .getObject("showingResultsForRenderer")
+                        .getObject("correctedQuery")), "");
     }
 
     @Override
@@ -208,7 +224,7 @@ public class YoutubeSearchExtractor extends SearchExtractor {
 
     private void collectStreamsFrom(final MultiInfoItemsCollector collector,
                                     @Nonnull final JsonArray contents)
-            throws NothingFoundException, ParsingException {
+            throws NothingFoundException {
         final TimeAgoParser timeAgoParser = getTimeAgoParser();
 
         for (final Object content : contents) {
@@ -217,13 +233,13 @@ public class YoutubeSearchExtractor extends SearchExtractor {
                 throw new NothingFoundException(
                         getTextFromObject(item.getObject("backgroundPromoRenderer")
                                 .getObject("bodyText")));
-            } else if (item.has("videoRenderer")) {
+            } else if (extractVideoResults && item.has("videoRenderer")) {
                 collector.commit(new YoutubeStreamInfoItemExtractor(
                         item.getObject("videoRenderer"), timeAgoParser));
-            } else if (item.has("channelRenderer")) {
+            } else if (extractChannelResults && item.has("channelRenderer")) {
                 collector.commit(new YoutubeChannelInfoItemExtractor(
                         item.getObject("channelRenderer")));
-            } else if (item.has("playlistRenderer")) {
+            } else if (extractPlaylistResults && item.has("playlistRenderer")) {
                 collector.commit(new YoutubePlaylistInfoItemExtractor(
                         item.getObject("playlistRenderer")));
             }

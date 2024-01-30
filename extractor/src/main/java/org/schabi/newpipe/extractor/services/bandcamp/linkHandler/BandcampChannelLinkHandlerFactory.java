@@ -11,6 +11,7 @@ import org.schabi.newpipe.extractor.exceptions.ReCaptchaException;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.bandcamp.extractors.BandcampExtractorHelper;
 import org.schabi.newpipe.extractor.utils.JsonUtils;
+import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,11 +22,20 @@ import javax.annotation.Nullable;
 /**
  * Artist do have IDs that are useful
  */
-public class BandcampChannelLinkHandlerFactory extends ListLinkHandlerFactory {
+public final class BandcampChannelLinkHandlerFactory extends ListLinkHandlerFactory {
 
+    private static final BandcampChannelLinkHandlerFactory INSTANCE
+            = new BandcampChannelLinkHandlerFactory();
+
+    private BandcampChannelLinkHandlerFactory() {
+    }
+
+    public static BandcampChannelLinkHandlerFactory getInstance() {
+        return INSTANCE;
+    }
 
     @Override
-    public String getId(final String url) throws ParsingException {
+    public String getId(final String url) throws ParsingException, UnsupportedOperationException {
         try {
             final String response = NewPipe.getDownloader().get(url).responseBody();
 
@@ -46,16 +56,13 @@ public class BandcampChannelLinkHandlerFactory extends ListLinkHandlerFactory {
     @Override
     public String getUrl(final String id, @Nonnull final List<FilterItem> contentFilter,
                          @Nullable final List<FilterItem> sortFilter)
-            throws ParsingException {
-        try {
-            return BandcampExtractorHelper.getArtistDetails(id)
-                    .getString("bandcamp_url")
-                    .replace("http://", "https://");
-        } catch (final NullPointerException e) {
+            throws ParsingException, UnsupportedOperationException {
+        final JsonObject artistDetails = BandcampExtractorHelper.getArtistDetails(id);
+        if (artistDetails.getBoolean("error")) {
             throw new ParsingException(
-                    "JSON does not contain URL (invalid id?) or is otherwise invalid", e);
+                    "JSON does not contain a channel URL (invalid id?) or is otherwise invalid");
         }
-
+        return Utils.replaceHttpWithHttps(artistDetails.getString("bandcamp_url"));
     }
 
     /**
@@ -66,22 +73,21 @@ public class BandcampChannelLinkHandlerFactory extends ListLinkHandlerFactory {
 
         final String lowercaseUrl = url.toLowerCase();
 
-        // https: | | artist.bandcamp.com | releases
-        //  0      1           2               3
+        // https: | | artist.bandcamp.com | releases - music - album - track ( | name)
+        //  0      1           2                           3                    (4)
         final String[] splitUrl = lowercaseUrl.split("/");
 
         // URL is too short
-        if (splitUrl.length < 3) {
+        if (splitUrl.length != 3 && splitUrl.length != 4) {
             return false;
         }
 
-        // Must have "releases" or "music" as segment after url or none at all
-        if (splitUrl.length > 3 && !(
-                splitUrl[3].equals("releases") || splitUrl[3].equals("music")
-        )) {
-
+        // Must have "releases", "music", "album" or "track" as segment after URL or none at all
+        if (splitUrl.length == 4 && !(splitUrl[3].equals("releases")
+                || splitUrl[3].equals("music")
+                || splitUrl[3].equals("album")
+                || splitUrl[3].equals("track"))) {
             return false;
-
         } else {
             if (splitUrl[2].equals("daily.bandcamp.com")) {
                 // Refuse links to daily.bandcamp.com as that is not an artist
