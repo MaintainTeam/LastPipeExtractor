@@ -10,6 +10,13 @@ import org.schabi.newpipe.extractor.search.filter.LibraryStringIds;
 
 public final class RumbleFilters extends BaseSearchFilters {
 
+    /**
+     * The rumble searchpage has a kind of 'all' (channels and videos)
+     * search feature. Nevertheless the found channels are more or
+     * less like a preview and a link to the channel search.
+     * -> there is no backend based ' real search all feature with one result page.
+     * -> it is too much effort at the moment to have a 'all' feature for BraveNewPipe
+     */
     public static final int ID_CF_MAIN_GRP = 0;
     public static final int ID_CF_MAIN_VIDEOS = 1;
     public static final int ID_CF_MAIN_CHANNELS = 2;
