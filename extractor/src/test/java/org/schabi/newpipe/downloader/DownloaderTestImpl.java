@@ -24,6 +24,7 @@ public final class DownloaderTestImpl extends Downloader {
     private final OkHttpClient client;
 
     private DownloaderTestImpl(final OkHttpClient.Builder builder) {
+        BraveDownloaderTestImplUtils.addCookieManager(builder);
         this.client = builder.readTimeout(30, TimeUnit.SECONDS).build();
     }
 
