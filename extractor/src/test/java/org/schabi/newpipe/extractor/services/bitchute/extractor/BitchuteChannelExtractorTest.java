@@ -1,20 +1,27 @@
 package org.schabi.newpipe.extractor.services.bitchute.extractor;
 
+import com.grack.nanojson.JsonArray;
+import com.grack.nanojson.JsonObject;
+import com.grack.nanojson.JsonParser;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderTestImpl;
 import org.schabi.newpipe.extractor.ExtractorAsserts;
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.services.BaseChannelExtractorTest;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.schabi.newpipe.extractor.ExtractorAsserts.assertIsSecureUrl;
 import static org.schabi.newpipe.extractor.ServiceList.Bitchute;
 
 /**
@@ -22,7 +29,7 @@ import static org.schabi.newpipe.extractor.ServiceList.Bitchute;
  */
 public class BitchuteChannelExtractorTest {
 
-    public abstract static class TestMarkDiceChannel extends TestChannel {
+    public static class TestMarkDiceChannel extends TestChannel {
         @SuppressWarnings("checkstyle:LineLength")
         @BeforeAll
         public static void setUp() throws Exception {
@@ -42,7 +49,7 @@ public class BitchuteChannelExtractorTest {
         }
     }
 
-    public abstract static class TestMissionCommanderChannel extends TestChannel {
+    public static class TestMissionCommanderChannel extends TestChannel {
         @BeforeAll
         @SuppressWarnings("checkstyle:LineLength")
         public static void setUp() throws Exception {
@@ -55,11 +62,24 @@ public class BitchuteChannelExtractorTest {
                 put(KeysForTestDataMap.expectedMinSubscriberCount, "400");
                 // 20210414 at the writing of this test the channel has no description added
                 put(KeysForTestDataMap.expectedDescription, "");
-                put(KeysForTestDataMap.expectedAvatarUrl, "2fqQXi6GCbgyrXaPQ540PLNu_small.jpg");
-                put(KeysForTestDataMap.expectedBannerlUrl, "2fqQXi6GCbgyrXaPQ540PLNu_small.jpg");
+
+
                 // 20210414 at the writing of this test the channel has not more than one page videos are added
                 put(KeysForTestDataMap.doTestMoreRelatedItems, "false");
             }};
+            testDataMap.put(KeysForTestDataMap.expectedAvatarUrl, "["
+                    + "{\"hasImage\":"
+                    + /* ===expected to have image? ===*/
+                    "true"
+                    + ",\"url\":\""
+                    + /* ===set the expected url=== */
+                    "2fqQXi6GCbgyrXaPQ540PLNu_small.jpg"
+                    + "\"}"
+                    + "]"
+            );
+            testDataMap.put(KeysForTestDataMap.expectedBannerlUrl,
+                    testDataMap.get(KeysForTestDataMap.expectedAvatarUrl));
+
             TestChannel.setUp();
         }
     }
@@ -148,21 +168,52 @@ public class BitchuteChannelExtractorTest {
                     extractor.getDescription());
         }
 
-        //@Test
-        //public void testAvatarUrl() throws Exception {
-        //    final String avatarUrl = extractor.getAvatarUrl();
-        //    assertIsSecureUrl(avatarUrl);
-        //    assertTrue(avatarUrl.contains(testDataMap.get(KeysForTestDataMap.expectedAvatarUrl)),
-        //            avatarUrl);
-        //}
+        @Override
+        @Test
+        public void testAvatars() throws Exception {
+            final JsonArray testData = (JsonArray) JsonParser.any().from(
+                    testDataMap.get(KeysForTestDataMap.expectedAvatarUrl));
+            final List<Image> avatars = extractor.getAvatars();
+            commonBannerAndAvatarTest(testData, avatars);
+        }
 
-        //@Test
-        //public void testBannerUrl() throws Exception {
-        //    final String bannerUrl = extractor.getBannerUrl();
-        //    assertIsSecureUrl(bannerUrl);
-        //    assertTrue(bannerUrl.contains(testDataMap.get(KeysForTestDataMap.expectedBannerlUrl)),
-        //            bannerUrl);
-        //}
+        @Override
+        @Test
+        public void testBanners() throws Exception {
+            final JsonArray testData = (JsonArray) JsonParser.any().from(
+                    testDataMap.get(KeysForTestDataMap.expectedBannerlUrl));
+            final List<Image> banners = extractor.getBanners();
+            commonBannerAndAvatarTest(testData, banners);
+        }
+
+        private void commonBannerAndAvatarTest(
+                final JsonArray testDataArray,
+                final List<Image> actualData) {
+
+            for (int pos = 0; pos < actualData.size(); pos++) {
+                final Image actualImage = actualData.get(pos);
+                final JsonObject testDataObject = ((JsonObject) testDataArray.get(pos));
+                final boolean isImageExpected = testDataObject.getBoolean("hasImage");
+                final String expectedUrlPart = testDataObject.getString("url");
+
+                assertIsSecureUrl(actualImage.getUrl());
+                if (isImageExpected) {
+                    assertTrue(actualImage.getUrl().contains(expectedUrlPart),
+                            actualImage.getUrl());
+                }
+            }
+        }
+
+        @Override
+        public void testTabs() throws Exception {
+
+        }
+
+        @Override
+        public void testTags() throws Exception {
+
+        }
+
 
         @Test
         public void testFeedUrl() throws Exception {
