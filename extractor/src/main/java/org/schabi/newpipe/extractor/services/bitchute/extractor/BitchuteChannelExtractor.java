@@ -51,14 +51,10 @@ public class BitchuteChannelExtractor extends ChannelExtractor {
     @Nonnull
     @Override
     public String getName() throws ParsingException {
-        try {
-            if (channelName == null) {
-                channelName = doc.select("#channel-title").first().text();
-            }
-            return channelName;
-        } catch (final Exception e) {
-            throw new ParsingException("Error parsing Channel Name");
+        if (channelName == null) {
+            channelName = BitchuteParserHelper.getChannelName(doc);
         }
+        return channelName;
     }
 
     @Nonnull

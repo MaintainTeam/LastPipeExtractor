@@ -134,7 +134,7 @@ public class BitchuteChannelTabExtractor extends ChannelTabExtractor {
         fetchRssFeed();
         final JsonObject jsonObject = new JsonObject();
         jsonObject.put("offset", "0");
-        jsonObject.put("name", getName());
+        jsonObject.put("name", BitchuteParserHelper.getChannelName(this.doc));
         jsonObject.put("url", getUrl());
         return getInfoItemsPage(this.doc, jsonObject);
     }

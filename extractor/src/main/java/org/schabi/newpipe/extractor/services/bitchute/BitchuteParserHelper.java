@@ -384,4 +384,12 @@ public final class BitchuteParserHelper {
             return viewCount;
         }
     }
+
+    public static String getChannelName(final Document doc) throws ParsingException {
+        try {
+                return doc.select("#channel-title").first().text();
+        } catch (final Exception e) {
+            throw new ParsingException("Error parsing Channel Name");
+        }
+    }
 }
