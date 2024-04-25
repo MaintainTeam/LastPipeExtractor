@@ -30,7 +30,6 @@ import static org.schabi.newpipe.extractor.services.youtube.YoutubeChannelHelper
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.DISABLE_PRETTY_PRINT_PARAMETER;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.YOUTUBEI_V1_URL;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getJsonPostResponse;
-import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getKey;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getTextFromObject;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.prepareDesktopJsonBuilder;
 import static org.schabi.newpipe.extractor.utils.Utils.isNullOrEmpty;
@@ -78,6 +77,8 @@ public class YoutubeChannelTabExtractor extends ChannelTabExtractor {
             return "EgZzaG9ydHPyBgUKA5oBAA%3D%3D";
         } else if (type.equals(ChannelTabs.LIVESTREAMS)) {
             return "EgdzdHJlYW1z8gYECgJ6AA%3D%3D";
+        } else if (type.equals(ChannelTabs.ALBUMS)) {
+            return "EghyZWxlYXNlc_IGBQoDsgEA";
         } else if (type.equals(ChannelTabs.PLAYLISTS)) {
             return "EglwbGF5bGlzdHPyBgQKAkIA";
         }
@@ -304,7 +305,7 @@ public class YoutubeChannelTabExtractor extends ChannelTabExtractor {
                         richItem.getObject("reelItemRenderer"));
             } else if (richItem.has("playlistRenderer")) {
                 getCommitPlaylistConsumer(collector, channelIds,
-                        item.getObject("playlistRenderer"));
+                        richItem.getObject("playlistRenderer"));
             }
         } else if (item.has("gridVideoRenderer")) {
             getCommitVideoConsumer(collector, timeAgoParser, channelIds,
@@ -420,8 +421,8 @@ public class YoutubeChannelTabExtractor extends ChannelTabExtractor {
                         .done())
                 .getBytes(StandardCharsets.UTF_8);
 
-        return new Page(YOUTUBEI_V1_URL + "browse?key=" + getKey()
-                + DISABLE_PRETTY_PRINT_PARAMETER, null, channelIds, null, body);
+        return new Page(YOUTUBEI_V1_URL + "browse?" + DISABLE_PRETTY_PRINT_PARAMETER, null,
+                channelIds, null, body);
     }
 
     /**

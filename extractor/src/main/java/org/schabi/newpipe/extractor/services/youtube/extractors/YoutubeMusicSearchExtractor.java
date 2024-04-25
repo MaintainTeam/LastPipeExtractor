@@ -3,6 +3,7 @@ package org.schabi.newpipe.extractor.services.youtube.extractors;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.DISABLE_PRETTY_PRINT_PARAMETER;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getTextFromObjectOrThrow;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getValidJsonResponseBody;
+import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getYoutubeMusicClientVersion;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getYoutubeMusicHeaders;
 import static org.schabi.newpipe.extractor.utils.Utils.isNullOrEmpty;
 
@@ -20,11 +21,9 @@ import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
-import org.schabi.newpipe.extractor.exceptions.ReCaptchaException;
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
 import org.schabi.newpipe.extractor.search.filter.FilterContainer;
-import org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper;
 import org.schabi.newpipe.extractor.services.youtube.search.filter.YoutubeFilters;
 import org.schabi.newpipe.extractor.utils.JsonUtils;
 import org.schabi.newpipe.extractor.utils.Utils;
@@ -59,10 +58,8 @@ public class YoutubeMusicSearchExtractor extends SearchExtractor {
     @Override
     public void onFetchPage(@Nonnull final Downloader downloader)
             throws IOException, ExtractionException {
-        final String[] youtubeMusicKeys = YoutubeParsingHelper.getYoutubeMusicKey();
-
-        final String url = "https://music.youtube.com/youtubei/v1/search?key="
-                + youtubeMusicKeys[0] + DISABLE_PRETTY_PRINT_PARAMETER;
+        final String url = "https://music.youtube.com/youtubei/v1/search?"
+                + DISABLE_PRETTY_PRINT_PARAMETER;
 
 
         final YoutubeFilters.MusicYoutubeContentFilterItem contentFilterItem =
@@ -77,7 +74,7 @@ public class YoutubeMusicSearchExtractor extends SearchExtractor {
                 .object("context")
                     .object("client")
                         .value("clientName", "WEB_REMIX")
-                        .value("clientVersion", youtubeMusicKeys[2])
+                        .value("clientVersion", getYoutubeMusicClientVersion())
                         .value("hl", "en-GB")
                         .value("gl", getExtractorContentCountry().getCountryCode())
                         .value("platform", "DESKTOP")
@@ -199,15 +196,13 @@ public class YoutubeMusicSearchExtractor extends SearchExtractor {
 
         final MultiInfoItemsCollector collector = new MultiInfoItemsCollector(getServiceId());
 
-        final String[] youtubeMusicKeys = YoutubeParsingHelper.getYoutubeMusicKey();
-
         // @formatter:off
         final byte[] json = JsonWriter.string()
             .object()
                 .object("context")
                     .object("client")
                         .value("clientName", "WEB_REMIX")
-                        .value("clientVersion", youtubeMusicKeys[2])
+                        .value("clientVersion", getYoutubeMusicClientVersion())
                         .value("hl", "en-GB")
                         .value("gl", getExtractorContentCountry().getCountryCode())
                         .value("platform", "DESKTOP")
@@ -289,8 +284,7 @@ public class YoutubeMusicSearchExtractor extends SearchExtractor {
     }
 
     @Nullable
-    private Page getNextPageFrom(final JsonArray continuations)
-            throws IOException, ParsingException, ReCaptchaException {
+    private Page getNextPageFrom(final JsonArray continuations) {
         if (isNullOrEmpty(continuations)) {
             return null;
         }
@@ -300,7 +294,6 @@ public class YoutubeMusicSearchExtractor extends SearchExtractor {
         final String continuation = nextContinuationData.getString("continuation");
 
         return new Page("https://music.youtube.com/youtubei/v1/search?ctoken=" + continuation
-                + "&continuation=" + continuation + "&key="
-                + YoutubeParsingHelper.getYoutubeMusicKey()[0] + DISABLE_PRETTY_PRINT_PARAMETER);
+                + "&continuation=" + continuation + "&" + DISABLE_PRETTY_PRINT_PARAMETER);
     }
 }

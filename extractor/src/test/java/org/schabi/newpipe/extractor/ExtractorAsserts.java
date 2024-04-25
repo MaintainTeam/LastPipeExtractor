@@ -172,8 +172,17 @@ public class ExtractorAsserts {
     public static void assertTabsContain(@Nonnull final List<ListLinkHandler> tabs,
                                          @Nonnull final FilterItem... expectedTabs) {
         final Set<FilterItem> tabSet = tabs.stream()
-                .map(linkHandler -> linkHandler.getContentFilters().get(0))
+                .map(linkHandler -> {
+                    assertEquals(1, linkHandler.getContentFilters().size(),
+                            "Unexpected content filters for channel tab: "
+                                    + linkHandler.getContentFilters());
+                    return linkHandler.getContentFilters().get(0);
+                })
                 .collect(Collectors.toUnmodifiableSet());
+
+        assertEquals(expectedTabs.length, tabSet.size(),
+                "Different amount of tabs returned:\nExpected: "
+                + Arrays.toString(expectedTabs) + "\nActual: " + tabSet);
         Arrays.stream(expectedTabs)
                 .forEach(expectedTab -> assertTrue(tabSet.contains(expectedTab),
                         "Missing " + expectedTab + " tab (got " + tabSet + ")"));

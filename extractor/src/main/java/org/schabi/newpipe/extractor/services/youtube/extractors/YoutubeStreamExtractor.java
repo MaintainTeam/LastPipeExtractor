@@ -22,6 +22,7 @@ package org.schabi.newpipe.extractor.services.youtube.extractors;
 
 import static org.schabi.newpipe.extractor.services.youtube.ItagItem.APPROX_DURATION_MS_UNKNOWN;
 import static org.schabi.newpipe.extractor.services.youtube.ItagItem.CONTENT_LENGTH_UNKNOWN;
+import static org.schabi.newpipe.extractor.services.youtube.YoutubeDescriptionHelper.attributedDescriptionToHtml;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.CONTENT_CHECK_OK;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.CPN;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.RACY_CHECK_OK;
@@ -30,7 +31,6 @@ import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.fixThumbnailUrl;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.generateContentPlaybackNonce;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.generateTParameter;
-import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getAttributedDescription;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getImagesFromThumbnailsArray;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getJsonAndroidPostResponse;
 import static org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper.getJsonIosPostResponse;
@@ -190,7 +190,7 @@ public class YoutubeStreamExtractor extends StreamExtractor {
 
                 try { // Premiered 20 hours ago
                     final TimeAgoParser timeAgoParser = TimeAgoPatternsManager.getTimeAgoParserFor(
-                            Localization.fromLocalizationCode("en"));
+                            new Localization("en"));
                     final OffsetDateTime parsedTime = timeAgoParser.parse(time).offsetDateTime();
                     return DateTimeFormatter.ISO_LOCAL_DATE.format(parsedTime);
                 } catch (final Exception ignored) {
@@ -261,7 +261,7 @@ public class YoutubeStreamExtractor extends StreamExtractor {
             return new Description(videoSecondaryInfoRendererDescription, Description.HTML);
         }
 
-        final String attributedDescription = getAttributedDescription(
+        final String attributedDescription = attributedDescriptionToHtml(
                 getVideoSecondaryInfoRenderer().getObject("attributedDescription"));
         if (!isNullOrEmpty(attributedDescription)) {
             return new Description(attributedDescription, Description.HTML);
@@ -965,7 +965,7 @@ public class YoutubeStreamExtractor extends StreamExtractor {
                         .value(RACY_CHECK_OK, true)
                         // Workaround getting streaming URLs which return 403 HTTP response code by
                         // using some parameters for Android client requests
-                        .value("params", "CgIQBg")
+                        .value("params", "CgIIAQ%3D%3D")
                         .done())
                 .getBytes(StandardCharsets.UTF_8);
 
@@ -1378,8 +1378,9 @@ public class YoutubeStreamExtractor extends StreamExtractor {
                 final int audioTrackIdLastLocaleCharacter = audioTrackId.indexOf(".");
                 if (audioTrackIdLastLocaleCharacter != -1) {
                     // Audio tracks IDs are in the form LANGUAGE_CODE.TRACK_NUMBER
-                    itagItem.setAudioLocale(LocaleCompat.forLanguageTag(
-                            audioTrackId.substring(0, audioTrackIdLastLocaleCharacter)));
+                    LocaleCompat.forLanguageTag(
+                            audioTrackId.substring(0, audioTrackIdLastLocaleCharacter)
+                    ).ifPresent(itagItem::setAudioLocale);
                 }
                 itagItem.setAudioTrackType(YoutubeParsingHelper.extractAudioTrackType(streamUrl));
             }

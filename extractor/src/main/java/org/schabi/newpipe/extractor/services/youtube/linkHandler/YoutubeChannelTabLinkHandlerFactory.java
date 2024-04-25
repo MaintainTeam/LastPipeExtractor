@@ -31,6 +31,8 @@ public final class YoutubeChannelTabLinkHandlerFactory extends ListLinkHandlerFa
             return "/shorts";
         } else if (tab.equals(ChannelTabs.LIVESTREAMS)) {
             return "/streams";
+        } else if (tab.equals(ChannelTabs.ALBUMS)) {
+            return "/releases";
         } else if (tab.equals(ChannelTabs.PLAYLISTS)) {
             return "/playlists";
         }
