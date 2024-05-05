@@ -2,7 +2,6 @@ package org.schabi.newpipe.extractor.services.media_ccc.linkHandler;
 
 import org.schabi.newpipe.extractor.search.filter.FilterItem;
 
-import org.schabi.newpipe.extractor.channel.tabs.ChannelTabs;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandlerFactory;
 import org.schabi.newpipe.extractor.utils.Parser;
