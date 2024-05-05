@@ -59,7 +59,9 @@ public final class PeertubeChannelLinkHandlerFactory extends ListLinkHandlerFact
     @Override
     public boolean onAcceptUrl(final String url) {
         try {
-            new URL(url);
+            if (!new BravePeertubeChannelLinkHandlerFactoryHelper().onAcceptUrl(new URL(url))) {
+                return false;
+            }
             return url.contains("/accounts/") || url.contains("/a/")
                     || url.contains("/video-channels/") || url.contains("/c/");
         } catch (final MalformedURLException e) {
