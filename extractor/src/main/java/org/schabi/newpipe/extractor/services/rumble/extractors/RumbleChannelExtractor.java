@@ -119,7 +119,7 @@ public class RumbleChannelExtractor extends ChannelExtractor {
 
         final String viewCount = RumbleParsingHelper.extractSafely(true,
                 errorMsg,
-                () -> doc.select("span.subscribe-button-count").first().text()
+                () -> doc.select("span.channel-header--followers").first().text()
         );
 
         if (null != viewCount) {
