@@ -5,13 +5,18 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.schabi.newpipe.downloader.DownloaderFactory;
 import org.schabi.newpipe.extractor.ExtractorAsserts;
+import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.services.BaseChannelExtractorTest;
+import org.schabi.newpipe.extractor.services.DefaultTests;
 import org.schabi.newpipe.extractor.services.youtube.YoutubeTestsUtils;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -65,7 +70,7 @@ public class RumbleChannelExtractorTest {
         @BeforeAll
         public static void setUp() throws Exception {
             testDataMap = new HashMap() {{
-                put(KeysForTestDataMap.channelUrl, "https://rumble.com/c/c-3075549");
+                put(KeysForTestDataMap.channelUrl, "https://rumble.com/c/Bongino");
                 put(KeysForTestDataMap.expectedOriginalUrl, "https://rumble.com/c/Bongino");
                 put(KeysForTestDataMap.expectedUrl, "https://rumble.com/c/Bongino");
                 put(KeysForTestDataMap.expectedChannelName, "The Dan Bongino Show");
@@ -84,7 +89,7 @@ public class RumbleChannelExtractorTest {
                 put(KeysForTestDataMap.mockPath, "channelTestMulitplePages");
                 put(KeysForTestDataMap.isVerified, "true");
             }};
-            //System.setProperty("downloader", "MOCK");
+            System.setProperty("downloader", "MOCK");
             //System.setProperty("downloader", "RECORDING");
             TestChannel.setUp();
             /** more info see: {@link RumbleSharedTests#infoItemsResultsTest} */
@@ -262,7 +267,7 @@ public class RumbleChannelExtractorTest {
 
         @Test
         public void testAvatars() throws Exception {
-            YoutubeTestsUtils.testImages(extractor.getAvatars());
+            DefaultTests.defaultTestImageCollection(extractor.getAvatars());
             // assertEquals(testDataMap.get(KeysForTestDataMap.expectedAvatarUrl), avatarUrl);
         }
 
